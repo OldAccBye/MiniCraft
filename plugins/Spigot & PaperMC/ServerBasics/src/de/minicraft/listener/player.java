@@ -19,6 +19,7 @@ public class player implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         playerApi.add(e.getPlayer().getUniqueId());
         playerPermissions.add(e.getPlayer().getUniqueId());
+        e.getPlayer().sendMessage("This is a test server for programming open source Spigot plugins!");
     }
 
     @EventHandler

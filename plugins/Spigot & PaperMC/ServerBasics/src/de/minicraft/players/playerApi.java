@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -32,10 +31,7 @@ public class playerApi {
             ps = database.getConnection().prepareStatement("INSERT INTO users SET username = ?, UUID = ?, perm_group = 'default'");
             ps.setString(1, username);
             ps.setString(2, pUUID.toString());
-            if (!ps.execute()) {
-                Objects.requireNonNull(Bukkit.getPlayer(pUUID)).kickPlayer("Account konnte nicht erstellt werden!"); // TODO add to language.yml
-                return;
-            }
+            ps.execute();
 
             playerData data = new playerData(pUUID);
             data.username = username;
