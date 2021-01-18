@@ -1,0 +1,8 @@
+name: ServerBasics
+version: 1.0
+main: de.minicraft.serverbasics
+authors: [EntenKoeniq]
+
+commands:
+  setgroup:
+    usage: /setgroup <USERNAME> <group>
