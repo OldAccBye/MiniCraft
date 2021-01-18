@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -23,13 +24,18 @@ public class playerApi {
             return;
         }
 
+        PreparedStatement ps = null;
+
         String username = p.getName();
 
         try {
-            PreparedStatement ps = database.getConnection().prepareStatement("INSERT INTO users SET username = ?, UUID = ?, perm_group = 'default'");
+            ps = database.getConnection().prepareStatement("INSERT INTO users SET username = ?, UUID = ?, perm_group = 'default'");
             ps.setString(1, username);
             ps.setString(2, pUUID.toString());
-            ps.execute();
+            if (!ps.execute()) {
+                Objects.requireNonNull(Bukkit.getPlayer(pUUID)).kickPlayer("Account konnte nicht erstellt werden!"); // TODO add to language.yml
+                return;
+            }
 
             playerData data = new playerData(pUUID);
             data.username = username;
@@ -38,6 +44,12 @@ public class playerApi {
             playerList.put(pUUID, data);
         } catch (SQLException e) {
             Bukkit.getLogger().severe("[DB][ERROR] " + e);
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                Bukkit.getLogger().severe("[playerApi->createUser][ERROR] " + e.getMessage());
+            }
         }
     }
 
@@ -76,10 +88,8 @@ public class playerApi {
         }
     }
 
-    public static playerData getPlayer(UUID UUID) {
-        if (!exists(UUID)) add(UUID);
-
-        return playerList.get(UUID);
+    public static playerData getPlayer(UUID pUUID) {
+        return (exists(pUUID) ? playerList.get(pUUID) : null);
     }
 
     public static void remove(UUID pUUID) { if (exists(pUUID)) playerList.remove(pUUID); }

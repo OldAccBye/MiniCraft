@@ -4,11 +4,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.minicraft.players.playerApi;
 import de.minicraft.players.playerPermissions;
+
+import java.util.Objects;
 
 public class player implements Listener {
     @EventHandler
@@ -16,13 +17,14 @@ public class player implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        playerPermissions.add(e.getPlayer().getUniqueId());
         playerApi.add(e.getPlayer().getUniqueId());
+        playerPermissions.add(e.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
-        playerApi.getPlayer(e.getPlayer().getUniqueId()).saveAll();
+        if (!playerApi.exists(e.getPlayer().getUniqueId())) return;
+        Objects.requireNonNull(playerApi.getPlayer(e.getPlayer().getUniqueId())).saveAll();
         playerPermissions.removeAll(e.getPlayer().getUniqueId());
         playerApi.remove(e.getPlayer().getUniqueId());
     }

@@ -1,7 +1,6 @@
 package de.minicraft.players;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.UUID;
@@ -23,7 +22,7 @@ public class playerData {
         permissions = Objects.requireNonNull(Bukkit.getPlayer(pUUID)).addAttachment(serverbasics.plugin);
     }
 
-    public boolean saveAll() {
+    public void saveAll() {
         PreparedStatement ps = null;
 
         try {
@@ -33,17 +32,14 @@ public class playerData {
 
             if (ps.executeUpdate() <= 0) {
                 ps.close();
-                return false;
             }
         } catch (SQLException e) {
             Bukkit.getLogger().severe("[DB][ERROR] " + e);
         } finally {
             try {
-                ps.close();
-                return true;
+                if (ps != null) ps.close();
             } catch (SQLException e) {
                 Bukkit.getLogger().severe("[playerData->saveAll][ERROR] " + e.getMessage());
-                return false;
             }
         }
     }

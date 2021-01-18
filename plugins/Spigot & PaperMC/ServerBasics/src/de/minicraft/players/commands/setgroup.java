@@ -3,6 +3,7 @@ package de.minicraft.players.commands;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -49,7 +50,7 @@ public class setgroup implements TabCompleter, CommandExecutor {
         }
 
         playerPermissions.removeAll(t.getUniqueId());
-        playerApi.getPlayer(t.getUniqueId()).group = args[1];
+        Objects.requireNonNull(playerApi.getPlayer(t.getUniqueId())).group = args[1];
         playerPermissions.add(t.getUniqueId());
 
         p.sendMessage(config.getLanguageText("setPlayerRank").replace("%username%", t.getName()) + args[1] + ".");

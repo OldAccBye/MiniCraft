@@ -34,7 +34,7 @@ public class chat implements Listener {
         });
 
         for (Player t : p.getWorld().getPlayers())
-            t.sendMessage(config.getLanguageText("prefix." + playerApi.getPlayer(p.getUniqueId()).group) + p.getName() + ": " + tempMsg);
+            t.sendMessage(config.getLanguageText("prefix." + Objects.requireNonNull(playerApi.getPlayer(p.getUniqueId())).group) + p.getName() + ": " + tempMsg);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
