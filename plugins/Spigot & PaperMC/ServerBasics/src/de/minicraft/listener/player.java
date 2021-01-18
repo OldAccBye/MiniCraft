@@ -22,12 +22,7 @@ public class player implements Listener {
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
-        playerPermissions.removeAll(e.getPlayer().getUniqueId());
-        playerApi.remove(e.getPlayer().getUniqueId());
-    }
-
-    @EventHandler
-    public void onPlayerKick(PlayerKickEvent e) {
+        playerApi.getPlayer(e.getPlayer().getUniqueId()).saveAll();
         playerPermissions.removeAll(e.getPlayer().getUniqueId());
         playerApi.remove(e.getPlayer().getUniqueId());
     }

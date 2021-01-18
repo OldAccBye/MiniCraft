@@ -1,7 +1,5 @@
 package de.minicraft.players.commands;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +12,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import de.minicraft.config;
-import de.minicraft.database;
 import de.minicraft.players.playerApi;
 import de.minicraft.players.playerPermissions;
 
@@ -49,19 +46,6 @@ public class setgroup implements TabCompleter, CommandExecutor {
         if (t == null) {
             p.sendMessage(config.getLanguageText("playerNotFound"));
             return false;
-        }
-
-        try {
-            PreparedStatement ps = database.getConnection().prepareStatement("UPDATE users SET perm_group = ? WHERE UUID = ? LIMIT 1");
-            ps.setString(1, args[1]);
-            ps.setString(2, t.getUniqueId().toString());
-
-            if (ps.executeUpdate() <= 0) {
-                p.sendMessage(config.getLanguageText("error"));
-                return false;
-            }
-        } catch (SQLException e) {
-            Bukkit.getLogger().severe("[DB][ERROR] " + e);
         }
 
         playerPermissions.removeAll(t.getUniqueId());

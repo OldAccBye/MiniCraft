@@ -45,10 +45,13 @@ public class playerApi {
         // Diese Funktion prüft ob dieser Spieler bereits eingetragen ist und wenn ja entfernt diese Funktion diesen Eintrag
         remove(pUUID);
 
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
-            PreparedStatement ps = database.getConnection().prepareStatement("SELECT * FROM users WHERE UUID = ?");
+            ps = database.getConnection().prepareStatement("SELECT * FROM users WHERE UUID = ?");
             ps.setString(1, pUUID.toString());
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (!rs.next()) {
                 // Benutzer nicht gefunden also brich hier ab und erstell einen neuen
@@ -63,6 +66,13 @@ public class playerApi {
             playerList.put(pUUID, data);
         } catch (SQLException e) {
             Bukkit.getLogger().severe("[DB][ERROR] " + e);
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                Bukkit.getLogger().severe("[playerApi->add][ERROR] " + e.getMessage());
+            }
         }
     }
 
