@@ -17,11 +17,7 @@ public class playerApi {
 
     public static void createUser(UUID pUUID) {
         Player p = Bukkit.getPlayer(pUUID);
-
-        if (p == null) {
-            Bukkit.getLogger().severe("[createUser][ERROR] player = null");
-            return;
-        }
+        if (p == null) return;
 
         PreparedStatement ps = null;
 
@@ -33,7 +29,7 @@ public class playerApi {
             ps.setString(2, pUUID.toString());
             ps.execute();
 
-            playerData data = new playerData(pUUID);
+            playerData data = new playerData(pUUID, "en_us");
             data.username = username;
             data.group = "default";
 
@@ -67,7 +63,7 @@ public class playerApi {
                 return;
             }
 
-            playerData data = new playerData(pUUID);
+            playerData data = new playerData(pUUID, rs.getString("language"));
             data.username = rs.getString("username");
             data.group = rs.getString("perm_group");
 
@@ -85,7 +81,15 @@ public class playerApi {
     }
 
     public static playerData getPlayer(UUID pUUID) {
-        return (exists(pUUID) ? playerList.get(pUUID) : null);
+        if (!exists(pUUID)) {
+            Player p = Bukkit.getPlayer(pUUID);
+            if (p == null) {
+                Bukkit.getLogger().severe("[playerApi->getPlayer][ERROR] player = null");
+                return null;
+            }
+        }
+
+        return playerList.get(pUUID);
     }
 
     public static void remove(UUID pUUID) { if (exists(pUUID)) playerList.remove(pUUID); }

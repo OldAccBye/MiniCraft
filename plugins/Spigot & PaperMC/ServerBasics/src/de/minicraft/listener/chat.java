@@ -28,13 +28,13 @@ public class chat implements Listener {
 
         p.getWorld().getPlayers().stream().filter(players -> tempMsg.contains("@" + p.getName())).forEach(players -> {
             //if (players.getName() != p.getName())
-            players.sendMessage(config.getLanguageText("playerHasBeenMarked").replace("%username%", p.getName()));
+            players.sendMessage(config.getLanguageText(p.getUniqueId(), "playerHasBeenMarked").replace("%username%", p.getName()));
 
             tempMsg = tempMsg.replace("@" + players.getName(), "§b@" + players.getName() + "§r");
         });
 
         for (Player t : p.getWorld().getPlayers())
-            t.sendMessage(config.getLanguageText("prefix." + Objects.requireNonNull(playerApi.getPlayer(p.getUniqueId())).group) + p.getName() + ": " + tempMsg);
+            t.sendMessage(config.getLanguageText(p.getUniqueId(), "prefix." + Objects.requireNonNull(playerApi.getPlayer(p.getUniqueId())).group) + p.getName() + ": " + tempMsg);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -46,14 +46,14 @@ public class chat implements Listener {
 
             if (!p.hasPermission(Objects.requireNonNull(config.commandList.getString(cmd)))) {
                 e.setCancelled(true);
-                p.sendMessage(config.getLanguageText("noPermission"));
+                p.sendMessage(config.getLanguageText(p.getUniqueId(), "noPermission"));
             }
 
             return;
         }
 
         e.setCancelled(true);
-        p.sendMessage(config.getLanguageText("cmdNotExists"));
+        p.sendMessage(config.getLanguageText(p.getUniqueId(), "cmdNotExists"));
     }
 
     @EventHandler

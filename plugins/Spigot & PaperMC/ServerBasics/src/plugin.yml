@@ -4,5 +4,7 @@ main: de.minicraft.serverbasics
 authors: [EntenKoeniq]
 
 commands:
+  setlanguage:
+    uage: /setlanguage <lang_lang>
   setgroup:
     usage: /setgroup <USERNAME> <group>

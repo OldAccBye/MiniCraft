@@ -45,7 +45,7 @@ public class setgroup implements TabCompleter, CommandExecutor {
 
         Player t = Bukkit.getPlayer(args[0]);
         if (t == null) {
-            p.sendMessage(config.getLanguageText("playerNotFound"));
+            p.sendMessage(config.getLanguageText(p.getUniqueId(), "playerNotFound"));
             return false;
         }
 
@@ -53,8 +53,8 @@ public class setgroup implements TabCompleter, CommandExecutor {
         Objects.requireNonNull(playerApi.getPlayer(t.getUniqueId())).group = args[1];
         playerPermissions.add(t.getUniqueId());
 
-        p.sendMessage(config.getLanguageText("setPlayerRank").replace("%username%", t.getName()) + args[1] + ".");
-        t.sendMessage(config.getLanguageText("getPlayerRank") + args[1] + ".");
+        p.sendMessage(config.getLanguageText(p.getUniqueId(), "setPlayerRank").replace("%username%", t.getName()) + args[1] + ".");
+        t.sendMessage(config.getLanguageText(p.getUniqueId(), "getPlayerRank") + args[1] + ".");
         return true;
     }
 }
