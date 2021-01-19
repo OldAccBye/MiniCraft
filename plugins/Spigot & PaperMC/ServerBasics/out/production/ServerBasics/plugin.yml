@@ -8,3 +8,5 @@ commands:
     uage: /setlanguage <lang_lang>
   setgroup:
     usage: /setgroup <USERNAME> <group>
+  build:
+    usage: /build

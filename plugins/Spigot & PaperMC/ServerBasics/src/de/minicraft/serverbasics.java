@@ -3,6 +3,7 @@ package de.minicraft;
 import de.minicraft.listener.block;
 import de.minicraft.listener.chat;
 import de.minicraft.listener.player;
+import de.minicraft.players.commands.build;
 import de.minicraft.players.commands.setgroup;
 import de.minicraft.players.commands.setlanguage;
 import org.bukkit.Bukkit;
@@ -84,6 +85,7 @@ public final class serverbasics extends JavaPlugin {
         /* ===== COMMANDS - START ===== */
         Objects.requireNonNull(plugin.getCommand("setlanguage")).setExecutor(new setlanguage());
         Objects.requireNonNull(plugin.getCommand("setgroup")).setExecutor(new setgroup());
+        Objects.requireNonNull(plugin.getCommand("build")).setExecutor(new build());
         /* ===== COMMANDS - END ===== */
 
         /* ===== LISTENER - START ===== */
