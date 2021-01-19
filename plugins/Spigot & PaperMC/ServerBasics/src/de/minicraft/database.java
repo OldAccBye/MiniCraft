@@ -4,7 +4,6 @@ import java.sql.*;
 
 public class database {
     private static Connection con = null;
-
     public static Connection getConnection() { return con; }
 
     public static boolean connect() throws SQLException, ClassNotFoundException {

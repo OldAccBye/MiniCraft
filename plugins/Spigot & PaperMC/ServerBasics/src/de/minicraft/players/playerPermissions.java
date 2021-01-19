@@ -36,6 +36,6 @@ public class playerPermissions {
         Bukkit.getLogger().warning("[Permissions] RemoveAll");
 
         for (String perm : config.permissionsList.getStringList(Objects.requireNonNull(playerApi.getPlayer(pUUID)).group))
-            Objects.requireNonNull(playerApi.getPlayer(pUUID)).permissions.setPermission(perm, false);
+            playerApi.getPlayer(pUUID).permissions.setPermission(perm, false);
     }
 }

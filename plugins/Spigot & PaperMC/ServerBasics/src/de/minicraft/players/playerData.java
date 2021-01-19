@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.Objects;
 import java.util.UUID;
 
-import de.minicraft.config;
 import de.minicraft.database;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.PermissionAttachment;

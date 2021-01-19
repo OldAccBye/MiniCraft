@@ -36,6 +36,7 @@ public class playerApi {
             playerList.put(pUUID, data);
         } catch (SQLException e) {
             Bukkit.getLogger().severe("[DB][ERROR] " + e);
+            p.kickPlayer("[ERROR-01] Please contact the support!");
         } finally {
             try {
                 if (ps != null) ps.close();
@@ -45,7 +46,7 @@ public class playerApi {
         }
     }
 
-    public static void add(UUID pUUID) {
+    public static void addUser(UUID pUUID) {
         // Diese Funktion prüft ob dieser Spieler bereits eingetragen ist und wenn ja entfernt diese Funktion diesen Eintrag
         remove(pUUID);
 
@@ -60,6 +61,8 @@ public class playerApi {
             if (!rs.next()) {
                 // Benutzer nicht gefunden also brich hier ab und erstell einen neuen
                 createUser(pUUID);
+                ps.close();
+                rs.close();
                 return;
             }
 
@@ -70,6 +73,9 @@ public class playerApi {
             playerList.put(pUUID, data);
         } catch (SQLException e) {
             Bukkit.getLogger().severe("[DB][ERROR] " + e);
+            Player p = Bukkit.getPlayer(pUUID);
+            if (p != null)
+                p.kickPlayer("[ERROR-02] Please contact the support!");
         } finally {
             try {
                 if (ps != null) ps.close();
@@ -83,10 +89,8 @@ public class playerApi {
     public static playerData getPlayer(UUID pUUID) {
         if (!exists(pUUID)) {
             Player p = Bukkit.getPlayer(pUUID);
-            if (p == null) {
-                Bukkit.getLogger().severe("[playerApi->getPlayer][ERROR] player = null");
-                return null;
-            }
+            if (p != null)
+                p.kickPlayer("[ERROR-03] Please contact the support!");
         }
 
         return playerList.get(pUUID);

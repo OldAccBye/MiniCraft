@@ -3,7 +3,6 @@ package de.minicraft.players.commands;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -39,18 +38,18 @@ public class setgroup implements TabCompleter, CommandExecutor {
         Player p = (Player) sender;
 
         if (!config.permissionsList.getKeys(true).contains(args[1])) {
-            p.sendMessage("Diese Gruppe existiert nicht!"); // TODO in die language.yml hinzufügen
+            p.sendMessage(config.getLanguageText(p.getUniqueId(), "groupNotExists"));
             return false;
         }
 
-        Player t = Bukkit.getPlayer(args[0]);
+        Player t = Bukkit.getPlayerExact(args[0]);
         if (t == null) {
             p.sendMessage(config.getLanguageText(p.getUniqueId(), "playerNotFound"));
             return false;
         }
 
         playerPermissions.removeAll(t.getUniqueId());
-        Objects.requireNonNull(playerApi.getPlayer(t.getUniqueId())).group = args[1];
+        playerApi.getPlayer(t.getUniqueId()).group = args[1];
         playerPermissions.add(t.getUniqueId());
 
         p.sendMessage(config.getLanguageText(p.getUniqueId(), "setPlayerRank").replace("%username%", t.getName()) + args[1] + ".");

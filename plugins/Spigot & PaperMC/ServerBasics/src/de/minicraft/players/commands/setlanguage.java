@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class setlanguage implements TabCompleter, CommandExecutor {
     @Override
@@ -31,7 +30,7 @@ public class setlanguage implements TabCompleter, CommandExecutor {
             return false;
         }
 
-        Objects.requireNonNull(playerApi.getPlayer(p.getUniqueId())).language = args[0];
+        playerApi.getPlayer(p.getUniqueId()).language = args[0];
         p.sendMessage(config.getLanguageText(p.getUniqueId(), "languageChanged"));
 
         return true;
