@@ -1,5 +1,6 @@
 package de.minicraft.listener;
 
+import de.minicraft.database;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
@@ -15,10 +16,14 @@ public class player implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
+        if (!database.isConnected()) {
+            e.getPlayer().kickPlayer("[ERROR-05] Please contact support.");
+            return;
+        }
         playerApi.addUser(e.getPlayer().getUniqueId());
         playerPermissions.add(e.getPlayer().getUniqueId());
         e.getPlayer().sendMessage("This is a test server for programming open source Spigot plugins!");
-        e.getPlayer().sendMessage("Your language has been set to: " + playerApi.getPlayer(e.getPlayer().getUniqueId()).language + ". You can set your language with /setlanguage <lang_lang>");
+        e.getPlayer().sendMessage("§3§l[§2SERVER§3§l] §aYour language has been set to: " + playerApi.getPlayer(e.getPlayer().getUniqueId()).language + ". You can set your language with /setlanguage <lang_lang>");
     }
 
     @EventHandler

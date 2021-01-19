@@ -21,16 +21,19 @@ public class playerApi {
 
         PreparedStatement ps = null;
 
-        String username = p.getName();
-
         try {
-            ps = database.getConnection().prepareStatement("INSERT INTO users SET username = ?, UUID = ?, perm_group = 'default'");
-            ps.setString(1, username);
+            ps = database.con.prepareStatement("INSERT INTO users SET username = ?, UUID = ?, perm_group = 'default'");
+            ps.setString(1, p.getName());
             ps.setString(2, pUUID.toString());
-            ps.execute();
+            if (ps.executeUpdate() == 0) {
+                ps.close();
+                p.kickPlayer("[ERROR-04] Please contact the support!");
+                Bukkit.getLogger().severe("[playerApi->createUser][ERROR] Player could not be created!");
+                return;
+            }
 
             playerData data = new playerData(pUUID, "en_us");
-            data.username = username;
+            data.username = p.getName();
             data.group = "default";
 
             playerList.put(pUUID, data);
@@ -54,15 +57,15 @@ public class playerApi {
         ResultSet rs = null;
 
         try {
-            ps = database.getConnection().prepareStatement("SELECT * FROM users WHERE UUID = ?");
+            ps = database.con.prepareStatement("SELECT * FROM users WHERE UUID = ? LIMIT 1");
             ps.setString(1, pUUID.toString());
             rs = ps.executeQuery();
 
             if (!rs.next()) {
                 // Benutzer nicht gefunden also brich hier ab und erstell einen neuen
-                createUser(pUUID);
-                ps.close();
                 rs.close();
+                ps.close();
+                createUser(pUUID);
                 return;
             }
 
@@ -78,8 +81,8 @@ public class playerApi {
                 p.kickPlayer("[ERROR-02] Please contact the support!");
         } finally {
             try {
-                if (ps != null) ps.close();
                 if (rs != null) rs.close();
+                if (ps != null) ps.close();
             } catch (SQLException e) {
                 Bukkit.getLogger().severe("[playerApi->add][ERROR] " + e.getMessage());
             }

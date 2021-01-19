@@ -1,13 +1,14 @@
 package de.minicraft;
 
+import org.bukkit.Bukkit;
+
 import java.sql.*;
 
 public class database {
-    private static Connection con = null;
-    public static Connection getConnection() { return con; }
+    public static Connection con;
 
     public static boolean connect() throws SQLException, ClassNotFoundException {
-        if (isConnected()) return true;
+        if (con != null && !con.isClosed()) return true;
 
         String host = config.config.getString("mysql.host"),
                 database = config.config.getString("mysql.database"),
@@ -22,12 +23,18 @@ public class database {
     }
 
     public static boolean disconnect() throws SQLException {
-        if (!isConnected()) return true;
+        if (con != null && !con.isClosed())
+            con.close();
 
-        con.close();
-
-        return con == null;
+        return true;
     }
 
-    public static boolean isConnected() { return (con != null); }
+    public static boolean isConnected() {
+        try {
+            return con != null && !con.isClosed();
+        } catch (SQLException e) {
+            Bukkit.getLogger().severe("[database-isConnected][ERROR] " + e.getMessage());
+            return false;
+        }
+    }
 }

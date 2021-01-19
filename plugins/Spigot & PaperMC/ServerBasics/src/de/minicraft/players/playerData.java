@@ -28,13 +28,14 @@ public class playerData {
         PreparedStatement ps = null;
 
         try {
-            ps = database.getConnection().prepareStatement("UPDATE users SET perm_group = ?, language = ? WHERE UUID = ? LIMIT 1");
+            ps = database.con.prepareStatement("UPDATE users SET perm_group = ?, language = ? WHERE UUID = ? LIMIT 1");
             ps.setString(1, this.group);
             ps.setString(2, this.language);
             ps.setString(3, this.pUUID.toString());
 
-            if (ps.executeUpdate() <= 0) {
+            if (ps.executeUpdate() == 0) {
                 ps.close();
+                Bukkit.getLogger().severe("[playerData->saveAll][ERROR] Player " + this.username + " could not be saved!");
             }
         } catch (SQLException e) {
             Bukkit.getLogger().severe("[DB][ERROR] " + e);
