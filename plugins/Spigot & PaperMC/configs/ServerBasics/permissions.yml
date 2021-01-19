@@ -1,0 +1,10 @@
+default:
+  - minicraft.commands.setlanguage
+premium:
+  - minicraft.commands.setlanguage
+supporter:
+  - minicraft.commands.setlanguage
+admin:
+  - minicraft.commands.setlanguage
+  - minicraft.commands.setgroup
+  - minicraft.commands.build

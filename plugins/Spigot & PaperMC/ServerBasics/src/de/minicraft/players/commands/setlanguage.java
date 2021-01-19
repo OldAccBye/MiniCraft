@@ -26,7 +26,7 @@ public class setlanguage implements TabCompleter, CommandExecutor {
         Player p = (Player) sender;
 
         if (args.length != 1) {
-            p.sendMessage("/setlanguage <lang_lang>");
+            p.sendMessage("/setlanguage <lang>");
             return false;
         }
 

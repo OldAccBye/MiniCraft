@@ -23,7 +23,7 @@ public class player implements Listener {
         playerApi.addUser(e.getPlayer().getUniqueId());
         playerPermissions.add(e.getPlayer().getUniqueId());
         e.getPlayer().sendMessage("This is a test server for programming open source Spigot plugins!");
-        e.getPlayer().sendMessage("§3§l[§2SERVER§3§l] §aYour language has been set to: " + playerApi.getPlayer(e.getPlayer().getUniqueId()).language + ". You can set your language with /setlanguage <lang_lang>");
+        e.getPlayer().sendMessage("§3§l[§2SERVER§3§l] §aYour language has been set to: " + playerApi.getPlayer(e.getPlayer().getUniqueId()).language + ". You can set your language with /setlanguage <lang>");
     }
 
     @EventHandler
