@@ -1,5 +1,6 @@
 package de.minicraft;
 
+import de.minicraft.listener.block;
 import de.minicraft.listener.chat;
 import de.minicraft.listener.player;
 import de.minicraft.players.commands.setgroup;
@@ -87,6 +88,7 @@ public final class serverbasics extends JavaPlugin {
 
         /* ===== LISTENER - START ===== */
         getServer().getPluginManager().registerEvents(new player(), this);
+        getServer().getPluginManager().registerEvents(new block(), this);
         getServer().getPluginManager().registerEvents(new chat(), this);
         /* ===== LISTENER - END ===== */
 

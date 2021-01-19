@@ -1,6 +1,5 @@
 package de.minicraft.players;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -17,12 +16,9 @@ public class playerPermissions {
             return;
         }
 
-        /*
-         * Setzt dem Spieler die neuen vorgegebenen Permissions aus "permissionsList" und wählt die anhand
-         * von der Gruppe des Spielers.
-         */
-        for (String perm : config.permissionsList.getStringList(Objects.requireNonNull(playerApi.getPlayer(pUUID)).group))
-            Objects.requireNonNull(playerApi.getPlayer(pUUID)).permissions.setPermission(perm, true);
+        // Setzt dem Spieler die neuen vorgegebenen Permissions aus "permissionsList" und wählt die anhand von der Gruppe des Spielers.
+        for (String perm : config.permissionsList.getStringList(playerApi.getPlayer(pUUID).group))
+            playerApi.getPlayer(pUUID).permissions.setPermission(perm, true);
     }
 
     public static void removeAll(UUID pUUID) {
@@ -33,9 +29,8 @@ public class playerPermissions {
             return;
         }
 
-        Bukkit.getLogger().warning("[Permissions] RemoveAll");
-
-        for (String perm : config.permissionsList.getStringList(Objects.requireNonNull(playerApi.getPlayer(pUUID)).group))
+        // Entfernt alle Permissions von diesem Spieler indem alle Permissions aus der jetzigen Gruppe auf "false" gesetzt werden.
+        for (String perm : config.permissionsList.getStringList(playerApi.getPlayer(pUUID).group))
             playerApi.getPlayer(pUUID).permissions.setPermission(perm, false);
     }
 }
