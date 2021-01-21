@@ -3,6 +3,9 @@ package de.minicraft.players;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.mongodb.MongoException;
+import com.mongodb.client.model.Filters;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.PermissionAttachment;
 
@@ -22,6 +25,21 @@ public class playerData {
     }
 
     public void saveAll() {
-        Bukkit.getLogger().info("Player " + this.username + " saved!");
+        try {
+            Document found = serverbasics.mongo.players.find(Filters.eq("UUID", this.pUUID.toString())).first();
+
+            if (found == null) {
+                Bukkit.getLogger().severe("[playerData->saveAll] Player " + this.username + " not found!");
+                return;
+            }
+
+            Document update = new Document("$set", new Document("username", this.username)
+                    .append("perm_group", this.group)
+                    .append("language", this.language));
+
+            serverbasics.mongo.players.findOneAndUpdate(found, update);
+        } catch (MongoException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,6 +1,5 @@
 package de.minicraft.listener;
 
-import de.minicraft.mongoManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,9 +17,8 @@ public class player implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         playerApi.addUser(e.getPlayer().getUniqueId());
-        Bukkit.getLogger().info("STEP 1");
         playerPermissions.add(e.getPlayer().getUniqueId());
-        e.getPlayer().sendMessage("This is a test server for programming open source Spigot plugins!");
+        e.getPlayer().sendMessage("This is a test server!");
         e.getPlayer().sendMessage("§3§l[§2SERVER§3§l] §aYour language has been set to: " + playerApi.getPlayer(e.getPlayer().getUniqueId()).language + ". You can set your language with /setlanguage <lang>");
     }
 

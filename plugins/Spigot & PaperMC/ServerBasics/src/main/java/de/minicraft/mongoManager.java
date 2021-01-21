@@ -1,5 +1,6 @@
 package de.minicraft;
 
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -15,7 +16,7 @@ public class mongoManager {
             MongoClient mongoClient = MongoClients.create("mongodb+srv://miniuser:minipass@minicraft.kxkh9.mongodb.net/");
             MongoDatabase mongoDatabase = mongoClient.getDatabase("MiniCraft");
             this.players = mongoDatabase.getCollection("players");
-        } catch (Exception e) {
+        } catch (MongoException e) {
             e.printStackTrace();
             Bukkit.getServer().shutdown();
         }

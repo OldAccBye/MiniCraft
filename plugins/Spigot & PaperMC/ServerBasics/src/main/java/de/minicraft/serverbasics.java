@@ -70,7 +70,6 @@ public final class serverbasics extends JavaPlugin {
         }
 
         /* ===== DATABASE - START ===== */
-        super.getLogger().info(">>>>> [DB] Verbindung wird hergestellt... <<<<<");
         mongo.connect();
         /* ===== DATABASE - END ===== */
 

@@ -3,6 +3,7 @@ package de.minicraft.players;
 import java.util.HashMap;
 import java.util.UUID;
 
+import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.model.Filters;
 import de.minicraft.serverbasics;
@@ -15,14 +16,25 @@ public class playerApi {
     // Eine Liste an Spieler welche sich mit einem Server verbunden haben
     private static final HashMap<UUID, playerData> playerList = new HashMap<>();
 
-    public static void createUser(UUID pUUID, String username) {
-        serverbasics.mongo.players.insertOne(new Document("username", username)
-                .append("UUID", pUUID.toString())
-                .append("perm_group", "default")
-                .append("language", "en"));
+    public static void createUser(UUID pUUID, Player p) {
+        try {
+            serverbasics.mongo.players.insertOne(new Document("username", p.getName())
+                    .append("UUID", pUUID.toString())
+                    .append("perm_group", "default")
+                    .append("language", "en"));
+        } catch (MongoWriteException e) {
+            e.printStackTrace();
+            p.kickPlayer("[playerApi][addUser] Player could not be saved.");
+            return;
+        } catch (MongoException e) {
+            e.printStackTrace();
+            p.kickPlayer("[playerApi][addUser] Something went wrong.");
+            return;
+        }
+
 
         playerData data = new playerData(pUUID, "en");
-        data.username = username;
+        data.username = p.getName();
         data.group = "default";
         playerList.put(pUUID, data);
     }
@@ -40,17 +52,17 @@ public class playerApi {
             playerDoc = serverbasics.mongo.players.find(Filters.eq("UUID", pUUID.toString())).first();
 
             if (playerDoc == null) {
-                createUser(pUUID, p.getName());
+                createUser(pUUID, p);
                 return;
             }
-        } catch (MongoWriteException e) {
+        } catch (MongoException e) {
             e.printStackTrace();
             p.kickPlayer("[playerApi][addUser] Something went wrong.");
             return;
         }
 
         playerData data = new playerData(pUUID, playerDoc.getString("language"));
-        data.username = playerDoc.getString("username");
+        data.username = p.getName();
         data.group = playerDoc.getString("perm_group");
         playerList.put(pUUID, data);
     }
