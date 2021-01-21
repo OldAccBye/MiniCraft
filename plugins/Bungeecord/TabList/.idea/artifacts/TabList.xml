@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="TabList">
-    <output-path>E:/MiniCraft/plugins/build/bungeecord</output-path>
-    <root id="archive" name="TabList.jar">
-      <element id="module-output" name="TabList" />
-    </root>
-  </artifact>
-</component>

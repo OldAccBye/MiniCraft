@@ -1,0 +1,7 @@
+name: BungeeSystem
+version: ${project.version}
+main: de.minicraft.BungeeSystem
+
+commands:
+  hub:
+    usage: /hub
