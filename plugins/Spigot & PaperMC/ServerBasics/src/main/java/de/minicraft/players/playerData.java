@@ -26,7 +26,7 @@ public class playerData {
 
     public void saveAll() {
         try {
-            Document found = serverbasics.mongo.players.find(Filters.eq("UUID", this.pUUID.toString())).first();
+            Document found = serverbasics.mongo.collections.get("players").find(Filters.eq("UUID", this.pUUID.toString())).first();
 
             if (found == null) {
                 Bukkit.getLogger().severe("[playerData->saveAll] Player " + this.username + " not found!");
@@ -37,7 +37,7 @@ public class playerData {
                     .append("perm_group", this.group)
                     .append("language", this.language));
 
-            serverbasics.mongo.players.findOneAndUpdate(found, update);
+            serverbasics.mongo.collections.get("players").findOneAndUpdate(found, update);
         } catch (MongoException e) {
             e.printStackTrace();
         }

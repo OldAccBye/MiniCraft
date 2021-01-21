@@ -18,7 +18,7 @@ public class playerApi {
 
     public static void createUser(UUID pUUID, Player p) {
         try {
-            serverbasics.mongo.players.insertOne(new Document("username", p.getName())
+            serverbasics.mongo.collections.get("players").insertOne(new Document("username", p.getName())
                     .append("UUID", pUUID.toString())
                     .append("perm_group", "default")
                     .append("language", "en"));
@@ -49,7 +49,7 @@ public class playerApi {
         Document playerDoc;
 
         try {
-            playerDoc = serverbasics.mongo.players.find(Filters.eq("UUID", pUUID.toString())).first();
+            playerDoc = serverbasics.mongo.collections.get("players").find(Filters.eq("UUID", pUUID.toString())).first();
 
             if (playerDoc == null) {
                 createUser(pUUID, p);
