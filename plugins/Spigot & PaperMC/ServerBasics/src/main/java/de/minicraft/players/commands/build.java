@@ -14,9 +14,9 @@ public class build implements CommandExecutor {
         Player p = (Player) sender;
 
         if (p.hasPermission("minicraft.blockbreak"))
-            playerApi.getPlayer(p.getUniqueId()).permissions.setPermission("minicraft.blockbreak", false);
+            playerApi.get(p.getUniqueId()).permissions.setPermission("minicraft.blockbreak", false);
         else
-            playerApi.getPlayer(p.getUniqueId()).permissions.setPermission("minicraft.blockbreak", true);
+            playerApi.get(p.getUniqueId()).permissions.setPermission("minicraft.blockbreak", true);
 
         return true;
     }

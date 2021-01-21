@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 
 import de.minicraft.config;
 import de.minicraft.players.playerApi;
-import de.minicraft.players.playerPermissions;
 
 public class setgroup implements TabCompleter, CommandExecutor {
     @Override
@@ -48,9 +47,9 @@ public class setgroup implements TabCompleter, CommandExecutor {
             return false;
         }
 
-        playerPermissions.removeAll(t.getUniqueId());
-        playerApi.getPlayer(t.getUniqueId()).group = args[1];
-        playerPermissions.add(t.getUniqueId());
+        playerApi.removeAllPerm(t.getUniqueId());
+        playerApi.get(t.getUniqueId()).group = args[1];
+        playerApi.addAllPerm(t.getUniqueId());
 
         p.sendMessage(config.getLanguageText(p.getUniqueId(), "setPlayerRank").replace("%username%", t.getName()) + args[1] + ".");
         t.sendMessage(config.getLanguageText(p.getUniqueId(), "getPlayerRank") + args[1] + ".");

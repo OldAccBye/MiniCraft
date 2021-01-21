@@ -16,5 +16,5 @@ public class config {
     public static void setCommandList(Configuration data) { commandList = data; }
     public static void setPermissionsList(Configuration data) { permissionsList = data; }
 
-    public static String getLanguageText(UUID pUUID, String data) { return language.getString(playerApi.getPlayer(pUUID).language + "." + data); }
+    public static String getLanguageText(UUID pUUID, String data) { return language.getString(playerApi.get(pUUID).language + "." + data); }
 }

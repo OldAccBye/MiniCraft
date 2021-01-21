@@ -21,21 +21,16 @@ public class setlanguage implements TabCompleter, CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player) || args.length != 1) return false;
 
         Player p = (Player) sender;
-
-        if (args.length != 1) {
-            p.sendMessage("/setlanguage <lang>");
-            return false;
-        }
 
         if (!config.language.getKeys(true).contains(args[0])) {
             p.sendMessage(config.getLanguageText(p.getUniqueId(), "languageNotFound"));
             return false;
         }
 
-        playerApi.getPlayer(p.getUniqueId()).language = args[0];
+        playerApi.get(p.getUniqueId()).language = args[0];
         p.sendMessage(config.getLanguageText(p.getUniqueId(), "languageChanged"));
 
         return true;
