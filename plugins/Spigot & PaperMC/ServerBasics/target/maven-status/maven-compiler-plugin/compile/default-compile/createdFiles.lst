@@ -1,0 +1,12 @@
+de\minicraft\players\playerData.class
+de\minicraft\mongoManager.class
+de\minicraft\players\playerPermissions.class
+de\minicraft\players\commands\setlanguage.class
+de\minicraft\listener\chat.class
+de\minicraft\players\playerApi.class
+de\minicraft\serverbasics.class
+de\minicraft\players\commands\setgroup.class
+de\minicraft\config.class
+de\minicraft\listener\player.class
+de\minicraft\players\commands\build.class
+de\minicraft\listener\block.class

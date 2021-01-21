@@ -1,0 +1,13 @@
+name: ServerBasics
+version: 1.0
+api-version: 1.16
+main: de.minicraft.serverbasics
+author: EntenKoeniq
+
+commands:
+  setlanguage:
+    uage: /setlanguage <lang>
+  setgroup:
+    usage: /setgroup <USERNAME> <group>
+  build:
+    usage: /build
