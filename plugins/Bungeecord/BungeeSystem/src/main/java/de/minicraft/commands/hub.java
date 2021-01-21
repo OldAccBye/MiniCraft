@@ -8,7 +8,7 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class hub extends Command {
     public hub() {
-        super("hub", "minicraft.commands.hub", "lobby");
+        super("hub", "", "lobby");
     }
 
     @Override

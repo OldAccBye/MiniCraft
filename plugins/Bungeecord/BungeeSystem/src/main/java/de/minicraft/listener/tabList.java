@@ -14,11 +14,17 @@ public class tabList implements Listener {
     public void onServerSwitch(ServerSwitchEvent e) {
         try {
             ProxyServer.getInstance().getScheduler().schedule(BungeeSystem.plugin, () -> {
+                int cPP = e.getPlayer().getPing();
+                String cPPT = "§7" + cPP;
+                if (cPP >= 135) cPPT = "§c" + cPP;
+                else if (cPP > 75) cPPT = "§e" + cPP;
+
                 String header = " §b§l§m------§7§l§m[--§6 §lMini§2§lCraft §7§l§m--]§b§l§m------§r \n"
-                        + "§aServer: §7" + e.getPlayer().getServer().getInfo().getName();
+                        + "§aServer: §7" + e.getPlayer().getServer().getInfo().getName() + " §f| "
+                        + "§aPing: " + cPPT;
                 String footer =  " §r§7§l§m--------------------------§r \n " + ProxyServer.getInstance().getOnlineCount() + "/100 Online ";
                 e.getPlayer().setTabHeader(new TextComponent(header), new TextComponent(footer));
-            }, 1, TimeUnit.SECONDS);
+            }, 0, 1, TimeUnit.SECONDS);
         } catch (Exception err) {
             err.printStackTrace();
         }
