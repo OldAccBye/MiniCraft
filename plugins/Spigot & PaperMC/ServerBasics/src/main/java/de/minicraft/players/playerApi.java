@@ -1,5 +1,7 @@
 package de.minicraft.players;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -22,26 +24,36 @@ public class playerApi {
             serverBasics.mongo.collections.get("players").insertOne(new Document("username", p.getName())
                     .append("UUID", pUUID.toString())
                     .append("perm_group", "default")
-                    .append("language", "en"));
+                    .append("language", "en")
+                    .append("banned", false)
+                    .append("banSince", 0)
+                    .append("banExpires", 0)
+                    .append("banReason", "")
+                    .append("bannedFrom", ""));
         } catch (MongoWriteException e) {
             e.printStackTrace();
-            p.kickPlayer("[playerApi][addUser] Player could not be saved.");
+            p.kickPlayer("[playerApi->register] Player could not be saved.");
             return;
         } catch (MongoException e) {
             e.printStackTrace();
-            p.kickPlayer("[playerApi][addUser] Something went wrong.");
+            p.kickPlayer("[playerApi->register] Something went wrong.");
             return;
         }
 
         playerData data = new playerData(pUUID, "en");
         data.username = p.getName();
         data.group = "default";
+        data.banned = false;
+        data.banSince = 0L;
+        data.banExpires = 0L;
+        data.banReason = "";
+        data.bannedFrom = "";
         playerList.put(pUUID, data);
     }
 
-    public static void login(UUID pUUID) {
+    public static boolean login(UUID pUUID) {
         Player p = Bukkit.getPlayer(pUUID);
-        if (p == null) return;
+        if (p == null) return false;
 
         // Diese Funktion prüft ob dieser Spieler bereits eingetragen ist und wenn ja entfernt diese Funktion diesen Eintrag
         logout(pUUID);
@@ -53,18 +65,39 @@ public class playerApi {
 
             if (playerDoc == null) {
                 register(pUUID, p);
-                return;
+                return true;
             }
         } catch (MongoException e) {
             e.printStackTrace();
-            p.kickPlayer("[playerApi][addUser] Something went wrong.");
-            return;
+            p.kickPlayer("[playerApi->login] Something went wrong.");
+            return false;
+        }
+
+        if (playerDoc.getBoolean("banned")) {
+            Date date = new Date();
+            Long currentDateTime = date.getTime();
+            if (playerDoc.getLong("banExpires") > currentDateTime) {
+                p.kickPlayer("§cYou have been banned from this network." +
+                        "\n\nTime zone §7>>§f Europe/Berlin" +
+                        "\n§cDate and time §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentDateTime) +
+                        "\n§cBanned until §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(playerDoc.getLong("banExpires")) +
+                        "\n§cReason §7>>§f " + playerDoc.getString("banReason") +
+                        "\n§cBanned from §7>>§f " + playerDoc.getString("bannedFrom"));
+                return false;
+            }
         }
 
         playerData data = new playerData(pUUID, playerDoc.getString("language"));
         data.username = p.getName();
         data.group = playerDoc.getString("perm_group");
+        data.banned = false;
+        data.banSince = 0L;
+        data.banExpires = 0L;
+        data.banReason = "";
+        data.bannedFrom = "";
         playerList.put(pUUID, data);
+
+        return true;
     }
 
     public static playerData get(UUID pUUID) {

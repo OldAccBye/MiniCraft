@@ -13,9 +13,9 @@ import de.minicraft.serverBasics;
 
 public class playerData {
     public UUID pUUID;
-    public String username;
-    public String language;
-    public String group;
+    public String username, language, group, banReason, bannedFrom;
+    public Boolean banned;
+    public Long banSince, banExpires;
     public PermissionAttachment permissions;
 
     playerData(UUID pUUID, String language) {
@@ -35,7 +35,12 @@ public class playerData {
 
             Document update = new Document("$set", new Document("username", this.username)
                     .append("perm_group", this.group)
-                    .append("language", this.language));
+                    .append("language", this.language)
+                    .append("banned", this.banned)
+                    .append("banSince", this.banSince)
+                    .append("banExpires", this.banExpires)
+                    .append("banReason", this.banReason)
+                    .append("bannedFrom", this.bannedFrom));
 
             serverBasics.mongo.collections.get("players").findOneAndUpdate(found, update);
         } catch (MongoException e) {
