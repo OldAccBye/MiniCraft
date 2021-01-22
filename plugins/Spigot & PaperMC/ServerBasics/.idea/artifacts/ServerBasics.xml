@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="ServerBasics">
-    <output-path>E:/MiniCraft/plugins/build/spigot</output-path>
-    <root id="archive" name="ServerBasics.jar">
-      <element id="module-output" name="ServerBasics" />
-    </root>
-  </artifact>
-</component>

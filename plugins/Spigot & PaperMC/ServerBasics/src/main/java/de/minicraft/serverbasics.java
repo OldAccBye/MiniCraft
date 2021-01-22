@@ -13,8 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.Objects;
 
-public final class serverbasics extends JavaPlugin {
-    public static serverbasics plugin;
+public final class serverBasics extends JavaPlugin {
+    public static serverBasics plugin;
     public static mongoManager mongo = new mongoManager();
 
     @Override

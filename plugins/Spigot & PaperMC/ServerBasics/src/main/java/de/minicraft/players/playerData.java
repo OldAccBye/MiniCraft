@@ -9,7 +9,7 @@ import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.PermissionAttachment;
 
-import de.minicraft.serverbasics;
+import de.minicraft.serverBasics;
 
 public class playerData {
     public UUID pUUID;
@@ -21,12 +21,12 @@ public class playerData {
     playerData(UUID pUUID, String language) {
         this.pUUID = pUUID;
         this.language = language;
-        this.permissions = Objects.requireNonNull(Bukkit.getPlayer(pUUID)).addAttachment(serverbasics.plugin);
+        this.permissions = Objects.requireNonNull(Bukkit.getPlayer(pUUID)).addAttachment(serverBasics.plugin);
     }
 
     public void saveAll() {
         try {
-            Document found = serverbasics.mongo.collections.get("players").find(Filters.eq("UUID", this.pUUID.toString())).first();
+            Document found = serverBasics.mongo.collections.get("players").find(Filters.eq("UUID", this.pUUID.toString())).first();
 
             if (found == null) {
                 Bukkit.getLogger().severe("[playerData->saveAll] Player " + this.username + " not found!");
@@ -37,7 +37,7 @@ public class playerData {
                     .append("perm_group", this.group)
                     .append("language", this.language));
 
-            serverbasics.mongo.collections.get("players").findOneAndUpdate(found, update);
+            serverBasics.mongo.collections.get("players").findOneAndUpdate(found, update);
         } catch (MongoException e) {
             e.printStackTrace();
         }

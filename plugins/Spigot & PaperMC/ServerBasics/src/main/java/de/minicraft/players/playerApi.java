@@ -7,7 +7,7 @@ import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.model.Filters;
 import de.minicraft.config;
-import de.minicraft.serverbasics;
+import de.minicraft.serverBasics;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 
@@ -19,7 +19,7 @@ public class playerApi {
 
     private static void register(UUID pUUID, Player p) {
         try {
-            serverbasics.mongo.collections.get("players").insertOne(new Document("username", p.getName())
+            serverBasics.mongo.collections.get("players").insertOne(new Document("username", p.getName())
                     .append("UUID", pUUID.toString())
                     .append("perm_group", "default")
                     .append("language", "en"));
@@ -49,7 +49,7 @@ public class playerApi {
         Document playerDoc;
 
         try {
-            playerDoc = serverbasics.mongo.collections.get("players").find(Filters.eq("UUID", pUUID.toString())).first();
+            playerDoc = serverBasics.mongo.collections.get("players").find(Filters.eq("UUID", pUUID.toString())).first();
 
             if (playerDoc == null) {
                 register(pUUID, p);
