@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 
 public class playerApi {
     // Eine Liste an Spieler welche sich mit einem Server verbunden haben
-    private static final HashMap<UUID, playerData> playerList = new HashMap<>();
+    public static final HashMap<UUID, playerData> playerList = new HashMap<>();
 
     private static void register(UUID pUUID, Player p) {
         try {
@@ -101,17 +101,17 @@ public class playerApi {
     }
 
     public static playerData get(UUID pUUID) {
-        if (!exists(pUUID)) {
+        if (!playerList.containsKey(pUUID)) {
             Player p = Bukkit.getPlayer(pUUID);
             if (p != null)
                 p.kickPlayer("[ERROR-03] Please contact the support!");
+            return null;
         }
 
         return playerList.get(pUUID);
     }
 
-    public static void logout(UUID pUUID) { if (exists(pUUID)) playerList.remove(pUUID); }
-    public static boolean exists(UUID pUUID) { return playerList.containsKey(pUUID); }
+    public static void logout(UUID pUUID) { playerList.remove(pUUID); }
 
     public static void addAllPerm(UUID pUUID) {
         Player p = Bukkit.getPlayer(pUUID);
@@ -121,9 +121,15 @@ public class playerApi {
             return;
         }
 
+        playerData pData = get(pUUID);
+        if (pData == null) {
+            p.kickPlayer("Player data missing. Try to login again.");
+            return;
+        }
+
         // Setzt dem Spieler die neuen vorgegebenen Permissions aus "permissionsList" und wählt die anhand von der Gruppe des Spielers.
-        for (String perm : config.permissionsList.getStringList(get(pUUID).group))
-            get(pUUID).permissions.setPermission(perm, true);
+        for (String perm : config.permissionsList.getStringList(pData.group))
+            pData.permissions.setPermission(perm, true);
     }
 
     public static void removeAllPerm(UUID pUUID) {
@@ -134,8 +140,14 @@ public class playerApi {
             return;
         }
 
+        playerData pData = get(pUUID);
+        if (pData == null) {
+            p.kickPlayer("Player data missing. Try to login again.");
+            return;
+        }
+
         // Entfernt alle Permissions von diesem Spieler indem alle Permissions aus der jetzigen Gruppe auf "false" gesetzt werden.
-        for (String perm : config.permissionsList.getStringList(get(pUUID).group))
-            get(pUUID).permissions.setPermission(perm, false);
+        for (String perm : config.permissionsList.getStringList(pData.group))
+            pData.permissions.setPermission(perm, false);
     }
 }

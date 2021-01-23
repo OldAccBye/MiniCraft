@@ -2,6 +2,7 @@ package de.minicraft.players.commands;
 
 import de.minicraft.config;
 import de.minicraft.players.playerApi;
+import de.minicraft.players.playerData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,12 +26,18 @@ public class setlanguage implements TabCompleter, CommandExecutor {
 
         Player p = (Player) sender;
 
+        playerData pData = playerApi.get(p.getUniqueId());
+        if (pData == null) {
+            p.kickPlayer("Player data missing. Try to login again.");
+            return false;
+        }
+
         if (!config.language.getKeys(true).contains(args[0])) {
             p.sendMessage(config.getLanguageText(p.getUniqueId(), "languageNotFound"));
             return false;
         }
 
-        playerApi.get(p.getUniqueId()).language = args[0];
+        pData.language = args[0];
         p.sendMessage(config.getLanguageText(p.getUniqueId(), "languageChanged"));
 
         return true;

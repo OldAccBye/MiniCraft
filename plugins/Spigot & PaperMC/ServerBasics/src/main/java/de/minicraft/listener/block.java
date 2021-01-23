@@ -2,6 +2,7 @@ package de.minicraft.listener;
 
 import de.minicraft.config;
 import de.minicraft.players.playerApi;
+import de.minicraft.players.playerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +14,13 @@ public class block implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
+
+        playerData pData = playerApi.get(p.getUniqueId());
+        if (pData == null) {
+            p.kickPlayer("Player data missing. Try to login again.");
+            return;
+        }
+
         if (!p.hasPermission("minicraft.blockbreak")) {
             e.setCancelled(true);
 
@@ -20,26 +28,31 @@ public class block implements Listener {
             long currentDateTime = date.getTime();
 
             // 3000 = 3 Sekunden
-            if (playerApi.get(p.getUniqueId()).blockBreakEventTimestamp == null
-                    || currentDateTime > (playerApi.get(p.getUniqueId()).blockBreakEventTimestamp + 3000))
+            if (pData.blockBreakEventTimestamp == null
+                    || currentDateTime > (pData.blockBreakEventTimestamp + 3000))
             {
-                p.sendMessage(config.getLanguageText(p.getUniqueId(), "theyCanBeBanned"));
-                playerApi.get(p.getUniqueId()).blockBreakEventTimestamp = currentDateTime;
-                playerApi.get(p.getUniqueId()).blockBreakEventCounter = 0;
+                p.sendMessage(config.getLanguageText(p.getUniqueId(), "doNotDoThat"));
+                pData.blockBreakEventTimestamp = currentDateTime;
+                pData.blockBreakEventCounter = 0;
                 return;
             }
 
-            if (playerApi.get(p.getUniqueId()).blockBreakEventCounter < 10) {
-                playerApi.get(p.getUniqueId()).blockBreakEventCounter += 1;
+            pData.blockBreakEventCounter += 1;
+
+            if (pData.blockBreakEventCounter >= 10) {
+                pData.banned = true;
+                pData.banSinceTimestamp = currentDateTime;
+                pData.banExpiresTimestamp = (currentDateTime + 120000);
+                pData.banReason = "Spamming";
+                pData.bannedFrom = "SYSTEM";
+                p.kickPlayer("BANNED!");
                 return;
             }
 
-            playerApi.get(p.getUniqueId()).banned = true;
-            playerApi.get(p.getUniqueId()).banSinceTimestamp = currentDateTime;
-            playerApi.get(p.getUniqueId()).banExpiresTimestamp = (currentDateTime + 120000);
-            playerApi.get(p.getUniqueId()).banReason = "Spamming";
-            playerApi.get(p.getUniqueId()).bannedFrom = "SYSTEM";
-            p.kickPlayer("BANNED!");
+            if (pData.blockBreakEventCounter < 3)
+                p.sendMessage(config.getLanguageText(p.getUniqueId(), "doNotDoThat"));
+            else
+                p.sendMessage(config.getLanguageText(p.getUniqueId(), "youCanGetBanned"));
         }
     }
 }

@@ -1,5 +1,7 @@
 package de.minicraft.listener;
 
+import de.minicraft.players.playerData;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
@@ -16,15 +18,30 @@ public class player implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         if (playerApi.login(e.getPlayer().getUniqueId())) {
             playerApi.addAllPerm(e.getPlayer().getUniqueId());
-            e.getPlayer().sendMessage("This is a test server!");
-            e.getPlayer().sendMessage("§3§l[§2SERVER§3§l] §aYour language has been set to: " + playerApi.get(e.getPlayer().getUniqueId()).language + ". You can set your language with /setlanguage <lang>");
+
+            playerData pData = playerApi.get(e.getPlayer().getUniqueId());
+            if (pData == null) {
+                e.getPlayer().kickPlayer("Player data missing. Try to login again.");
+                return;
+            }
+
+            e.getPlayer().sendMessage("§3§l[§2SERVER§3§l] §aYour language has been set to: " + pData.language + ". You can set your language with /setlanguage <lang>");
         }
     }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
-        if (!playerApi.exists(e.getPlayer().getUniqueId())) return;
-        playerApi.get(e.getPlayer().getUniqueId()).saveAll();
+        if (!playerApi.playerList.containsKey(e.getPlayer().getUniqueId())) return;
+
+        playerData pData = playerApi.get(e.getPlayer().getUniqueId());
+        if (pData == null) {
+            Bukkit.getLogger().severe("Player data from [" + e.getPlayer().getName() + "] could not be saved!");
+            playerApi.removeAllPerm(e.getPlayer().getUniqueId());
+            playerApi.logout(e.getPlayer().getUniqueId());
+            return;
+        }
+
+        pData.saveAll();
         playerApi.removeAllPerm(e.getPlayer().getUniqueId());
         playerApi.logout(e.getPlayer().getUniqueId());
     }

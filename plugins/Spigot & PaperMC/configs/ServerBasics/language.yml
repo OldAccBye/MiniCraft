@@ -16,6 +16,8 @@ de:
   languageChanged: "§3§l[§2SERVER§3§l] §aSprache wurde aktualisiert!"
   groupNotExists: "§c[FEHLER]: §fDiese Gruppe existiert nicht!"
   youCantDoThat: "§c[FEHLER]: §fDu kannst dies nicht tun!"
+  youCanGetBanned: "§e[WARNUNG]: §fDu könntest durch eine Wiederholung von diesem Netzwerk verbannt werden!"
+  doNotDoThat: "§3§l[§2SERVER§3§l] §aTu das bitte nicht :("
 en:
   prefix:
     default: "§7§l[X]§r "
@@ -34,3 +36,5 @@ en:
   languageChanged: "§3§l[§2SERVER§3§l] §aLanguage has been updated!"
   groupNotExists: "§c[ERROR]: §fThis group does not exist!"
   youCantDoThat: "§c[ERROR]: §fYou can't do that!"
+  youCanGetBanned: "§e[WARNING]: §fYou could be banned from this network by repeating it!"
+  doNotDoThat: "§3§l[§2SERVER§3§l] §aPlease dont do this :("

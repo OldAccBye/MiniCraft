@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.minicraft.players.playerData;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -47,8 +48,15 @@ public class setgroup implements TabCompleter, CommandExecutor {
             return false;
         }
 
+        playerData pData = playerApi.get(t.getUniqueId());
+        if (pData == null) {
+            p.sendMessage(config.getLanguageText(p.getUniqueId(), "error"));
+            t.kickPlayer("Player data missing. Try to login again.");
+            return false;
+        }
+
         playerApi.removeAllPerm(t.getUniqueId());
-        playerApi.get(t.getUniqueId()).group = args[1];
+        pData.group = args[1];
         playerApi.addAllPerm(t.getUniqueId());
 
         p.sendMessage(config.getLanguageText(p.getUniqueId(), "setPlayerRank").replace("%username%", t.getName()) + args[1] + ".");

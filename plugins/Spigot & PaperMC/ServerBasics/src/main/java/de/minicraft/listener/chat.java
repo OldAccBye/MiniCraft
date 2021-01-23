@@ -2,6 +2,7 @@ package de.minicraft.listener;
 
 import java.util.Objects;
 
+import de.minicraft.players.playerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,9 +18,15 @@ import de.minicraft.players.playerApi;
 public class chat implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        String tempMsg = e.getMessage();
         Player p = e.getPlayer();
 
+        playerData pData = playerApi.get(p.getUniqueId());
+        if (pData == null) {
+            p.kickPlayer("Player data missing. Try to login again.");
+            return;
+        }
+
+        String tempMsg = e.getMessage();
         e.setCancelled(true);
 
         if (tempMsg.contains("@")) {
@@ -34,7 +41,7 @@ public class chat implements Listener {
         }
 
         for (Player t : p.getWorld().getPlayers())
-            t.sendMessage(config.getLanguageText(p.getUniqueId(), "prefix." + playerApi.get(p.getUniqueId()).group) + p.getName() + ": " + tempMsg);
+            t.sendMessage(config.getLanguageText(p.getUniqueId(), "prefix." + pData.group) + p.getName() + ": " + tempMsg);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

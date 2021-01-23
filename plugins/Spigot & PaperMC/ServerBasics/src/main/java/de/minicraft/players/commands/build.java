@@ -1,6 +1,7 @@
 package de.minicraft.players.commands;
 
 import de.minicraft.players.playerApi;
+import de.minicraft.players.playerData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,10 +14,13 @@ public class build implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        if (p.hasPermission("minicraft.blockbreak"))
-            playerApi.get(p.getUniqueId()).permissions.setPermission("minicraft.blockbreak", false);
-        else
-            playerApi.get(p.getUniqueId()).permissions.setPermission("minicraft.blockbreak", true);
+        playerData pData = playerApi.get(p.getUniqueId());
+        if (pData == null) {
+            p.kickPlayer("Player data missing. Try to login again.");
+            return false;
+        }
+
+        pData.permissions.setPermission("minicraft.blockbreak", !p.hasPermission("minicraft.blockbreak"));
 
         return true;
     }
