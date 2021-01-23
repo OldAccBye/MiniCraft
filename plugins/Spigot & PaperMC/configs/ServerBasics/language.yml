@@ -18,6 +18,7 @@ de:
   youCantDoThat: "§c[FEHLER]: §fDu kannst dies nicht tun!"
   youCanGetBanned: "§e[WARNUNG]: §fDu könntest durch eine Wiederholung von diesem Netzwerk verbannt werden!"
   doNotDoThat: "§3§l[§2SERVER§3§l] §aTu das bitte nicht :("
+  languageSetTo: "§3§l[§2SERVER§3§l] §aDeine Sprache wurde auf %l% eingestellt. Du kannst die Sprache mit /setlanguage ändern."
 en:
   prefix:
     default: "§7§l[X]§r "
@@ -38,3 +39,4 @@ en:
   youCantDoThat: "§c[ERROR]: §fYou can't do that!"
   youCanGetBanned: "§e[WARNING]: §fYou could be banned from this network by repeating it!"
   doNotDoThat: "§3§l[§2SERVER§3§l] §aPlease dont do this :("
+  languageSetTo: "§3§l[§2SERVER§3§l] §aYour language has been set to: %l%. You can change your language with /setlanguage."

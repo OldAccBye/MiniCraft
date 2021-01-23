@@ -18,14 +18,6 @@ public class player implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         if (playerApi.login(e.getPlayer().getUniqueId())) {
             playerApi.addAllPerm(e.getPlayer().getUniqueId());
-
-            playerData pData = playerApi.get(e.getPlayer().getUniqueId());
-            if (pData == null) {
-                e.getPlayer().kickPlayer("Player data missing. Try to login again.");
-                return;
-            }
-
-            e.getPlayer().sendMessage("§3§l[§2SERVER§3§l] §aYour language has been set to: " + pData.language + ". You can set your language with /setlanguage <lang>");
             e.getPlayer().updateCommands();
         }
     }

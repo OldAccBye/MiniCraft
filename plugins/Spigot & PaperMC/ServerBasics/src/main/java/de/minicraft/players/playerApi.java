@@ -49,6 +49,8 @@ public class playerApi {
         data.banReason = "";
         data.bannedFrom = "";
         playerList.put(pUUID, data);
+
+        p.sendMessage(config.getLanguageText(pUUID, "languageSetTo").replace("%l%", "en"));
     }
 
     public static boolean login(UUID pUUID) {
@@ -97,6 +99,7 @@ public class playerApi {
         data.bannedFrom = "";
         playerList.put(pUUID, data);
 
+        p.sendMessage(config.getLanguageText(pUUID, "languageSetTo").replace("%l%", playerDoc.getString("language")));
         return true;
     }
 
