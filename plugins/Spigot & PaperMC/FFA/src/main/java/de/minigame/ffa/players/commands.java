@@ -18,25 +18,21 @@ public class commands implements CommandExecutor {
         if (!(s instanceof Player)) return false;
         Player p = (Player) s;
 
-        if (args.length == 0) return false;
-
-        if (args[0].equalsIgnoreCase("setspawn")) {
-            File file = new File("plugins//FFA//spawns.yml");
-            YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-            Location loc = p.getLocation();
-            data.loc = loc;
-            cfg.set("spawn.x", loc.getX());
-            cfg.set("spawn.y", loc.getY());
-            cfg.set("sawpn.z", loc.getZ());
-            cfg.set("spawn.yaw", loc.getYaw());
-            cfg.set("spawn.pitch", loc.getPitch());
-            try {
-                cfg.save(file);
-                p.sendMessage(data.Prefix + "SPAWN GESETZT!");
-            } catch (IOException e) {
-                e.printStackTrace();
-                p.sendMessage("SPAWN NICHT GESETZT!");
-            }
+        File file = new File("plugins//FFA//spawns.yml");
+        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+        Location loc = p.getLocation();
+        data.loc = loc;
+        cfg.set("spawn.x", loc.getX());
+        cfg.set("spawn.y", loc.getY());
+        cfg.set("spawn.z", loc.getZ());
+        cfg.set("spawn.yaw", loc.getYaw());
+        cfg.set("spawn.pitch", loc.getPitch());
+        try {
+            cfg.save(file);
+            p.sendMessage(data.Prefix + "SPAWN GESETZT!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            p.sendMessage("SPAWN NICHT GESETZT!");
         }
 
         return true;

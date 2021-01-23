@@ -15,7 +15,7 @@ public class playerApi {
 
     public static boolean register(Player p) {
         try {
-            FFA.mongo.players.insertOne(new Document("UUID", p.getUniqueId())
+            FFA.mongo.players.insertOne(new Document("UUID", p.getUniqueId().toString())
                     .append("kills", 0)
                     .append("deaths", 0));
         } catch (MongoException e) {
@@ -54,5 +54,12 @@ public class playerApi {
         data.deaths = playerDoc.getInteger("deaths");
         playerList.put(pUUID, data);
         return true;
+    }
+
+    public static void logout(UUID pUUID) {
+        if (!playerList.containsKey(pUUID)) return;
+
+        playerList.get(pUUID).saveAll();
+        playerList.remove(pUUID);
     }
 }

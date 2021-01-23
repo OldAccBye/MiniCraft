@@ -32,6 +32,9 @@ public final class FFA extends JavaPlugin {
             config = YamlConfiguration.loadConfiguration(file);
         }
 
+        data.spawnPoint = createSpawn();
+        if (data.spawnPoint) loadSpawn();
+
         /* ===== LISTENER - START ===== */
         getServer().getPluginManager().registerEvents( new player(), this);
         /* ===== LISTENER - START ===== */
@@ -69,7 +72,6 @@ public final class FFA extends JavaPlugin {
     public boolean createSpawn() {
         File file = new File(getDataFolder().getPath(), "spawns.yml");
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-
         return cfg.get("spawn.x") != null;
     }
 }
