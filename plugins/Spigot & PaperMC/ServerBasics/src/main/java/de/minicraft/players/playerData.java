@@ -15,7 +15,8 @@ public class playerData {
     public UUID pUUID;
     public String username, language, group, banReason, bannedFrom;
     public Boolean banned;
-    public Long banSince, banExpires;
+    public Long banSinceTimestamp, banExpiresTimestamp, blockBreakEventTimestamp;
+    public Integer blockBreakEventCounter;
     public PermissionAttachment permissions;
 
     playerData(UUID pUUID, String language) {
@@ -37,8 +38,8 @@ public class playerData {
                     .append("perm_group", this.group)
                     .append("language", this.language)
                     .append("banned", this.banned)
-                    .append("banSince", this.banSince)
-                    .append("banExpires", this.banExpires)
+                    .append("banSinceTimestamp", this.banSinceTimestamp)
+                    .append("banExpiresTimestamp", this.banExpiresTimestamp)
                     .append("banReason", this.banReason)
                     .append("bannedFrom", this.bannedFrom));
 

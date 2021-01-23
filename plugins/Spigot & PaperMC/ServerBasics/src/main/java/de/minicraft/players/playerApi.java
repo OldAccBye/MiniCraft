@@ -26,8 +26,8 @@ public class playerApi {
                     .append("perm_group", "default")
                     .append("language", "en")
                     .append("banned", false)
-                    .append("banSince", 0)
-                    .append("banExpires", 0)
+                    .append("banSinceTimestamp", 0)
+                    .append("banExpiresTimestamp", 0)
                     .append("banReason", "")
                     .append("bannedFrom", ""));
         } catch (MongoWriteException e) {
@@ -44,8 +44,8 @@ public class playerApi {
         data.username = p.getName();
         data.group = "default";
         data.banned = false;
-        data.banSince = 0L;
-        data.banExpires = 0L;
+        data.banSinceTimestamp = 0L;
+        data.banExpiresTimestamp = 0L;
         data.banReason = "";
         data.bannedFrom = "";
         playerList.put(pUUID, data);
@@ -76,11 +76,11 @@ public class playerApi {
         if (playerDoc.getBoolean("banned")) {
             Date date = new Date();
             Long currentDateTime = date.getTime();
-            if (playerDoc.getLong("banExpires") > currentDateTime) {
+            if (playerDoc.getLong("banExpiresTimestamp") > currentDateTime) {
                 p.kickPlayer("§cYou have been banned from this network." +
                         "\n\nTime zone §7>>§f Europe/Berlin" +
                         "\n§cDate and time §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentDateTime) +
-                        "\n§cBanned until §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(playerDoc.getLong("banExpires")) +
+                        "\n§cBanned until §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(playerDoc.getLong("banExpiresTimestamp")) +
                         "\n§cReason §7>>§f " + playerDoc.getString("banReason") +
                         "\n§cBanned from §7>>§f " + playerDoc.getString("bannedFrom"));
                 return false;
@@ -91,8 +91,8 @@ public class playerApi {
         data.username = p.getName();
         data.group = playerDoc.getString("perm_group");
         data.banned = false;
-        data.banSince = 0L;
-        data.banExpires = 0L;
+        data.banSinceTimestamp = 0L;
+        data.banExpiresTimestamp = 0L;
         data.banReason = "";
         data.bannedFrom = "";
         playerList.put(pUUID, data);

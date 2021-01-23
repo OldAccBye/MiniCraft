@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="65c22aa9-895a-47e0-84b5-31eb5b76c824" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/listener/player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/listener/player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/listener/block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/listener/block.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/players/playerApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/players/playerApi.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/players/playerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/players/playerData.java" afterDir="false" />
     </list>
