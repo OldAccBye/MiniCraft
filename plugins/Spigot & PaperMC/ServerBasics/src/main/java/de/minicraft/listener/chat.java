@@ -65,7 +65,15 @@ public class chat implements Listener {
     public void onCommandTabSend(PlayerCommandSendEvent e) {
         e.getCommands().clear();
 
-        for (String cmd : config.commandList.getKeys(false))
-            e.getCommands().add(cmd);
+        playerData pData = playerApi.get(e.getPlayer().getUniqueId());
+        if (pData == null) return;
+
+        for (String cmd : config.commandList.getKeys(false)) {
+            String cmdPerm = config.commandList.getString(cmd);
+            if (cmdPerm == null) return;
+
+            if (e.getPlayer().hasPermission(cmdPerm))
+                e.getCommands().add(cmd);
+        }
     }
 }

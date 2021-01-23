@@ -6,15 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="65c22aa9-895a-47e0-84b5-31eb5b76c824" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/listener/block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/listener/block.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/listener/chat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/listener/chat.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/listener/player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/listener/player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/players/commands/build.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/players/commands/build.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/players/commands/setgroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/players/commands/setgroup.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/players/commands/setlanguage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/players/commands/setlanguage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/minicraft/players/playerApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/minicraft/players/playerApi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../configs/ServerBasics/language.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../configs/ServerBasics/language.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

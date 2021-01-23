@@ -26,6 +26,7 @@ public class player implements Listener {
             }
 
             e.getPlayer().sendMessage("§3§l[§2SERVER§3§l] §aYour language has been set to: " + pData.language + ". You can set your language with /setlanguage <lang>");
+            e.getPlayer().updateCommands();
         }
     }
 

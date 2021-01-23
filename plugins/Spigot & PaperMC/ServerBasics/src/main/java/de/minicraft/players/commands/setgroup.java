@@ -61,6 +61,7 @@ public class setgroup implements TabCompleter, CommandExecutor {
 
         p.sendMessage(config.getLanguageText(p.getUniqueId(), "setPlayerRank").replace("%username%", t.getName()) + args[1] + ".");
         t.sendMessage(config.getLanguageText(p.getUniqueId(), "getPlayerRank") + args[1] + ".");
+        t.updateCommands();
         return true;
     }
 }
