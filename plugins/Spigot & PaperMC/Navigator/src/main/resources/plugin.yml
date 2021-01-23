@@ -1,0 +1,5 @@
+name: Navigator
+version: 1.0
+api-version: 1.16
+main: de.minicraft.navigator
+author: EntenKoeniq
