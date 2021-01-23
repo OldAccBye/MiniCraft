@@ -21,11 +21,6 @@ public class commands implements CommandExecutor {
         if (args.length == 0) return false;
 
         if (args[0].equalsIgnoreCase("setspawn")) {
-            if (!p.hasPermission("de.minigames.ffa.setspawn")) {
-                p.sendMessage("NO PERMISSIONS!");
-                return false;
-            }
-
             File file = new File("plugins//FFA//spawns.yml");
             YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
             Location loc = p.getLocation();
@@ -37,7 +32,7 @@ public class commands implements CommandExecutor {
             cfg.set("spawn.pitch", loc.getPitch());
             try {
                 cfg.save(file);
-                p.sendMessage("SPAWN GESETZT!");
+                p.sendMessage(data.Prefix + "SPAWN GESETZT!");
             } catch (IOException e) {
                 e.printStackTrace();
                 p.sendMessage("SPAWN NICHT GESETZT!");

@@ -1,7 +1,10 @@
 package de.minicraft;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -20,7 +23,10 @@ import java.util.Collections;
 
 public final class navigator extends JavaPlugin implements Listener {
     @Override
-    public void onEnable() { getServer().getPluginManager().registerEvents(this, this); }
+    public void onEnable() {
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getServer().getPluginManager().registerEvents(this, this);
+    }
 
     @Override
     public void onDisable() {}
@@ -68,8 +74,17 @@ public final class navigator extends JavaPlugin implements Listener {
         if (e.getCurrentItem() == null) return;
         e.setCancelled(true);
 
-        if (e.getCurrentItem().getType() == Material.DIAMOND_SWORD)
-            e.getWhoClicked().sendMessage("DU HAST AUF FFA GEKLICKT!");
+        Player p = (Player) e.getWhoClicked();
+
+        if (e.getCurrentItem().getType() == Material.DIAMOND_SWORD) {
+            e.getWhoClicked().sendMessage("§3§l[§2SERVER§3§l] §aConnecting to §6server§a...");
+
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("Connect");
+            out.writeUTF("FFA");
+
+            p.sendPluginMessage(this, "BungeeCord", out.toByteArray());
+        }
     }
 
     @EventHandler
