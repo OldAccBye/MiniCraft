@@ -9,14 +9,14 @@ public class inventory {
     public static void getPlayerStandard(Player p) {
         p.getInventory().clear();
         p.getInventory().setArmorContents(null);
-        p.getInventory().setHelmet(createItemStack(Material.IRON_HELMET, 1, "§aHelm"));
+        p.getInventory().setHelmet(createItemStack(Material.IRON_HELMET, 1, "§aHelmet"));
         p.getInventory().setChestplate(createItemStack(Material.IRON_CHESTPLATE, 1, "§aChestplate"));
         p.getInventory().setLeggings(createItemStack(Material.IRON_LEGGINGS, 1, "§aLeggings"));
         p.getInventory().setBoots(createItemStack(Material.IRON_BOOTS, 1, "§aBoots"));
-        p.getInventory().setItem(0, createItemStack(Material.STONE_SWORD, 1, "§Sword"));
+        p.getInventory().setItem(0, createItemStack(Material.STONE_SWORD, 1, "§aSword"));
         p.getInventory().setItem(1, createItemStack(Material.FISHING_ROD, 1, "§aFishing rod"));
         p.getInventory().setItem(2, createItemStack(Material.BOW, 1, "§aBow"));
-        p.getInventory().setItem(3, createItemStack(Material.ARROW, 3, "§aArrow"));
+        p.getInventory().setItem(3, createItemStack(Material.ARROW, 1, "§aArrow"));
         p.setHealth(20);
         p.setFoodLevel(20);
     }

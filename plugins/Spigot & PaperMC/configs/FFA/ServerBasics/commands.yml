@@ -1,0 +1,4 @@
+setlanguage: minicraft.commands.setlanguage
+setgroup: minicraft.commands.setgroup
+build: minicraft.commands.build
+setspawn: minigames.commands.setspawn

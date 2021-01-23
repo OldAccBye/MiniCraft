@@ -31,7 +31,6 @@ public class block implements Listener {
             if (pData.blockBreakEventTimestamp == null
                     || currentDateTime > (pData.blockBreakEventTimestamp + 3000))
             {
-                p.sendMessage(config.getLanguageText(p.getUniqueId(), "doNotDoThat"));
                 pData.blockBreakEventTimestamp = currentDateTime;
                 pData.blockBreakEventCounter = 0;
                 return;
@@ -39,7 +38,7 @@ public class block implements Listener {
 
             pData.blockBreakEventCounter += 1;
 
-            if (pData.blockBreakEventCounter >= 10) {
+            if (pData.blockBreakEventCounter >= 20) {
                 pData.banned = true;
                 pData.banSinceTimestamp = currentDateTime;
                 pData.banExpiresTimestamp = (currentDateTime + 120000);
@@ -49,9 +48,9 @@ public class block implements Listener {
                 return;
             }
 
-            if (pData.blockBreakEventCounter < 3)
+            if ((pData.blockBreakEventCounter > 10) && (pData.blockBreakEventCounter <= 15))
                 p.sendMessage(config.getLanguageText(p.getUniqueId(), "doNotDoThat"));
-            else
+            else if (pData.blockBreakEventCounter > 15)
                 p.sendMessage(config.getLanguageText(p.getUniqueId(), "youCanGetBanned"));
         }
     }
