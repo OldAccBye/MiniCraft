@@ -20,13 +20,14 @@ public class player implements Listener {
         Player p = e.getPlayer();
 
         for (worldData world : GTC.worldLists.values()) {
-            if (world.players >= world.maxPlayers || world.roundStarted) continue;
+            if (Bukkit.getServer().getWorld(world.worldName) == null || world.players >= world.maxPlayers || world.roundStarted) continue;
 
             playerApi.login(p.getUniqueId());
             p.teleport(world.spawnLocation);
             p.sendTitle("§3GTC", "§aWelcome!", 10, 70, 20);
+            p.sendMessage(p.getWorld().getName());
 
-            if (!world.preRoundStarted && Bukkit.getOnlinePlayers().size() >= world.playersToStart)
+            if (!world.preRoundStarted && Bukkit.getServer().getOnlinePlayers().size() >= world.playersToStart)
                 GTC.startPreRound(world.worldName);
 
             return;
@@ -43,7 +44,7 @@ public class player implements Listener {
         playerApi.logout(e.getPlayer().getUniqueId());
 
         if (world.preRoundStarted)
-            if (Bukkit.getOnlinePlayers().size() < world.playersToStart)
+            if (Bukkit.getServer().getOnlinePlayers().size() < world.playersToStart)
                 GTC.stopPreRound(worldName);
     }
 
@@ -54,7 +55,7 @@ public class player implements Listener {
         if (!mob.getType().equals(EntityType.CHICKEN) || killer == null) return;
 
         playerApi.playerList.get(killer.getUniqueId()).kills += 1;
-        for (Player t : Bukkit.getOnlinePlayers()) {
+        for (Player t : Bukkit.getServer().getOnlinePlayers()) {
             if (playerApi.playerList.get(t.getUniqueId()).inRound) {
                 t.sendMessage("§eDer Spieler §6" + killer.getName() + " §ehat ein Huhn getötet!");
                 scoreboard.set(t);

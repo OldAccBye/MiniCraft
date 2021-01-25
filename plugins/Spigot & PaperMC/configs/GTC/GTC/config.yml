@@ -1,3 +1,4 @@
+# Die oberste Welt gilt quasi als der erste Server
 world: # Der Name deiner Welt
   MaxPlayers: 8 # Wie viele Spieler auf dieser Welt sein dürfen
   PlayersToStart: 6 # Wie viele Spieler zum starten benötigt werden

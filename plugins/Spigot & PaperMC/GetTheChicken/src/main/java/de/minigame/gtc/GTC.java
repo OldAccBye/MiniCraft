@@ -9,6 +9,7 @@ import de.minigame.gtc.players.scoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -22,18 +23,28 @@ public class GTC extends JavaPlugin {
     public final static HashMap<String, worldData> worldLists = new HashMap<>();
     public static GTC plugin;
 
-
     @Override
     public void onEnable() {
         plugin = this;
+        File file;
 
         // Config
         {
-            File file = new File(super.getDataFolder(), "config.yml");
+            file = new File(super.getDataFolder(), "config.yml");
             if (file.exists()) {
                 YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
                 for (String worldName : cfg.getKeys(false)) {
+                    if (Bukkit.getServer().getWorld(worldName) == null) {
+                        file = new File(Bukkit.getServer().getWorldContainer(), worldName);
+                        if (!file.exists()) {
+                            super.getLogger().severe("Die Welt mit dem Namen [" + worldName + "] konnte nicht als Ordner gefunden werden!");
+                            continue;
+                        }
+
+                        new WorldCreator(worldName).environment(World.Environment.NORMAL).generateStructures(false).createWorld();
+                    }
+
                     worldData w = new worldData();
                     w.worldName = worldName;
                     w.maxPlayers = cfg.getInt(worldName + ".MaxPlayers");
@@ -50,7 +61,7 @@ public class GTC extends JavaPlugin {
                     z = cfg.getDouble(worldName + ".Round.z");
                     yaw = (float) cfg.getDouble(worldName + ".Round.yaw");
                     pitch = (float) cfg.getDouble(worldName + ".Round.pitch");
-                    Loc = new Location(Bukkit.getWorld(worldName), x, y, z);
+                    Loc = new Location(Bukkit.getServer().getWorld(worldName), x, y, z);
                     Loc.setYaw(yaw);
                     Loc.setPitch(pitch);
                     w.roundLocation = Loc;
@@ -61,7 +72,7 @@ public class GTC extends JavaPlugin {
                     z = cfg.getDouble(worldName + ".Spawn.z");
                     yaw = (float) cfg.getDouble(worldName + ".Spawn.yaw");
                     pitch = (float) cfg.getDouble(worldName + ".Spawn.pitch");
-                    Loc = new Location(Bukkit.getWorld(worldName), x, y, z);
+                    Loc = new Location(Bukkit.getServer().getWorld(worldName), x, y, z);
                     Loc.setYaw(yaw);
                     Loc.setPitch(pitch);
                     w.spawnLocation = Loc;
@@ -70,7 +81,7 @@ public class GTC extends JavaPlugin {
                     x = cfg.getDouble(worldName + ".ChickenSpawn.pos1.x");
                     y = cfg.getDouble(worldName + ".ChickenSpawn.pos1.y");
                     z = cfg.getDouble(worldName + ".ChickenSpawn.pos1.z");
-                    w.chickenLocation.add(new Location(Bukkit.getWorld(worldName), x, y, z));
+                    w.chickenLocation.add(new Location(Bukkit.getServer().getWorld(worldName), x, y, z));
 
                     // chicken location2
                     x = cfg.getDouble(worldName + ".ChickenSpawn.pos2.x");
@@ -96,10 +107,10 @@ public class GTC extends JavaPlugin {
         w.preRoundStarted = true;
         w.preRoundSeconds = w.preTime;
 
-        w.preRoundTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+        w.preRoundTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
            switch (w.preRoundSeconds) {
                case 5: case 4: case 3: case 2: case 1:
-                   for (Player p : Bukkit.getOnlinePlayers())
+                   for (Player p : Bukkit.getServer().getOnlinePlayers())
                        p.sendMessage("§7Das Spiel startet in §a" + w.preRoundSeconds + " Sekunde(n)§7!");
                    break;
                case 0:
@@ -116,13 +127,13 @@ public class GTC extends JavaPlugin {
         worldData w = worldLists.get(worldName);
         if (!w.preRoundStarted) return;
 
-        Bukkit.getScheduler().cancelTask(w.preRoundTaskId);
+        Bukkit.getServer().getScheduler().cancelTask(w.preRoundTaskId);
         w.preRoundStarted = false;
     }
 
     public static void startRound(String worldName) {
         worldData w = worldLists.get(worldName);
-        Bukkit.getScheduler().cancelTask(w.preRoundTaskId);
+        Bukkit.getServer().getScheduler().cancelTask(w.preRoundTaskId);
         w.roundStarted = true;
         w.roundSeconds = w.playTime;
 
@@ -140,12 +151,12 @@ public class GTC extends JavaPlugin {
 
         spawnChicken(worldName);
 
-        w.roundTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+        w.roundTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             if (w.roundSeconds == 1)
                 stopRound(worldName);
             else {
                 w.roundSeconds--;
-                for (Player p : Bukkit.getOnlinePlayers()) {
+                for (Player p : Bukkit.getServer().getOnlinePlayers()) {
                     playerData pData = playerApi.playerList.get(p.getUniqueId());
                     if (pData == null || !playerApi.playerList.get(p.getUniqueId()).inRound) continue;
 
@@ -159,7 +170,7 @@ public class GTC extends JavaPlugin {
 
     public static void stopRound(String worldName) {
         worldData w = worldLists.get(worldName);
-        Bukkit.getScheduler().cancelTask(w.roundTaskId);
+        Bukkit.getServer().getScheduler().cancelTask(w.roundTaskId);
         HashMap<UUID, Integer> players = new HashMap<>();
 
         for (playerData data : playerApi.playerList.values())
@@ -168,16 +179,17 @@ public class GTC extends JavaPlugin {
 
         UUID topPlayerUUID = Collections.max(players.entrySet(), Map.Entry.comparingByValue()).getKey();
 
-        Player topPlayer = Bukkit.getPlayer(topPlayerUUID);
+        Player topPlayer = Bukkit.getServer().getPlayer(topPlayerUUID);
         if (topPlayer == null) return;
 
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             p.sendTitle("§3Gewonnen hat:", topPlayer.getName(),  10, 70, 20);
+            p.sendMessage("§eDer Spieler §6" + topPlayer.getName() + " §egewann mit §6" + players.get(topPlayerUUID) + " §ekills!");
             playerData pData = playerApi.playerList.get(p.getUniqueId());
             if (pData == null) continue;
             pData.inRound = false;
             pData.kills = 0;
-            ScoreboardManager manager = Bukkit.getScoreboardManager();
+            ScoreboardManager manager = Bukkit.getServer().getScoreboardManager();
             if (manager == null) continue;
             p.setScoreboard(manager.getNewScoreboard());
             p.teleport(w.spawnLocation);
@@ -205,6 +217,6 @@ public class GTC extends JavaPlugin {
 
         World w2 = Bukkit.getServer().getWorld(worldName);
         if (w2 == null) return;
-        w.lastChicken = w2.spawnEntity(new Location(Bukkit.getWorld(worldName), randomX, randomY, randomZ), EntityType.CHICKEN);
+        w.lastChicken = w2.spawnEntity(new Location(Bukkit.getServer().getWorld(worldName), randomX, randomY, randomZ), EntityType.CHICKEN);
     }
 }
