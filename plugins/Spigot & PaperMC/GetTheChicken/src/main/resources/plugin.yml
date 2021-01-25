@@ -1,0 +1,8 @@
+name: GTC
+version: 1.0
+api-version: 1.16
+main: de.minigame.gtc.GTC
+author: EntenKoeniq
+
+commands:
+  gtc:
