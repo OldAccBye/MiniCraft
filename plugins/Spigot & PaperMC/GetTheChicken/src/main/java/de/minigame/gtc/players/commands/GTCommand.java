@@ -1,6 +1,7 @@
 package de.minigame.gtc.players.commands;
 
 import de.minigame.gtc.GTC;
+import de.minigame.gtc.worldData;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,16 +17,18 @@ public class GTCommand implements CommandExecutor {
         if (!(s instanceof Player)) return false;
 
         Player p = (Player) s;
+        String worldName = p.getWorld().getName();
+        worldData world = GTC.worldLists.get(worldName);
 
         if (args.length == 1) {
             switch (args[0]) {
                 case "start" -> {
-                    if (!GTC.preRoundStarted && !GTC.roundStarted)
-                        GTC.startPreRound();
+                    if (!world.preRoundStarted && !world.roundStarted)
+                        GTC.startPreRound(worldName);
                 }
                 case "stop" -> {
-                    if (GTC.preRoundStarted && !GTC.roundStarted)
-                        GTC.stopPreRound();
+                    if (world.preRoundStarted && !world.roundStarted)
+                        GTC.stopPreRound(worldName);
                 }
                 default -> p.sendMessage("Wähle zwischen start und stop.");
             }
