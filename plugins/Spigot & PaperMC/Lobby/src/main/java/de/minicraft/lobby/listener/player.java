@@ -1,14 +1,10 @@
-package de.minicraft;
+package de.minicraft.lobby.listener;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -16,21 +12,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
 import java.util.Collections;
 
-public final class navigator extends JavaPlugin implements Listener {
-    @Override
-    public void onEnable() {
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        getServer().getPluginManager().registerEvents(this, this);
-    }
-
-    @Override
-    public void onDisable() {}
-
+public class player implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.getPlayer().getInventory().clear();
@@ -53,37 +38,28 @@ public final class navigator extends JavaPlugin implements Listener {
         if (e.getItem().getType() == Material.COMPASS) {
             Inventory i = Bukkit.createInventory(null, 9, "§3§lNavigator");
 
+            // FFA ITEM
             ItemStack FFA = new ItemStack(Material.DIAMOND_SWORD);
             ItemMeta FFAM = FFA.getItemMeta();
-            if (FFAM == null) {
-                e.getPlayer().kickPlayer("Something gone wrong! please try to login again.");
-                return;
-            }
+            if (FFAM == null) return;
             FFAM.setDisplayName("§c§lFFA");
             FFAM.setLore(Collections.singletonList("§eFREE-FOR-ALL"));
             FFAM.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             FFA.setItemMeta(FFAM);
-            i.setItem(4, FFA);
+
+            // GTC ITEM
+            ItemStack GTC = new ItemStack(Material.CHICKEN_SPAWN_EGG);
+            ItemMeta GTCM = GTC.getItemMeta();
+            if (GTCM == null) return;
+            GTCM.setDisplayName("§c§lGTC");
+            GTCM.setLore(Collections.singletonList("§eGET-THE-CHICKEN"));
+            GTCM.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            GTC.setItemMeta(GTCM);
+
+            i.setItem(0, FFA);
+            i.setItem(1, GTC);
 
             e.getPlayer().openInventory(i);
-        }
-    }
-
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent e) {
-        if (e.getCurrentItem() == null) return;
-        e.setCancelled(true);
-
-        Player p = (Player) e.getWhoClicked();
-
-        if (e.getCurrentItem().getType() == Material.DIAMOND_SWORD) {
-            e.getWhoClicked().sendMessage("§3§l[§2SERVER§3§l] §aConnecting to §6server§a...");
-
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("Connect");
-            out.writeUTF("FFA");
-
-            p.sendPluginMessage(this, "BungeeCord", out.toByteArray());
         }
     }
 
