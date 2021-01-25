@@ -19,9 +19,14 @@ public class GTCommand implements CommandExecutor {
 
         if (args.length == 1) {
             switch (args[0]) {
-                case "start" -> GTC.startPreRound();
-                case "stop" -> GTC.stopPreRound();
-                case "chicken" -> Objects.requireNonNull(Bukkit.getServer().getWorld("world")).spawnEntity(p.getLocation(), EntityType.CHICKEN);
+                case "start" -> {
+                    if (!GTC.preRoundStarted && !GTC.roundStarted)
+                        GTC.startPreRound();
+                }
+                case "stop" -> {
+                    if (GTC.preRoundStarted && !GTC.roundStarted)
+                        GTC.stopPreRound();
+                }
                 default -> p.sendMessage("Wähle zwischen start und stop.");
             }
         }

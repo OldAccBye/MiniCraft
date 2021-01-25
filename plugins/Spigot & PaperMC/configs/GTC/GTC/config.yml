@@ -1,3 +1,5 @@
+PreTime: 15
+PlayTime: 20
 World: "world"
 Spawn:
   x: 0.486
@@ -11,3 +13,12 @@ Round:
   z: 53.539
   yaw: -1.1
   pitch: 0.4
+ChickenSpawn:
+  pos1:
+    x: -6.245
+    y: 62.00000
+    z: 52.740
+  pos2:
+    x: 8.263
+    y: 62.00000
+    z: 66.246

@@ -47,6 +47,7 @@ public class player implements Listener {
                 if (playerApi.playerList.get(t.getUniqueId()).inRound) {
                     t.sendMessage("§eDer Spieler §6" + killer.getName() + " §ehat ein Huhn getötet!");
                     scoreboard.set(t);
+                    GTC.spawnChicken();
                 }
             }
         }
