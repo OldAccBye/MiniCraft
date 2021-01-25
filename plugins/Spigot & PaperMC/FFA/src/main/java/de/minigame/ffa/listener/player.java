@@ -49,10 +49,15 @@ public class player implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         Player p = e.getEntity();
-        Player k = e.getEntity().getKiller();
+        playerData pData = playerApi.playerList.get(p.getUniqueId());
+        pData.deaths += 1;
+        pData.killstreak = 0;
 
+        Player k = e.getEntity().getKiller();
         if (k == null)
             e.setDeathMessage("§eThe player §6" + p.getName() + " §emade a mistake :O");
+        else if (k.getName().equals(p.getName()))
+            e.setDeathMessage("§eThe player §6" + p.getName() + " §ekilled himself :O");
         else {
             e.setDeathMessage("§eThe player §6" + p.getName() + " §ewas killed by §6" + k.getName() + "§e!");
             k.playSound(k.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 10);
@@ -66,39 +71,44 @@ public class player implements Listener {
             k.setHealth(20);
             createBoard(k);
         }
-
-        playerData pData = playerApi.playerList.get(p.getUniqueId());
-        pData.deaths += 1;
-        pData.killstreak = 0;
     }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
 
-        p.teleport(spawnData.loc);
-        p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
+        e.setRespawnLocation(spawnData.loc);
+        inventory.getPlayerStandard(p);
         createBoard(p);
+        p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
     }
 
     @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent e) {
-        Location pLoc = e.getDamager().getLocation();
-        // X: -7.715 8.680 | Y: -3.377 3.526
-        if (pLoc.getY() > (spawnData.loc.getY() - 1)) {
+        Location pLoc = e.getEntity().getLocation();
+        Location kLoc = e.getDamager().getLocation();
+
+        double[] x = { -3.158, -8.802 },
+                z = { 3.233, 8.862 };
+
+        if ((kLoc.getX() <= x[0] && kLoc.getX() >= x[1]) && (kLoc.getZ() >= z[0] && kLoc.getZ() <= z[1]) ||
+                (pLoc.getX() <= x[0] && pLoc.getX() >= x[1]) && (pLoc.getZ() >= z[0] && pLoc.getZ() <= z[1])) {
             e.setCancelled(true);
             return;
         }
+
+        /*// X: -7.715 8.680 | Y: -3.377 3.526
+        if (pLoc.getY() > (spawnData.loc.getY() - 1)) {
+            e.setCancelled(true);
+            return;
+        }*/
 
         Entity damager = e.getDamager();
 
         if (damager instanceof Arrow) {
             Arrow arrow = (Arrow) damager;
             if (arrow.getShooter() instanceof Player) {
-                Player k = (Player) arrow.getShooter();
-                if (k == null) return;
-
-                Player p = (Player) e.getEntity();
+                Player k = (Player) arrow.getShooter(), p = (Player) e.getEntity();
                 p.damage(p.getHealth(), k);
             }
         }
