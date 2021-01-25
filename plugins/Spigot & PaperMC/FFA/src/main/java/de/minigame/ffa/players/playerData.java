@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class playerData {
     public UUID pUUID;
-    public int kills, deaths;
+    public int kills, killstreak = 0, deaths;
 
     public void saveAll() {
         try {

@@ -20,7 +20,7 @@ public class playerApi {
                     .append("deaths", 0));
         } catch (MongoException e) {
             e.printStackTrace();
-            p.kickPlayer("[playerApi->register] Something went wrong.");
+            p.kickPlayer("[02] Something went wrong.");
             return false;
         }
 
@@ -44,7 +44,7 @@ public class playerApi {
             if (playerDoc == null) return register(p);
         } catch (MongoException e) {
             e.printStackTrace();
-            p.kickPlayer("[playerApi->login] Something went wrong.");
+            p.kickPlayer("[01] Something went wrong.");
             return false;
         }
 

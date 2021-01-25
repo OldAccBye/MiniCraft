@@ -32,8 +32,7 @@ public final class FFA extends JavaPlugin {
             config = YamlConfiguration.loadConfiguration(file);
         }
 
-        data.spawnPoint = createSpawn();
-        if (data.spawnPoint) loadSpawn();
+        loadSpawn();
 
         /* ===== LISTENER - START ===== */
         getServer().getPluginManager().registerEvents( new player(), this);
@@ -55,23 +54,17 @@ public final class FFA extends JavaPlugin {
         File file = new File(getDataFolder().getPath(), "spawns.yml");
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
-        double x = cfg.getDouble("spawn.x"), y = cfg.getDouble("spawn.y"), z = cfg.getDouble("spawn.z");
-        float yaw = (float) cfg.getDouble("spawn.yaw"), pitch = (float) cfg.getDouble("spawn.pitch");
-        String wn = cfg.getString("spawn.worldname");
-        if (wn == null) {
-            Bukkit.getLogger().severe("worldname = null");
+        if (cfg.getString("spawn.x") == null) {
+            super.getLogger().severe("Keine Daten in der spawns.yml gefunden!");
             Bukkit.shutdown();
             return;
         }
-        Location loc = new Location(Bukkit.getWorld(wn), x, y, z);
+
+        double x = cfg.getDouble("spawn.x"), y = cfg.getDouble("spawn.y"), z = cfg.getDouble("spawn.z");
+        float yaw = (float) cfg.getDouble("spawn.yaw"), pitch = (float) cfg.getDouble("spawn.pitch");
+        Location loc = new Location(Bukkit.getWorld("world"), x, y, z);
         loc.setYaw(yaw);
         loc.setPitch(pitch);
-        data.loc = loc;
-    }
-
-    public boolean createSpawn() {
-        File file = new File(getDataFolder().getPath(), "spawns.yml");
-        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-        return cfg.get("spawn.x") != null;
+        spawnData.loc = loc;
     }
 }

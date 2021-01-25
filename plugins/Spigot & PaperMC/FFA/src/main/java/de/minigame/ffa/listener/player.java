@@ -1,21 +1,21 @@
 package de.minigame.ffa.listener;
 
-import de.minigame.ffa.data;
+import de.minigame.ffa.players.playerData;
+import de.minigame.ffa.spawnData;
 import de.minigame.ffa.players.inventory;
 import de.minigame.ffa.players.playerApi;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scoreboard.*;
 
 public class player implements Listener {
@@ -27,15 +27,11 @@ public class player implements Listener {
             return;
         }
 
-        if (data.spawnPoint) {
-            p.teleport(data.loc);
-            p.sendTitle("§3FFA", "§aWelcome!", 10, 70, 20);
-            inventory.getPlayerStandard(p);
-            for (Player otherP : Bukkit.getOnlinePlayers())
-                createBoard(otherP);
-        } else if (p.hasPermission("minigames.commands.setspawn")) {
-            p.setGameMode(GameMode.CREATIVE);
-        }
+        p.teleport(spawnData.loc);
+        p.sendTitle("§3FFA", "§aWelcome!", 10, 70, 20);
+        inventory.getPlayerStandard(p);
+        for (Player otherP : Bukkit.getOnlinePlayers())
+            createBoard(otherP);
     }
 
     @EventHandler
@@ -56,27 +52,40 @@ public class player implements Listener {
         Player k = e.getEntity().getKiller();
 
         if (k == null)
-            e.setDeathMessage("§eDer Spieler §6" + p.getName() + " §ehat einen Fehler begangen :O");
+            e.setDeathMessage("§eThe player §6" + p.getName() + " §emade a mistake :O");
         else {
-            e.setDeathMessage("§eDer Spieler §6" + p.getName() + " §ewurde von §6" + k.getName() + " §ehalbiert!");
+            e.setDeathMessage("§eThe player §6" + p.getName() + " §ewas killed by §6" + k.getName() + "§e!");
             k.playSound(k.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 10);
-            playerApi.playerList.get(k.getUniqueId()).kills += 1;
+            playerData kData = playerApi.playerList.get(k.getUniqueId());
+            kData.kills += 1;
+            kData.killstreak += 1;
+            if (kData.killstreak > 4)
+                for (Player others : Bukkit.getOnlinePlayers())
+                    if (others != null)
+                        others.sendMessage("§ePlayer §6" + k.getName() + " §has a kill streak of §6" + kData.killstreak + "§e!");
             k.setHealth(20);
             createBoard(k);
         }
 
-        p.teleport(data.loc);
+        playerData pData = playerApi.playerList.get(p.getUniqueId());
+        pData.deaths += 1;
+        pData.killstreak = 0;
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent e) {
+        Player p = e.getPlayer();
+
+        p.teleport(spawnData.loc);
         p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
-        playerApi.playerList.get(p.getUniqueId()).deaths += 1;
         createBoard(p);
-        inventory.getPlayerStandard(p);
     }
 
     @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent e) {
         Location pLoc = e.getDamager().getLocation();
         // X: -7.715 8.680 | Y: -3.377 3.526
-        if (pLoc.getY() > (data.loc.getY() - 1)) {
+        if (pLoc.getY() > (spawnData.loc.getY() - 1)) {
             e.setCancelled(true);
             return;
         }
@@ -97,14 +106,13 @@ public class player implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
-        Player p = (Player) e.getEntity();
-
         if (e.getCause() == EntityDamageEvent.DamageCause.FALL)
             e.setCancelled(true);
     }
 
     public void createBoard(Player p) {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
+        if (manager == null) return;
         Scoreboard board = manager.getNewScoreboard();
         Objective obj = board.registerNewObjective("FFA-ScoreBoard", "dummy", "§8>> §cFFA §8<<");
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
