@@ -103,23 +103,28 @@ public class GTC extends JavaPlugin {
     public void onDisable() {}
 
     public static void startPreRound(String worldName) {
-        worldData w = worldLists.get(worldName);
-        w.preRoundStarted = true;
-        w.preRoundSeconds = w.preTime;
+        World w = Bukkit.getServer().getWorld(worldName);
+        if (w == null) return;
+        worldData wData = worldLists.get(worldName);
+        wData.preRoundStarted = true;
+        wData.preRoundSeconds = wData.preTime;
 
-        w.preRoundTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-           switch (w.preRoundSeconds) {
+        for (Player p : w.getPlayers())
+            p.sendMessage("§7Das Spiel startet in §a" + wData.preRoundSeconds + " Sekunden§7!");
+
+        wData.preRoundTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+           switch (wData.preRoundSeconds) {
                case 5: case 4: case 3: case 2: case 1:
-                   for (Player p : Bukkit.getServer().getOnlinePlayers())
-                       p.sendMessage("§7Das Spiel startet in §a" + w.preRoundSeconds + " Sekunde(n)§7!");
+                   for (Player p : w.getPlayers())
+                       p.sendMessage("§7Das Spiel startet in §a" + wData.preRoundSeconds + " Sekunde(n)§7!");
                    break;
                case 0:
                    startRound(worldName);
                    break;
            }
 
-           if (w.preRoundSeconds != 0)
-               w.preRoundSeconds--;
+           if (wData.preRoundSeconds != 0)
+               wData.preRoundSeconds--;
         }, 0, 20);
     }
 
@@ -132,45 +137,60 @@ public class GTC extends JavaPlugin {
     }
 
     public static void startRound(String worldName) {
-        worldData w = worldLists.get(worldName);
-        Bukkit.getServer().getScheduler().cancelTask(w.preRoundTaskId);
-        w.roundStarted = true;
-        w.roundSeconds = w.playTime;
+        worldData wData = worldLists.get(worldName);
+        Bukkit.getServer().getScheduler().cancelTask(wData.preRoundTaskId);
+        wData.preRoundStarted = false;
+        wData.roundStarted = true;
+        wData.roundSeconds = wData.playTime;
 
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
             playerData pData = playerApi.playerList.get(p.getUniqueId());
             if (pData == null) continue;
             pData.inRound = true;
-            p.teleport(w.roundLocation);
+            p.teleport(wData.roundLocation);
             inventory.reset(p);
             scoreboard.set(p);
-            p.sendTitle("§3GTC", "Good luck!",  10, 70, 20);
+            p.sendTitle("§3GTC", "Viel Glück!",  10, 70, 20);
             p.setExp(0.99f);
             p.setLevel(20);
         }
 
         spawnChicken(worldName);
 
-        w.roundTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-            if (w.roundSeconds == 1)
+        wData.roundTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+            World w = Bukkit.getServer().getWorld(worldName);
+            if (w == null || w.getPlayers().size() == 0) {
+                wData.roundStarted = false;
+                wData.roundSeconds = 0;
+                if (!wData.lastChicken.isDead())
+                    wData.lastChicken.remove();
+                Bukkit.getServer().getScheduler().cancelTask(wData.roundTaskId);
+                return;
+            }
+
+            if (wData.roundSeconds == 1)
                 stopRound(worldName);
             else {
-                w.roundSeconds--;
-                for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+                wData.roundSeconds--;
+                for (Player p : w.getPlayers()) {
                     playerData pData = playerApi.playerList.get(p.getUniqueId());
                     if (pData == null || !playerApi.playerList.get(p.getUniqueId()).inRound) continue;
 
-                    float exp = p.getExp() - (float) 1/w.playTime;
+                    float exp = p.getExp() - (float) 1/wData.playTime;
                     p.setExp(exp);
-                    p.setLevel(w.roundSeconds);
+                    p.setLevel(wData.roundSeconds);
                 }
             }
         }, 0, 20);
     }
 
     public static void stopRound(String worldName) {
-        worldData w = worldLists.get(worldName);
-        Bukkit.getServer().getScheduler().cancelTask(w.roundTaskId);
+        World w = Bukkit.getServer().getWorld(worldName);
+        if (w == null) return;
+        worldData wData = worldLists.get(worldName);
+        wData.roundStarted = false;
+
+        Bukkit.getServer().getScheduler().cancelTask(wData.roundTaskId);
         HashMap<UUID, Integer> players = new HashMap<>();
 
         for (playerData data : playerApi.playerList.values())
@@ -179,27 +199,32 @@ public class GTC extends JavaPlugin {
 
         UUID topPlayerUUID = Collections.max(players.entrySet(), Map.Entry.comparingByValue()).getKey();
 
+        String topPlayerName = "null";
         Player topPlayer = Bukkit.getServer().getPlayer(topPlayerUUID);
-        if (topPlayer == null) return;
+        if (topPlayer != null) topPlayerName = topPlayer.getName();
 
-        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            p.sendTitle("§3Gewonnen hat:", topPlayer.getName(),  10, 70, 20);
-            p.sendMessage("§eDer Spieler §6" + topPlayer.getName() + " §egewann mit §6" + players.get(topPlayerUUID) + " §ekills!");
+        for (Player p : w.getPlayers()) {
+            p.sendTitle("§3Gewonnen hat:", topPlayerName,  10, 70, 20);
+            p.sendMessage("§eDer Spieler §6" + topPlayerName + " §egewann mit §6" + players.get(topPlayerUUID) + " §ekills!");
+
             playerData pData = playerApi.playerList.get(p.getUniqueId());
-            if (pData == null) continue;
-            pData.inRound = false;
-            pData.kills = 0;
+            if (pData != null) {
+                pData.inRound = false;
+                pData.kills = 0;
+            }
+
             ScoreboardManager manager = Bukkit.getServer().getScoreboardManager();
-            if (manager == null) continue;
-            p.setScoreboard(manager.getNewScoreboard());
-            p.teleport(w.spawnLocation);
+            if (manager != null)
+                p.setScoreboard(manager.getNewScoreboard());
+
+            p.teleport(wData.spawnLocation);
             p.getInventory().clear();
             p.setExp(0.0f);
             p.setLevel(0);
         }
 
-        if (!w.lastChicken.isDead())
-            w.lastChicken.remove();
+        if (!wData.lastChicken.isDead())
+            wData.lastChicken.remove();
     }
 
     private static double getRandomDouble(double val1, double val2) {
