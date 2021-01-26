@@ -223,7 +223,7 @@ public class GTC extends JavaPlugin {
             p.setLevel(0);
         }
 
-        if (!wData.lastChicken.isDead())
+        if (wData.lastChicken != null && !wData.lastChicken.isDead())
             wData.lastChicken.remove();
     }
 

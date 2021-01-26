@@ -22,10 +22,12 @@ public class inventory {
         ItemStack i = new ItemStack(m);
         i.setAmount(1);
         ItemMeta im = i.getItemMeta();
-        if (im == null) return null;
-        im.setDisplayName(DM);
-        im.setUnbreakable(true);
-        i.setItemMeta(im);
+        if (im != null) {
+            im.setDisplayName(DM);
+            im.setUnbreakable(true);
+            i.setItemMeta(im);
+        }
+
         return i;
     }
 }

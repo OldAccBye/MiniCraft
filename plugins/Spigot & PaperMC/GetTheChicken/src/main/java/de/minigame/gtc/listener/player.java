@@ -41,16 +41,16 @@ public class player implements Listener {
     public static void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         String worldName = p.getWorld().getName();
-        worldData world = GTC.worldLists.get(worldName);
+        worldData wData = GTC.worldLists.get(worldName);
         playerApi.logout(e.getPlayer().getUniqueId());
 
-        if (world.preRoundStarted) {
-            if (Bukkit.getServer().getOnlinePlayers().size() < world.playersToStart) {
+        if (wData.preRoundStarted) {
+            if (Bukkit.getServer().getOnlinePlayers().size() < wData.playersToStart) {
                 GTC.stopPreRound(worldName);
 
                 World w = e.getPlayer().getWorld();
                 for (Player t : w.getPlayers())
-                    t.sendMessage("§7Das Spiel sucht nun nach weiteren Mitspieler!");
+                    t.sendMessage("§eAuf weitere Mitspieler warten... §6" + w.getPlayers().size() + "§e/§6" + wData.playersToStart);
             }
         }
     }
@@ -69,19 +69,19 @@ public class player implements Listener {
         if (!mob.getType().equals(EntityType.CHICKEN)) return;
 
         Player killer = e.getEntity().getKiller();
-        if (killer == null) return;
+        if (killer != null) {
+            World w = killer.getWorld();
+            if (mob != GTC.worldLists.get(w.getName()).lastChicken) return;
 
-        World w = killer.getWorld();
-        if (mob != GTC.worldLists.get(w.getName()).lastChicken) return;
-
-        playerApi.playerList.get(killer.getUniqueId()).kills += 1;
-        for (Player t : w.getPlayers()) {
-            if (playerApi.playerList.get(t.getUniqueId()).inRound) {
-                t.sendMessage("§eDer Spieler §6" + killer.getName() + " §ehat ein Huhn getötet!");
-                scoreboard.set(t);
+            playerApi.playerList.get(killer.getUniqueId()).kills += 1;
+            for (Player t : w.getPlayers()) {
+                if (playerApi.playerList.get(t.getUniqueId()).inRound) {
+                    t.sendMessage("§eDer Spieler §6" + killer.getName() + " §ehat ein Huhn getötet!");
+                    scoreboard.set(t);
+                }
             }
         }
 
-        GTC.spawnChicken(killer.getWorld().getName());
+        GTC.spawnChicken(e.getEntity().getWorld().getName());
     }
 }
