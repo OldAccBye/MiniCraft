@@ -235,13 +235,13 @@ public class GTC extends JavaPlugin {
     }
 
     public static void spawnChicken(String worldName) {
-        worldData w = worldLists.get(worldName);
-        double randomX = getRandomDouble(w.chickenLocation.get(0).getX(), w.chickenLocation.get(1).getX());
-        double randomY = getRandomDouble(w.chickenLocation.get(0).getY(), w.chickenLocation.get(1).getY());
-        double randomZ = getRandomDouble(w.chickenLocation.get(0).getZ(), w.chickenLocation.get(1).getZ());
+        worldData wData = worldLists.get(worldName);
+        double randomX = getRandomDouble(wData.chickenLocation.get(0).getX(), wData.chickenLocation.get(1).getX());
+        double randomY = getRandomDouble(wData.chickenLocation.get(0).getY(), wData.chickenLocation.get(1).getY());
+        double randomZ = getRandomDouble(wData.chickenLocation.get(0).getZ(), wData.chickenLocation.get(1).getZ());
 
-        World w2 = Bukkit.getServer().getWorld(worldName);
-        if (w2 == null) return;
-        w.lastChicken = w2.spawnEntity(new Location(Bukkit.getServer().getWorld(worldName), randomX, randomY, randomZ), EntityType.CHICKEN);
+        World w = Bukkit.getServer().getWorld(worldName);
+        if (w != null)
+            wData.lastChicken = w.spawnEntity(new Location(Bukkit.getServer().getWorld(worldName), randomX, randomY, randomZ), EntityType.CHICKEN);
     }
 }
