@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="65c22aa9-895a-47e0-84b5-31eb5b76c824" name="Default Changelist" comment="" />
+    <list default="true" id="65c22aa9-895a-47e0-84b5-31eb5b76c824" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Bungeecord/BungeeSystem/src/main/java/de/minicraft/BungeeSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Bungeecord/BungeeSystem/src/main/java/de/minicraft/BungeeSystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lobby/src/main/java/de/minicraft/lobby/listener/navigator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lobby/src/main/java/de/minicraft/lobby/listener/navigator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lobby/src/main/java/de/minicraft/lobby/lobby.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lobby/src/main/java/de/minicraft/lobby/lobby.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,7 +33,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../FFA" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Lobby" />
   </component>
   <component name="RunManager">
     <configuration name="serverBasics build" type="MavenRunConfiguration" factoryName="Maven">

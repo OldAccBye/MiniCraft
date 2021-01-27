@@ -13,7 +13,7 @@ public class tabList implements Listener {
     @EventHandler
     public void onServerSwitch(ServerSwitchEvent e) {
         try {
-            ProxyServer.getInstance().getScheduler().schedule(BungeeSystem.plugin, () -> {
+            BungeeSystem.plugin.getProxy().getScheduler().schedule(BungeeSystem.plugin, () -> {
                 int cPP = e.getPlayer().getPing();
                 String cPPT = "§7" + cPP;
                 if (cPP >= 135) cPPT = "§c" + cPP;
