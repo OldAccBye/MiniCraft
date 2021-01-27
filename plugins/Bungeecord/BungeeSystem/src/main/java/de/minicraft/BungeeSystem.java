@@ -51,28 +51,4 @@ public final class BungeeSystem extends Plugin {
         // Channels
         plugin.getProxy().registerChannel("lobby:getserverinfo");
     }
-
-    public static void getServerStatus(ProxiedPlayer p, String server) {
-        Collection<ProxiedPlayer> networkPlayers = plugin.getProxy().getPlayers();
-        if (networkPlayers == null || networkPlayers.isEmpty()) return;
-
-        boolean serverStatus = true;
-
-        try {
-            Socket s = new Socket();
-            s.connect(plugin.getProxy().getServerInfo(server).getSocketAddress(), 20);
-            s.close();
-        } catch (IOException e) {
-            serverStatus = false;
-        }
-
-        plugin.getLogger().warning("[" + server + "] Status: " + serverStatus);
-
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("getServerStatus");
-        out.writeUTF(server);
-        out.writeBoolean(serverStatus);
-
-        p.getServer().getInfo().sendData("lobby:getserverinfo", out.toByteArray());
-    }
 }
