@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.minicraft.lobby.lobby;
 import de.minicraft.lobby.lobbyData;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,59 +24,51 @@ public final class navigator implements Listener {
         if (meta == null) return;
 
         Player p = (Player) e.getWhoClicked();
-        lobbyData lData;
-        Date date = new Date();
 
         if (e.getCurrentItem().getType() == Material.DIAMOND_SWORD && meta.getDisplayName().equalsIgnoreCase("§c§lFFA")) {
-            if (!lobby.lobbyLists.containsKey("FFA")) lobby.lobbyLists.put("FFA", new lobbyData());
+            ByteArrayDataOutput get = ByteStreams.newDataOutput();
+            get.writeUTF("getServerStatus");
+            get.writeUTF("FFA");
+            p.sendPluginMessage(lobby.plugin, "lobby:getserverinfo", get.toByteArray());
 
-            lData = lobby.lobbyLists.get("FFA");
-            ByteArrayDataOutput out;
+            Bukkit.getScheduler().scheduleSyncDelayedTask(lobby.plugin, () -> {
+                lobbyData lData = lobby.lobbyLists.get("FFA");
 
-            if (lData.lastUpdateTimestamp == null || date.getTime() > (lData.lastUpdateTimestamp + 30000)) {
-                out = ByteStreams.newDataOutput();
-                out.writeUTF("getServerStatus");
-                out.writeUTF("FFA");
-                p.sendPluginMessage(lobby.plugin, "lobby:getserverinfo", out.toByteArray());
-            }
+                if (!lData.serverStatus) {
+                    e.getWhoClicked().sendMessage("§3§l[§2SERVER§3§l] §aServer offline!");
+                    return;
+                }
 
-            if (!lData.serverStatus) {
-                e.getWhoClicked().sendMessage("§3§l[§2SERVER§3§l] §aServer offline!");
-                return;
-            }
+                e.getWhoClicked().sendMessage("§3§l[§2SERVER§3§l] §aConnecting to §6server§a...");
 
-            e.getWhoClicked().sendMessage("§3§l[§2SERVER§3§l] §aConnecting to §6server§a...");
+                ByteArrayDataOutput con = ByteStreams.newDataOutput();
+                con.writeUTF("Connect");
+                con.writeUTF("FFA");
 
-            out = ByteStreams.newDataOutput();
-            out.writeUTF("Connect");
-            out.writeUTF("FFA");
-
-            p.sendPluginMessage(lobby.plugin, "BungeeCord", out.toByteArray());
+                p.sendPluginMessage(lobby.plugin, "BungeeCord", con.toByteArray());
+            }, 10L);
         } else if (e.getCurrentItem().getType() == Material.CHICKEN_SPAWN_EGG && meta.getDisplayName().equalsIgnoreCase("§c§lGTC")) {
-            if (!lobby.lobbyLists.containsKey("GTC")) lobby.lobbyLists.put("GTC", new lobbyData());
+            ByteArrayDataOutput get = ByteStreams.newDataOutput();
+            get.writeUTF("getServerStatus");
+            get.writeUTF("GTC");
+            p.sendPluginMessage(lobby.plugin, "lobby:getserverinfo", get.toByteArray());
 
-            lData = lobby.lobbyLists.get("GTC");
-            ByteArrayDataOutput out;
+            Bukkit.getScheduler().scheduleSyncDelayedTask(lobby.plugin, () -> {
+                lobbyData lData = lobby.lobbyLists.get("GTC");
 
-            if (lData.lastUpdateTimestamp == null || date.getTime() > (lData.lastUpdateTimestamp + 30000)) {
-                out = ByteStreams.newDataOutput();
-                out.writeUTF("getServerStatus");
-                out.writeUTF("GTC");
-                p.sendPluginMessage(lobby.plugin, "lobby:getserverinfo", out.toByteArray());
-            }
+                if (!lData.serverStatus) {
+                    e.getWhoClicked().sendMessage("§3§l[§2SERVER§3§l] §aServer offline!");
+                    return;
+                }
 
-            if (!lData.serverStatus) {
-                e.getWhoClicked().sendMessage("§3§l[§2SERVER§3§l] §aServer offline!");
-                return;
-            }
+                e.getWhoClicked().sendMessage("§3§l[§2SERVER§3§l] §aConnecting to §6server§a...");
 
-            e.getWhoClicked().sendMessage("§3§l[§2SERVER§3§l] §aConnecting to §6server§a...");
+                ByteArrayDataOutput con = ByteStreams.newDataOutput();
+                con.writeUTF("Connect");
+                con.writeUTF("GTC");
 
-            out = ByteStreams.newDataOutput();
-            out.writeUTF("Connect");
-            out.writeUTF("GTC");
-
-            p.sendPluginMessage(lobby.plugin, "BungeeCord", out.toByteArray());
+                p.sendPluginMessage(lobby.plugin, "BungeeCord", con.toByteArray());
+            }, 10L);
         }
     }
 }

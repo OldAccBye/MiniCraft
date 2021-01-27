@@ -15,6 +15,9 @@ public class lobby extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
+        lobbyLists.put("FFA", new lobbyData());
+        lobbyLists.put("GTC", new lobbyData());
+
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "lobby:getserverinfo");
         getServer().getMessenger().registerIncomingPluginChannel(this, "lobby:getserverinfo", new pluginMessageReceived());

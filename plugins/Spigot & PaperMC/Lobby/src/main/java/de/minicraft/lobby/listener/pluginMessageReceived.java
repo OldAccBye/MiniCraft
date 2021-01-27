@@ -21,7 +21,6 @@ public class pluginMessageReceived implements PluginMessageListener {
                 boolean serverStatus = in.readBoolean();
 
                 lobbyData lData = lobby.lobbyLists.get(serverName);
-                lData.lastUpdateTimestamp = date.getTime();
                 lData.serverStatus = serverStatus;
             }
         }
