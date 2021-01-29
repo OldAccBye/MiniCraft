@@ -2,14 +2,10 @@ package de.minigame.gtc.players.commands;
 
 import de.minigame.gtc.GTC;
 import de.minigame.gtc.worldData;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-
-import java.util.Objects;
 
 public class GTCommand implements CommandExecutor {
     @Override

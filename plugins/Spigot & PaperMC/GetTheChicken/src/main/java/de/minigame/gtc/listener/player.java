@@ -1,10 +1,8 @@
 package de.minigame.gtc.listener;
 
 import de.minigame.gtc.GTC;
-import de.minigame.gtc.players.playerApi;
 import de.minigame.gtc.players.scoreboard;
 import de.minigame.gtc.worldData;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -16,20 +14,24 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.Map;
+
 public class player implements Listener {
     @EventHandler
     public static void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
 
-        for (worldData world : GTC.worldLists.values()) {
-            if (Bukkit.getServer().getWorld(world.worldName) == null || world.players >= world.maxPlayers || world.roundStarted) continue;
+        for (Map.Entry<String, worldData> data : GTC.worldLists.entrySet()) {
+            String key = data.getKey();
+            worldData value = data.getValue();
+            if (GTC.plugin.getServer().getWorld(key) == null || value.players >= value.maxPlayers || value.roundStarted) continue;
 
-            playerApi.login(p.getUniqueId());
-            p.teleport(world.spawnLocation);
+            GTC.playerList.put(p.getUniqueId(), 0);
+            p.teleport(value.spawnLocation);
             p.sendTitle("§3GTC", "§aWillkommen!", 10, 70, 20);
 
-            if (!world.preRoundStarted && Bukkit.getServer().getOnlinePlayers().size() >= world.playersToStart)
-                GTC.startPreRound(world.worldName);
+            if (!value.preRoundStarted && GTC.plugin.getServer().getOnlinePlayers().size() >= value.playersToStart)
+                GTC.startPreRound(key);
 
             return;
         }
@@ -42,10 +44,10 @@ public class player implements Listener {
         Player p = e.getPlayer();
         String worldName = p.getWorld().getName();
         worldData wData = GTC.worldLists.get(worldName);
-        playerApi.logout(e.getPlayer().getUniqueId());
+        GTC.playerList.remove(p.getUniqueId());
 
         if (wData.preRoundStarted) {
-            if (Bukkit.getServer().getOnlinePlayers().size() < wData.playersToStart) {
+            if (GTC.plugin.getServer().getOnlinePlayers().size() < wData.playersToStart) {
                 GTC.stopPreRound(worldName);
 
                 World w = e.getPlayer().getWorld();
@@ -73,12 +75,10 @@ public class player implements Listener {
             World w = killer.getWorld();
             if (mob != GTC.worldLists.get(w.getName()).lastChicken) return;
 
-            playerApi.playerList.get(killer.getUniqueId()).kills += 1;
+            GTC.playerList.computeIfPresent(killer.getUniqueId(), (k, v) -> v + 1);
             for (Player t : w.getPlayers()) {
-                if (playerApi.playerList.get(t.getUniqueId()).inRound) {
-                    t.sendMessage("§eDer Spieler §6" + killer.getName() + " §ehat ein Huhn getötet!");
-                    scoreboard.set(t);
-                }
+                t.sendMessage("§eDer Spieler §6" + killer.getName() + " §ehat ein Huhn getötet!");
+                scoreboard.set(t);
             }
         }
 
