@@ -6,7 +6,6 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,8 +22,8 @@ public class mongoManager {
         List<String> collectionsList = config.config.getStringList("mongodb.collections");
 
         if (username == null || password == null || host == null || database == null || collections == null) {
-            Bukkit.getLogger().severe("[mongoManager->connect] Please fill out all fields in the config.yml.");
-            Bukkit.getServer().shutdown();
+            serverBasics.plugin.getLogger().severe("[mongoManager->connect] Please fill out all fields in the config.yml.");
+            serverBasics.plugin.getServer().shutdown();
             return;
         }
 
@@ -35,7 +34,7 @@ public class mongoManager {
                 this.collections.put(collectionName, mongoDatabase.getCollection(collectionName));
         } catch (MongoException e) {
             e.printStackTrace();
-            Bukkit.getServer().shutdown();
+            serverBasics.plugin.getServer().shutdown();
         }
     }
 }

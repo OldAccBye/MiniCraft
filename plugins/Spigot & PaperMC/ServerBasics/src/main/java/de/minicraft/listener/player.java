@@ -1,7 +1,7 @@
 package de.minicraft.listener;
 
 import de.minicraft.players.playerData;
-import org.bukkit.Bukkit;
+import de.minicraft.serverBasics;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
@@ -28,13 +28,13 @@ public class player implements Listener {
 
         playerData pData = playerApi.get(e.getPlayer().getUniqueId());
         if (pData == null) {
-            Bukkit.getLogger().severe("Player data from [" + e.getPlayer().getName() + "] could not be saved!");
+            serverBasics.plugin.getLogger().severe("Player data from [" + e.getPlayer().getName() + "] could not be saved!");
             playerApi.removeAllPerm(e.getPlayer().getUniqueId());
             playerApi.logout(e.getPlayer().getUniqueId());
             return;
         }
 
-        pData.saveAll();
+        playerApi.saveAll(e.getPlayer().getUniqueId());
         playerApi.removeAllPerm(e.getPlayer().getUniqueId());
         playerApi.logout(e.getPlayer().getUniqueId());
     }

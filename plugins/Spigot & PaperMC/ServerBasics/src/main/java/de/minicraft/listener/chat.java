@@ -3,7 +3,7 @@ package de.minicraft.listener;
 import java.util.Objects;
 
 import de.minicraft.players.playerData;
-import org.bukkit.Bukkit;
+import de.minicraft.serverBasics;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,7 +32,7 @@ public class chat implements Listener {
         if (tempMsg.contains("@")) {
             String t = tempMsg.substring(tempMsg.indexOf("@") + 1).split(" ")[0];
 
-            if (Bukkit.getPlayerExact(t) == null)
+            if (serverBasics.plugin.getServer().getPlayerExact(t) == null)
                 p.sendMessage(config.getLanguageText(p.getUniqueId(), "playerNotFound"));
             else if (!t.equals(p.getName())) {
                 p.sendMessage(config.getLanguageText(p.getUniqueId(), "playerHasBeenMarked").replace("%username%", p.getName()));

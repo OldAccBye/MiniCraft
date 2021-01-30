@@ -11,7 +11,6 @@ import com.mongodb.client.model.Filters;
 import de.minicraft.config;
 import de.minicraft.serverBasics;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 
 import org.bukkit.entity.Player;
 
@@ -40,8 +39,9 @@ public class playerApi {
             return;
         }
 
-        playerData data = new playerData(pUUID, "en");
+        playerData data = new playerData(p.addAttachment(serverBasics.plugin));
         data.username = p.getName();
+        data.language = "en";
         data.group = "default";
         data.banned = false;
         data.banSinceTimestamp = 0L;
@@ -54,7 +54,7 @@ public class playerApi {
     }
 
     public static boolean login(UUID pUUID) {
-        Player p = Bukkit.getPlayer(pUUID);
+        Player p = serverBasics.plugin.getServer().getPlayer(pUUID);
         if (p == null) return false;
 
         // Diese Funktion prüft ob dieser Spieler bereits eingetragen ist und wenn ja entfernt diese Funktion diesen Eintrag
@@ -89,8 +89,9 @@ public class playerApi {
             }
         }
 
-        playerData data = new playerData(pUUID, playerDoc.getString("language"));
+        playerData data = new playerData(p.addAttachment(serverBasics.plugin));
         data.username = p.getName();
+        data.language = playerDoc.getString("language");
         data.group = playerDoc.getString("perm_group");
         data.banned = false;
         data.banSinceTimestamp = 0L;
@@ -105,7 +106,7 @@ public class playerApi {
 
     public static playerData get(UUID pUUID) {
         if (!playerList.containsKey(pUUID)) {
-            Player p = Bukkit.getPlayer(pUUID);
+            Player p = serverBasics.plugin.getServer().getPlayer(pUUID);
             if (p != null)
                 p.kickPlayer("[ERROR-03] Please contact the support!");
             return null;
@@ -116,11 +117,26 @@ public class playerApi {
 
     public static void logout(UUID pUUID) { playerList.remove(pUUID); }
 
+    public static void saveAll(UUID pUUID) {
+        try {
+            Document found = serverBasics.mongo.collections.get("players").find(Filters.eq("UUID", pUUID.toString())).first();
+
+            if (found == null) {
+                serverBasics.plugin.getLogger().severe("[playerData->saveAll] Player [" + pUUID.toString() + "] not found!");
+                return;
+            }
+
+            serverBasics.mongo.collections.get("players").findOneAndUpdate(found, playerList.get(pUUID).getDoc());
+        } catch (MongoException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void addAllPerm(UUID pUUID) {
-        Player p = Bukkit.getPlayer(pUUID);
+        Player p = serverBasics.plugin.getServer().getPlayer(pUUID);
 
         if (p == null) {
-            Bukkit.getLogger().severe("[Permissions] player = null");
+            serverBasics.plugin.getLogger().severe("[Permissions] player = null");
             return;
         }
 
@@ -136,10 +152,10 @@ public class playerApi {
     }
 
     public static void removeAllPerm(UUID pUUID) {
-        Player p = Bukkit.getPlayer(pUUID);
+        Player p = serverBasics.plugin.getServer().getPlayer(pUUID);
 
         if (p == null) {
-            Bukkit.getLogger().severe("[Permissions] player = null");
+            serverBasics.plugin.getLogger().severe("[Permissions] player = null");
             return;
         }
 

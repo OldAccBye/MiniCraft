@@ -2,7 +2,6 @@ package de.minicraft;
 
 import de.minicraft.players.playerApi;
 import de.minicraft.players.playerData;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 
@@ -20,10 +19,10 @@ public class config {
     public static void setPermissionsList(Configuration data) { permissionsList = data; }
 
     public static String getLanguageText(UUID pUUID, String data) {
-        Player p = Bukkit.getPlayer(pUUID);
+        Player p = serverBasics.plugin.getServer().getPlayer(pUUID);
 
         if (p == null) {
-            Bukkit.getLogger().severe("[Permissions] player = null");
+            serverBasics.plugin.getLogger().severe("[Permissions] player = null");
             return "null";
         }
 

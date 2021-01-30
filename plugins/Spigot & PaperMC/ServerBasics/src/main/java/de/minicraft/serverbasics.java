@@ -6,7 +6,6 @@ import de.minicraft.listener.player;
 import de.minicraft.players.commands.build;
 import de.minicraft.players.commands.setgroup;
 import de.minicraft.players.commands.setlanguage;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,7 +22,7 @@ public final class serverBasics extends JavaPlugin {
         File file;
 
         if (!getDataFolder().exists())
-            if (!getDataFolder().mkdir()) Bukkit.getLogger().severe("[FILE] A new directory cannot be created!");
+            if (!getDataFolder().mkdir()) plugin.getLogger().severe("[FILE] A new directory cannot be created!");
 
         // Config
         {

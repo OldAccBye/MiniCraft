@@ -24,9 +24,11 @@ public class build implements CommandExecutor {
         if (p.hasPermission("minicraft.blockbreak")) {
             pData.permissions.setPermission("minicraft.blockbreak", false);
             p.setGameMode(GameMode.SURVIVAL);
+            p.sendMessage("build deaktiviert!");
         } else {
             pData.permissions.setPermission("minicraft.blockbreak", true);
             p.setGameMode(GameMode.CREATIVE);
+            p.sendMessage("build aktiviert!");
         }
 
         return true;
