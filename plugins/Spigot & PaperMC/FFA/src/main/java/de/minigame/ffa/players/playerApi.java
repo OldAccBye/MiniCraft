@@ -4,7 +4,6 @@ import com.mongodb.MongoException;
 import com.mongodb.client.model.Filters;
 import de.minigame.ffa.FFA;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -25,7 +24,6 @@ public class playerApi {
         }
 
         playerData data = new playerData();
-        data.pUUID = p.getUniqueId();
         data.kills = 0;
         data.deaths = 0;
         playerList.put(p.getUniqueId(), data);
@@ -33,14 +31,13 @@ public class playerApi {
     }
 
     public static boolean login(UUID pUUID) {
-        Player p = Bukkit.getPlayer(pUUID);
+        Player p = FFA.plugin.getServer().getPlayer(pUUID);
         if (p == null) return false;
 
         Document playerDoc;
 
         try {
             playerDoc = FFA.mongo.players.find(Filters.eq("UUID", pUUID.toString())).first();
-
             if (playerDoc == null) return register(p);
         } catch (MongoException e) {
             e.printStackTrace();
@@ -49,7 +46,6 @@ public class playerApi {
         }
 
         playerData data = new playerData();
-        data.pUUID = pUUID;
         data.kills = playerDoc.getInteger("kills");
         data.deaths = playerDoc.getInteger("deaths");
         playerList.put(pUUID, data);
@@ -59,7 +55,9 @@ public class playerApi {
     public static void logout(UUID pUUID) {
         if (!playerList.containsKey(pUUID)) return;
 
-        playerList.get(pUUID).saveAll();
+        if (!FFA.mongo.updatePlayerStats(pUUID, new Document("kills", playerList.get(pUUID).kills).append("deaths", playerList.get(pUUID).deaths)))
+            FFA.plugin.getLogger().severe("Player [" + pUUID + "] could not be saved!");
+
         playerList.remove(pUUID);
     }
 }

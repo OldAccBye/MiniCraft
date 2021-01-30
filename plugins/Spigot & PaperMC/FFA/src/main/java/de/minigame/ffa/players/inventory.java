@@ -27,6 +27,7 @@ public class inventory {
         ItemMeta im = i.getItemMeta();
         if (im == null) return null;
         im.setDisplayName(DM);
+        im.setUnbreakable(true);
         i.setItemMeta(im);
         return i;
     }
