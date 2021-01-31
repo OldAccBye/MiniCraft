@@ -35,7 +35,7 @@ public class pluginMessageReceiver implements Listener {
                     s.connect(server.getSocketAddress(), 15);
                     s.close();
                 } catch (IOException err) {
-                    p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aServer offline!"));
+                    p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aNo connection to the server..."));
                     return;
                 }
 
