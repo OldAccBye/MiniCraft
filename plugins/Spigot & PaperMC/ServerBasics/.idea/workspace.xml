@@ -31,7 +31,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../../GetTheChicken/Source/GetTheChicken" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Lobby" />
   </component>
   <component name="RunManager">
     <configuration name="serverBasics build" type="MavenRunConfiguration" factoryName="Maven">
