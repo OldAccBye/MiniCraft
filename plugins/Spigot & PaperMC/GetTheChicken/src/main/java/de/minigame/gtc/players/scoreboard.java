@@ -26,13 +26,13 @@ public class scoreboard {
         if (manager == null) return;
         Scoreboard board = manager.getNewScoreboard();
 
-        Objective obj = board.registerNewObjective("GTC-ScoreBoard", "dummy", "§8>> §GTC §8<<");
+        Objective obj = board.registerNewObjective("GTC-ScoreBoard", "dummy", "§8>§7> §3GTC §7<§8<");
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        obj.getScore("§r§e=-=-=-=-=-=-=-=").setScore(4);
-        obj.getScore("§a§lKills: §r§6" + GTC.playerList.get(topPlayerUUID)).setScore(3);
+        obj.getScore("§e=-=-=-=-=-=-=-=").setScore(4);
+        obj.getScore("§a§lKills: §r§6" + GTC.playerList.get(p.getUniqueId())).setScore(3);
         obj.getScore("§c§lTOP: §r§6" + topPlayer.getName()).setScore(2);
         obj.getScore("§f§lPlayers: §r§6" + GTC.plugin.getServer().getOnlinePlayers().size()).setScore(1);
-        obj.getScore("§e=-=-=-=-=-=-=-=§r").setScore(0);
+        obj.getScore("§r§e=-=-=-=-=-=-=-=").setScore(0);
 
         p.setScoreboard(board);
     }

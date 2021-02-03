@@ -20,11 +20,11 @@ public class GTCommand implements CommandExecutor {
             switch (args[0]) {
                 case "start" -> {
                     if (!world.preRoundStarted && !world.roundStarted)
-                        GTC.startPreRound(worldName);
+                        world.startPreRound();
                 }
                 case "stop" -> {
                     if (world.preRoundStarted && !world.roundStarted)
-                        GTC.stopPreRound(worldName);
+                        world.stopPreRound();
                 }
                 default -> p.sendMessage("Wähle zwischen start und stop.");
             }

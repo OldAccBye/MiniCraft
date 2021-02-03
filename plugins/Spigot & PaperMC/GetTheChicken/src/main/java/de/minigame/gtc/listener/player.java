@@ -24,19 +24,21 @@ public class player implements Listener {
         for (Map.Entry<String, worldData> data : GTC.worldLists.entrySet()) {
             String key = data.getKey();
             worldData value = data.getValue();
-            if (GTC.plugin.getServer().getWorld(key) == null || value.players >= value.maxPlayers || value.roundStarted) continue;
+            if (value.players >= value.maxPlayers || value.roundStarted) continue;
 
             GTC.playerList.put(p.getUniqueId(), 0);
             p.teleport(value.spawnLocation);
             p.sendTitle("§3GTC", "§aWillkommen!", 10, 70, 20);
 
             if (!value.preRoundStarted && GTC.plugin.getServer().getOnlinePlayers().size() >= value.playersToStart)
-                GTC.startPreRound(key);
+                GTC.worldLists.get(key).startPreRound();
+            else if (!value.preRoundStarted)
+                value.world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §6" + value.world.getPlayers().size() + "§e/§6" + value.playersToStart + " §eSpieler bis zum Start!"));
 
             return;
         }
 
-        p.kickPlayer("Keine freie Runde momentan verfügbar!");
+        p.kickPlayer("Keine freie Runde gefunden!");
     }
 
     @EventHandler
@@ -47,12 +49,9 @@ public class player implements Listener {
         GTC.playerList.remove(p.getUniqueId());
 
         if (wData.preRoundStarted) {
-            if (GTC.plugin.getServer().getOnlinePlayers().size() < wData.playersToStart) {
-                GTC.stopPreRound(worldName);
-
-                World w = e.getPlayer().getWorld();
-                for (Player t : w.getPlayers())
-                    t.sendMessage("§eAuf weitere Mitspieler warten... §6" + w.getPlayers().size() + "§e/§6" + wData.playersToStart);
+            if (wData.world.getPlayers().size() < wData.playersToStart) {
+                GTC.worldLists.get(worldName).stopPreRound();
+                wData.world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §6" + wData.world.getPlayers().size() + "§e/§6" + wData.playersToStart + " §eSpieler bis zum Start!"));
             }
         }
     }
@@ -75,13 +74,13 @@ public class player implements Listener {
             World w = killer.getWorld();
             if (mob != GTC.worldLists.get(w.getName()).lastChicken) return;
 
-            GTC.playerList.computeIfPresent(killer.getUniqueId(), (k, v) -> v + 1);
-            for (Player t : w.getPlayers()) {
-                t.sendMessage("§eDer Spieler §6" + killer.getName() + " §ehat ein Huhn getötet!");
-                scoreboard.set(t);
-            }
+            GTC.playerList.computeIfPresent(killer.getUniqueId(), (k, v) -> v += 1);
+            w.getPlayers().forEach(players -> {
+                players.sendMessage("§3GTC §7| §eDer Spieler §6" + killer.getName() + " §ehat ein Huhn getötet!");
+                scoreboard.set(players);
+            });
         }
 
-        GTC.spawnChicken(e.getEntity().getWorld().getName());
+        GTC.worldLists.get(e.getEntity().getWorld().getName()).spawnChicken();
     }
 }

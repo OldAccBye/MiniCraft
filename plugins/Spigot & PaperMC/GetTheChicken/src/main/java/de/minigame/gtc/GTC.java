@@ -2,17 +2,12 @@ package de.minigame.gtc;
 
 import de.minigame.gtc.listener.player;
 import de.minigame.gtc.players.commands.GTCommand;
-import de.minigame.gtc.players.inventory;
-import de.minigame.gtc.players.scoreboard;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
 import java.util.*;
@@ -44,7 +39,7 @@ public class GTC extends JavaPlugin {
                         new WorldCreator(worldName).environment(World.Environment.NORMAL).generateStructures(false).createWorld();
                     }
 
-                    worldData w = new worldData();
+                    worldData w = new worldData(worldName);
                     w.maxPlayers = cfg.getInt(worldName + ".MaxPlayers");
                     w.playersToStart = cfg.getInt(worldName + ".PlayersToStart");
                     w.preTime = cfg.getInt(worldName + ".PreTime");
@@ -99,130 +94,4 @@ public class GTC extends JavaPlugin {
 
     @Override
     public void onDisable() {}
-
-    public static void startPreRound(String worldName) {
-        World w = plugin.getServer().getWorld(worldName);
-        if (w == null) return;
-        worldData wData = worldLists.get(worldName);
-        wData.preRoundStarted = true;
-        wData.preRoundSeconds = wData.preTime;
-
-        for (Player p : w.getPlayers())
-            p.sendMessage("§7Das Spiel startet in §a" + wData.preRoundSeconds + " Sekunden§7!");
-
-        wData.preRoundTaskId = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-           switch (wData.preRoundSeconds) {
-               case 5: case 4: case 3: case 2: case 1:
-                   for (Player p : w.getPlayers())
-                       p.sendMessage("§7Das Spiel startet in §a" + wData.preRoundSeconds + " Sekunde(n)§7!");
-                   break;
-               case 0:
-                   startRound(worldName);
-                   break;
-           }
-
-           if (wData.preRoundSeconds != 0)
-               wData.preRoundSeconds--;
-        }, 0, 20);
-    }
-
-    public static void stopPreRound(String worldName) {
-        worldData w = worldLists.get(worldName);
-        if (!w.preRoundStarted) return;
-
-        plugin.getServer().getScheduler().cancelTask(w.preRoundTaskId);
-        w.preRoundStarted = false;
-    }
-
-    public static void startRound(String worldName) {
-        worldData wData = worldLists.get(worldName);
-        plugin.getServer().getScheduler().cancelTask(wData.preRoundTaskId);
-        wData.preRoundStarted = false;
-        wData.roundStarted = true;
-        wData.roundSeconds = wData.playTime;
-
-        for (Player p : plugin.getServer().getOnlinePlayers()) {
-            p.teleport(wData.roundLocation);
-            inventory.reset(p);
-            scoreboard.set(p);
-            p.sendTitle("§3GTC", "Viel Glück!",  10, 70, 20);
-            p.setExp(0.99f);
-            p.setLevel(20);
-        }
-
-        spawnChicken(worldName);
-
-        wData.roundTaskId = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-            World w = plugin.getServer().getWorld(worldName);
-            if (w == null || w.getPlayers().size() == 0) {
-                wData.roundStarted = false;
-                wData.roundSeconds = 0;
-                if (!wData.lastChicken.isDead())
-                    wData.lastChicken.remove();
-                plugin.getServer().getScheduler().cancelTask(wData.roundTaskId);
-                return;
-            }
-
-            if (wData.roundSeconds == 1)
-                stopRound(worldName);
-            else {
-                wData.roundSeconds--;
-                for (Player p : w.getPlayers()) {
-                    float exp = p.getExp() - (float) 1/wData.playTime;
-                    p.setExp(exp);
-                    p.setLevel(wData.roundSeconds);
-                }
-            }
-        }, 0, 20);
-    }
-
-    public static void stopRound(String worldName) {
-        World w = plugin.getServer().getWorld(worldName);
-        if (w == null) return;
-        worldData wData = worldLists.get(worldName);
-        wData.roundStarted = false;
-
-        plugin.getServer().getScheduler().cancelTask(wData.roundTaskId);
-
-        String topPlayerName = "null";
-        Player topPlayer = plugin.getServer().getPlayer(wData.topPlayer);
-        if (topPlayer != null) topPlayerName = topPlayer.getName();
-
-        for (Player p : w.getPlayers()) {
-            p.sendTitle("§3Gewonnen hat:", topPlayerName,  10, 70, 20);
-            p.sendMessage("§eDer Spieler §6" + topPlayerName + " §egewann mit §6" + playerList.get(wData.topPlayer) + " §ekill(s)!");
-
-            playerList.put(p.getUniqueId(), 0);
-
-            ScoreboardManager manager = plugin.getServer().getScoreboardManager();
-            if (manager != null)
-                p.setScoreboard(manager.getNewScoreboard());
-
-            p.teleport(wData.spawnLocation);
-            p.getInventory().clear();
-            p.setExp(0.0f);
-            p.setLevel(0);
-        }
-
-        if (wData.lastChicken != null && !wData.lastChicken.isDead())
-            wData.lastChicken.remove();
-    }
-
-    private static double getRandomDouble(double val1, double val2) {
-        double min = Math.min(val1, val2);
-        double max = Math.max(val1, val2);
-
-        return (Math.random() * (max - min)) + min;
-    }
-
-    public static void spawnChicken(String worldName) {
-        worldData wData = worldLists.get(worldName);
-        double randomX = getRandomDouble(wData.chickenLocation.get(0).getX(), wData.chickenLocation.get(1).getX());
-        double randomY = getRandomDouble(wData.chickenLocation.get(0).getY(), wData.chickenLocation.get(1).getY());
-        double randomZ = getRandomDouble(wData.chickenLocation.get(0).getZ(), wData.chickenLocation.get(1).getZ());
-
-        World w = plugin.getServer().getWorld(worldName);
-        if (w != null)
-            wData.lastChicken = w.spawnEntity(new Location(plugin.getServer().getWorld(worldName), randomX, randomY, randomZ), EntityType.CHICKEN);
-    }
 }
