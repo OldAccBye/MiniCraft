@@ -1,9 +1,9 @@
 package de.minigame.ffa;
 
-import de.minigame.ffa.listener.player;
-import de.minigame.ffa.players.commands;
-import de.minigame.ffa.players.playerApi;
-import de.minigame.ffa.players.playerData;
+import de.minigame.ffa.listener.PlayerListener;
+import de.minigame.ffa.players.FFAComands;
+import de.minigame.ffa.players.FFAPlayerApi;
+import de.minigame.ffa.players.FFAPlayerData;
 import org.bson.Document;
 import org.bukkit.Location;
 import org.bukkit.configuration.Configuration;
@@ -16,8 +16,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 public final class FFA extends JavaPlugin {
-    public static mongoManager mongo = new mongoManager();
+    public static FFAMM mongo = new FFAMM();
     public static Configuration config;
+    public static Location spawnLoc;
     public static FFA plugin;
 
     @Override
@@ -45,7 +46,7 @@ public final class FFA extends JavaPlugin {
         {
             file = new File(getDataFolder().getPath(), "spawns.yml");
             if (!file.exists()) {
-                super.getLogger().severe(">>>>> [CONFIG] config.yml existiert nicht! <<<<<");
+                super.getLogger().severe(">>>>> [CONFIG] spawns.yml existiert nicht! <<<<<");
                 plugin.getServer().shutdown();
                 return;
             }
@@ -57,15 +58,15 @@ public final class FFA extends JavaPlugin {
             Location loc = new Location(plugin.getServer().getWorld("world"), x, y, z);
             loc.setYaw(yaw);
             loc.setPitch(pitch);
-            spawnData.loc = loc;
+            spawnLoc = loc;
         }
 
         /* ===== LISTENER - START ===== */
-        plugin.getServer().getPluginManager().registerEvents( new player(), this);
+        plugin.getServer().getPluginManager().registerEvents( new PlayerListener(), this);
         /* ===== LISTENER - START ===== */
 
         /* ===== COMMANDS - START ===== */
-        Objects.requireNonNull(plugin.getCommand("setspawn")).setExecutor(new commands());
+        Objects.requireNonNull(plugin.getCommand("setspawn")).setExecutor(new FFAComands());
         /* ===== COMMANDS - END ===== */
 
         /* ===== DATABASE - START ===== */
@@ -77,12 +78,12 @@ public final class FFA extends JavaPlugin {
     public void onDisable() {
         plugin.getLogger().info("Spieler werden gespeichert...");
 
-        for (Map.Entry<UUID, playerData> pData : playerApi.playerList.entrySet()) {
+        for (Map.Entry<UUID, FFAPlayerData> pData : FFAPlayerApi.playerList.entrySet()) {
             UUID key = pData.getKey();
-            playerData value = pData.getValue();
+            FFAPlayerData value = pData.getValue();
 
             if (!FFA.mongo.updatePlayerStats(key, new Document("kills", value.kills).append("deaths", value.deaths)))
-                plugin.getLogger().severe("Player [" + key.toString() + "] could not be saved!");
+                plugin.getLogger().severe("Spieler [" + key.toString() + "] konnte nicht gespeichert werden!");
         }
 
         plugin.getLogger().info("Spieler wurden gespeichert!");

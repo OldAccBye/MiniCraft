@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class playerApi {
-    public static final HashMap<UUID, playerData> playerList = new HashMap<>();
+public class FFAPlayerApi {
+    public static final HashMap<UUID, FFAPlayerData> playerList = new HashMap<>();
 
     public static boolean register(Player p) {
         try {
@@ -23,7 +23,7 @@ public class playerApi {
             return false;
         }
 
-        playerData data = new playerData();
+        FFAPlayerData data = new FFAPlayerData();
         data.kills = 0;
         data.deaths = 0;
         playerList.put(p.getUniqueId(), data);
@@ -45,7 +45,7 @@ public class playerApi {
             return false;
         }
 
-        playerData data = new playerData();
+        FFAPlayerData data = new FFAPlayerData();
         data.kills = playerDoc.getInteger("kills");
         data.deaths = playerDoc.getInteger("deaths");
         playerList.put(pUUID, data);
@@ -56,7 +56,7 @@ public class playerApi {
         if (!playerList.containsKey(pUUID)) return;
 
         if (!FFA.mongo.updatePlayerStats(pUUID, new Document("kills", playerList.get(pUUID).kills).append("deaths", playerList.get(pUUID).deaths)))
-            FFA.plugin.getLogger().severe("Player [" + pUUID + "] could not be saved!");
+            FFA.plugin.getLogger().severe("Spieler [" + pUUID + "] konnte nicht gespeichert werden!");
 
         playerList.remove(pUUID);
     }

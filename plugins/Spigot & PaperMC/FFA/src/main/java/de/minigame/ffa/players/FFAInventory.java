@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class inventory {
+public class FFAInventory {
     public static void getPlayerStandard(Player p) {
         p.getInventory().clear();
         p.getInventory().setArmorContents(null);
@@ -25,10 +25,12 @@ public class inventory {
         ItemStack i = new ItemStack(m);
         i.setAmount(value);
         ItemMeta im = i.getItemMeta();
-        if (im == null) return null;
-        im.setDisplayName(DM);
-        im.setUnbreakable(true);
-        i.setItemMeta(im);
+        if (im != null) {
+            im.setDisplayName(DM);
+            im.setUnbreakable(true);
+            i.setItemMeta(im);
+        }
+
         return i;
     }
 }

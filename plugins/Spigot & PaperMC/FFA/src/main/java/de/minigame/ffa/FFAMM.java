@@ -10,7 +10,7 @@ import org.bson.Document;
 
 import java.util.UUID;
 
-public class mongoManager {
+public class FFAMM {
     public MongoCollection<Document> players;
 
     public void connect() {
@@ -21,7 +21,7 @@ public class mongoManager {
                 collection = FFA.config.getString("mongodb.collection");
 
         if (username == null || password == null || host == null || database == null || collection == null) {
-            FFA.plugin.getLogger().severe("[mongoManager->connect] Please fill out all fields in the config.yml.");
+            FFA.plugin.getLogger().severe("[FFAMM->connect] Please fill out all fields in the config.yml.");
             FFA.plugin.getServer().shutdown();
             return;
         }

@@ -1,6 +1,6 @@
 package de.minigame.ffa.players;
 
-import de.minigame.ffa.spawnData;
+import de.minigame.ffa.FFA;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 
-public class commands implements CommandExecutor {
+public class FFAComands implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender s, Command c, String arg2, String[] args) {
         if (!(s instanceof Player)) return false;
@@ -20,7 +20,7 @@ public class commands implements CommandExecutor {
         File file = new File("plugins//FFA//spawns.yml");
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
         Location loc = p.getLocation();
-        spawnData.loc = loc;
+        FFA.spawnLoc = loc;
         cfg.set("spawn.x", loc.getX());
         cfg.set("spawn.y", loc.getY());
         cfg.set("spawn.z", loc.getZ());
@@ -28,10 +28,10 @@ public class commands implements CommandExecutor {
         cfg.set("spawn.pitch", loc.getPitch());
         try {
             cfg.save(file);
-            p.sendMessage("SPAWN GESETZT!");
+            p.sendMessage("§3FFA §7| §fSPAWN GESETZT!");
         } catch (IOException e) {
             e.printStackTrace();
-            p.sendMessage("SPAWN NICHT GESETZT!");
+            p.sendMessage("§3FFA §7| §fSPAWN NICHT GESETZT!");
         }
 
         return true;
