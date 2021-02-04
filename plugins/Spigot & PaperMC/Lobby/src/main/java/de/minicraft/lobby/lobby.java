@@ -1,11 +1,10 @@
 package de.minicraft.lobby;
 
-import de.minicraft.lobby.listener.navigator;
-import de.minicraft.lobby.listener.player;
+import de.minicraft.lobby.listener.PlayerListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class lobby extends JavaPlugin {
-    public static lobby plugin;
+public class Lobby extends JavaPlugin {
+    public static Lobby plugin;
 
     @Override
     public void onEnable() {
@@ -13,8 +12,7 @@ public class lobby extends JavaPlugin {
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getServer().getMessenger().registerOutgoingPluginChannel(this, "lobby:getserverinfo");
-        getServer().getPluginManager().registerEvents(new player(), this);
-        getServer().getPluginManager().registerEvents(new navigator(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
     @Override
