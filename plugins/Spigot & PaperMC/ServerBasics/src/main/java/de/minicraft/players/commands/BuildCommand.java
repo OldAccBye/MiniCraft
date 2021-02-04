@@ -1,21 +1,21 @@
 package de.minicraft.players.commands;
 
-import de.minicraft.players.playerApi;
-import de.minicraft.players.playerData;
+import de.minicraft.players.SBPlayerApi;
+import de.minicraft.players.SBPlayerData;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class build implements CommandExecutor {
+public class BuildCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) return false;
 
         Player p = (Player) sender;
 
-        playerData pData = playerApi.get(p.getUniqueId());
+        SBPlayerData pData = SBPlayerApi.get(p.getUniqueId());
         if (pData == null) {
             p.kickPlayer("Player data missing. Try to login again.");
             return false;
@@ -24,11 +24,11 @@ public class build implements CommandExecutor {
         if (p.hasPermission("minicraft.blockbreak")) {
             pData.permissions.setPermission("minicraft.blockbreak", false);
             p.setGameMode(GameMode.SURVIVAL);
-            p.sendMessage("build deaktiviert!");
+            p.sendMessage("BuildCommand deaktiviert!");
         } else {
             pData.permissions.setPermission("minicraft.blockbreak", true);
             p.setGameMode(GameMode.CREATIVE);
-            p.sendMessage("build aktiviert!");
+            p.sendMessage("BuildCommand aktiviert!");
         }
 
         return true;

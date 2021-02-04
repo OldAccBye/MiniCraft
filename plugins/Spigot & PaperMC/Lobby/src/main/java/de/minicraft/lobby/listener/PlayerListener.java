@@ -31,13 +31,11 @@ public class PlayerListener implements Listener {
             e.getPlayer().getInventory().clear();
             ItemStack i = new ItemStack(Material.COMPASS);
             ItemMeta im = i.getItemMeta();
-            if (im == null) {
-                e.getPlayer().kickPlayer("Something gone wrong! please try to login again.");
-                return;
+            if (im != null) {
+                im.setDisplayName("§3§lNavigator");
+                i.setItemMeta(im);
+                e.getPlayer().getInventory().setItem(4, i);
             }
-            im.setDisplayName("§3§lNavigator");
-            i.setItemMeta(im);
-            e.getPlayer().getInventory().setItem(4, i);
         }
 
         // Double jump

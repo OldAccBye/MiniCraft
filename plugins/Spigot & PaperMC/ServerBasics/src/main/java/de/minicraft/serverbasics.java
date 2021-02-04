@@ -1,20 +1,20 @@
 package de.minicraft;
 
-import de.minicraft.listener.block;
-import de.minicraft.listener.chat;
-import de.minicraft.listener.player;
-import de.minicraft.players.commands.build;
-import de.minicraft.players.commands.setgroup;
-import de.minicraft.players.commands.setlanguage;
+import de.minicraft.listener.BlockListener;
+import de.minicraft.listener.ChatListener;
+import de.minicraft.listener.PlayerListener;
+import de.minicraft.players.commands.BuildCommand;
+import de.minicraft.players.commands.SetgroupCommand;
+import de.minicraft.players.commands.SetlanguageCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Objects;
 
-public final class serverBasics extends JavaPlugin {
-    public static serverBasics plugin;
-    public static mongoManager mongo = new mongoManager();
+public final class ServerBasics extends JavaPlugin {
+    public static ServerBasics plugin;
+    public static SBMM mongo = new SBMM();
 
     @Override
     public void onEnable() {
@@ -32,7 +32,7 @@ public final class serverBasics extends JavaPlugin {
                 return;
             }
 
-            config.setConfig(YamlConfiguration.loadConfiguration(file));
+            SBConfig.setConfig(YamlConfiguration.loadConfiguration(file));
         }
 
         // language
@@ -43,7 +43,7 @@ public final class serverBasics extends JavaPlugin {
                 return;
             }
 
-            config.setLanguage(YamlConfiguration.loadConfiguration(file));
+            SBConfig.setLanguage(YamlConfiguration.loadConfiguration(file));
         }
 
         // commands
@@ -54,7 +54,7 @@ public final class serverBasics extends JavaPlugin {
                 return;
             }
 
-            config.setCommandList(YamlConfiguration.loadConfiguration(file));
+            SBConfig.setCommandList(YamlConfiguration.loadConfiguration(file));
         }
 
         // permissions
@@ -65,7 +65,7 @@ public final class serverBasics extends JavaPlugin {
                 return;
             }
 
-            config.setPermissionsList(YamlConfiguration.loadConfiguration(file));
+            SBConfig.setPermissionsList(YamlConfiguration.loadConfiguration(file));
         }
 
         /* ===== DATABASE - START ===== */
@@ -73,15 +73,15 @@ public final class serverBasics extends JavaPlugin {
         /* ===== DATABASE - END ===== */
 
         /* ===== COMMANDS - START ===== */
-        Objects.requireNonNull(plugin.getCommand("setlanguage")).setExecutor(new setlanguage());
-        Objects.requireNonNull(plugin.getCommand("setgroup")).setExecutor(new setgroup());
-        Objects.requireNonNull(plugin.getCommand("build")).setExecutor(new build());
+        Objects.requireNonNull(plugin.getCommand("setlanguage")).setExecutor(new SetlanguageCommand());
+        Objects.requireNonNull(plugin.getCommand("setgroup")).setExecutor(new SetgroupCommand());
+        Objects.requireNonNull(plugin.getCommand("build")).setExecutor(new BuildCommand());
         /* ===== COMMANDS - END ===== */
 
         /* ===== LISTENER - START ===== */
-        getServer().getPluginManager().registerEvents(new player(), this);
-        getServer().getPluginManager().registerEvents(new block(), this);
-        getServer().getPluginManager().registerEvents(new chat(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new BlockListener(), this);
+        getServer().getPluginManager().registerEvents(new ChatListener(), this);
         /* ===== LISTENER - END ===== */
 
         System.out.println(" ");

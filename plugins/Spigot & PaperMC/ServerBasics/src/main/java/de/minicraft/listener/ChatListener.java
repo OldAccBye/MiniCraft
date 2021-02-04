@@ -2,8 +2,10 @@ package de.minicraft.listener;
 
 import java.util.Objects;
 
-import de.minicraft.players.playerData;
-import de.minicraft.serverBasics;
+import de.minicraft.SBConfig;
+import de.minicraft.players.SBPlayerApi;
+import de.minicraft.players.SBPlayerData;
+import de.minicraft.ServerBasics;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,15 +14,12 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 
-import de.minicraft.config;
-import de.minicraft.players.playerApi;
-
-public class chat implements Listener {
+public class ChatListener implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
 
-        playerData pData = playerApi.get(p.getUniqueId());
+        SBPlayerData pData = SBPlayerApi.get(p.getUniqueId());
         if (pData == null) {
             p.kickPlayer("Player data missing. Try to login again.");
             return;
@@ -32,16 +31,16 @@ public class chat implements Listener {
         if (tempMsg.contains("@")) {
             String t = tempMsg.substring(tempMsg.indexOf("@") + 1).split(" ")[0];
 
-            if (serverBasics.plugin.getServer().getPlayerExact(t) == null)
-                p.sendMessage(config.getLanguageText(p.getUniqueId(), "playerNotFound"));
+            if (ServerBasics.plugin.getServer().getPlayerExact(t) == null)
+                p.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "playerNotFound"));
             else if (!t.equals(p.getName())) {
-                p.sendMessage(config.getLanguageText(p.getUniqueId(), "playerHasBeenMarked").replace("%username%", p.getName()));
+                p.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "playerHasBeenMarked").replace("%username%", p.getName()));
                 tempMsg = tempMsg.replace("@" + p.getName(), "§b@" + p.getName() + "§r");
             }
         }
 
         for (Player t : p.getWorld().getPlayers())
-            t.sendMessage(config.getLanguageText(p.getUniqueId(), "prefix." + pData.group) + p.getName() + ": " + tempMsg);
+            t.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "prefix." + pData.group) + p.getName() + ": " + tempMsg);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -49,15 +48,15 @@ public class chat implements Listener {
         Player p = e.getPlayer();
 
         String firstWord = e.getMessage().split(" ")[0].replace("/", "");
-        if (!config.commandList.getKeys(true).contains(firstWord)) {
+        if (!SBConfig.commandList.getKeys(true).contains(firstWord)) {
             e.setCancelled(true);
-            p.sendMessage(config.getLanguageText(p.getUniqueId(), "cmdNotExists"));
+            p.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "cmdNotExists"));
             return;
         }
 
-        if (!p.hasPermission(Objects.requireNonNull(config.commandList.getString(firstWord)))) {
+        if (!p.hasPermission(Objects.requireNonNull(SBConfig.commandList.getString(firstWord)))) {
             e.setCancelled(true);
-            p.sendMessage(config.getLanguageText(p.getUniqueId(), "noPermission"));
+            p.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "noPermission"));
         }
     }
 
@@ -65,11 +64,11 @@ public class chat implements Listener {
     public void onCommandTabSend(PlayerCommandSendEvent e) {
         e.getCommands().clear();
 
-        playerData pData = playerApi.get(e.getPlayer().getUniqueId());
+        SBPlayerData pData = SBPlayerApi.get(e.getPlayer().getUniqueId());
         if (pData == null) return;
 
-        for (String cmd : config.commandList.getKeys(false)) {
-            String cmdPerm = config.commandList.getString(cmd);
+        for (String cmd : SBConfig.commandList.getKeys(false)) {
+            String cmdPerm = SBConfig.commandList.getString(cmd);
             if (cmdPerm == null) return;
 
             if (e.getPlayer().hasPermission(cmdPerm))
