@@ -1,8 +1,8 @@
 package de.minicraft;
 
-import de.minicraft.commands.hub;
-import de.minicraft.listener.pluginMessageReceiver;
-import de.minicraft.listener.tabList;
+import de.minicraft.commands.HubCommand;
+import de.minicraft.listener.PluginMessageReceiver;
+import de.minicraft.listener.Tablist;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public final class BungeeSystem extends Plugin {
@@ -13,11 +13,11 @@ public final class BungeeSystem extends Plugin {
         plugin = this;
 
         // Listener
-        plugin.getProxy().getPluginManager().registerListener(plugin, new pluginMessageReceiver());
-        plugin.getProxy().getPluginManager().registerListener(plugin, new tabList());
+        plugin.getProxy().getPluginManager().registerListener(plugin, new PluginMessageReceiver());
+        plugin.getProxy().getPluginManager().registerListener(plugin, new Tablist());
 
         // Commands
-        plugin.getProxy().getPluginManager().registerCommand(plugin, new hub());
+        plugin.getProxy().getPluginManager().registerCommand(plugin, new HubCommand());
 
         // Channels
         plugin.getProxy().registerChannel("lobby:getserverinfo");

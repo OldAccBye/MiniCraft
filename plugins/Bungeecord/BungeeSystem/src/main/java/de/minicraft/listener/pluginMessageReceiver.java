@@ -13,7 +13,7 @@ import net.md_5.bungee.event.EventHandler;
 import java.io.IOException;
 import java.net.Socket;
 
-public class pluginMessageReceiver implements Listener {
+public class PluginMessageReceiver implements Listener {
     @EventHandler
     public void on(PluginMessageEvent e) {
         if (e.getTag().equalsIgnoreCase("lobby:getserverinfo")) {
