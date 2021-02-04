@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.minigame.gtc</groupId>
-    <artifactId>GetTheChicken</artifactId>
+    <artifactId>GTC</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
