@@ -88,18 +88,17 @@ public class PlayerListener implements Listener {
         Location pLoc = e.getEntity().getLocation();
         Location kLoc = e.getDamager().getLocation();
 
-        double[] x = { -3.158, -8.802 },
-                z = { 3.233, 8.862 };
+        double[] x = { -1.945, 2.947 },
+                z = { 2.945, -1.947 };
 
-        if ((kLoc.getX() <= x[0] && kLoc.getX() >= x[1]) && (kLoc.getZ() >= z[0] && kLoc.getZ() <= z[1]) ||
-                (pLoc.getX() <= x[0] && pLoc.getX() >= x[1]) && (pLoc.getZ() >= z[0] && pLoc.getZ() <= z[1]))
+        if ((kLoc.getX() >= x[0] && kLoc.getX() <= x[1]) && (kLoc.getZ() <= z[0] && kLoc.getZ() >= z[1]) ||
+                (pLoc.getX() >= x[0] && pLoc.getX() <= x[1]) && (pLoc.getZ() <= z[0] && pLoc.getZ() >= z[1]))
         {
             e.setCancelled(true);
             return;
         }
 
         if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-
             if (!(e.getDamager() instanceof Projectile)) return;
             Projectile projectile = (Projectile) e.getDamager();
 
