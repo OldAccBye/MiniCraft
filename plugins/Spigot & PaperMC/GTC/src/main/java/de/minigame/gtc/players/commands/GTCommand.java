@@ -1,7 +1,7 @@
 package de.minigame.gtc.players.commands;
 
 import de.minigame.gtc.GTC;
-import de.minigame.gtc.worldData;
+import de.minigame.gtc.GTCWorld;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,7 +14,7 @@ public class GTCommand implements CommandExecutor {
 
         Player p = (Player) s;
         String worldName = p.getWorld().getName();
-        worldData world = GTC.worldLists.get(worldName);
+        GTCWorld world = GTC.worldLists.get(worldName);
 
         if (args.length == 1) {
             switch (args[0]) {

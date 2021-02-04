@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class inventory {
+public class GTCInventory {
     public static void reset(Player p) {
         p.getInventory().clear();
         p.getInventory().setArmorContents(null);

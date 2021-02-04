@@ -1,7 +1,7 @@
 package de.minigame.gtc;
 
-import de.minigame.gtc.players.inventory;
-import de.minigame.gtc.players.scoreboard;
+import de.minigame.gtc.players.GTCInventory;
+import de.minigame.gtc.players.GTCScoreboard;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class worldData {
+public class GTCWorld {
     public final World world;
     public boolean roundStarted = false, preRoundStarted = false;
     public int lastTaskId, preRoundSeconds, roundSeconds, playTime, preTime, players, maxPlayers, playersToStart;
@@ -23,25 +23,20 @@ public class worldData {
     public Entity lastChicken;
     public UUID topPlayer;
 
-    worldData(String worldName) { this.world = GTC.plugin.getServer().getWorld(worldName); }
+    GTCWorld(String worldName) { this.world = GTC.plugin.getServer().getWorld(worldName); }
 
     public void startPreRound() {
         this.preRoundStarted = true;
         this.preRoundSeconds = this.preTime;
 
         for (Player p : world.getPlayers())
-            p.sendMessage("§3GTC §7| §fDas Spiel startet in §a" + this.preRoundSeconds + " Sekunden§f!");
+            p.sendMessage("§3GTC §7| §fThe game starts in §a" + this.preRoundSeconds + " seconds§f!");
 
         this.lastTaskId = GTC.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(GTC.plugin, () -> {
-            switch (this.preRoundSeconds) {
-                case 5: case 4: case 3: case 2: case 1:
-                    for (Player p : world.getPlayers())
-                        p.sendMessage("§3GTC §7| §fDas Spiel startet in §a" + this.preRoundSeconds + " Sekunde(n)§f!");
-                    break;
-                case 0:
-                    startRound();
-                    break;
-            }
+            if (this.preRoundSeconds > 0 && this.preRoundSeconds <= 5)
+                world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §fThe game starts in §a" + this.preRoundSeconds + " second(n)§f!"));
+            else if (this.preRoundSeconds == 0)
+                startRound();
 
             if (this.preRoundSeconds != 0)
                 this.preRoundSeconds--;
@@ -62,9 +57,9 @@ public class worldData {
         this.world.getPlayers().forEach(player -> {
             GTC.playerList.computeIfPresent(player.getUniqueId(), (k, v) -> v = 0);
             player.teleport(this.roundLocation);
-            inventory.reset(player);
-            scoreboard.set(player);
-            player.sendTitle("§3GTC", "Viel Glück!",  10, 70, 20);
+            GTCInventory.reset(player);
+            GTCScoreboard.set(player);
+            player.sendTitle("§3GTC", "Good luck!",  10, 70, 20);
             player.setExp(0.99f);
             player.setLevel(20);
         });
@@ -91,7 +86,7 @@ public class worldData {
             }
 
             switch (this.roundSeconds) {
-                case 5 -> world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §fDie Runde endet in §a5 Sekunden§f!"));
+                case 5 -> world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §fThe round ends in §a5 seconds§f!"));
                 case 0 -> stopRound();
             }
         }, 0, 20);
@@ -106,8 +101,8 @@ public class worldData {
         String topPlayerName = (topPlayer != null) ? topPlayer.getName() : "null";
 
         this.world.getPlayers().forEach(player -> {
-            player.sendTitle("§3Gewonnen hat:", topPlayerName,  10, 70, 20);
-            player.sendMessage("§3GTC §7| §eDer Spieler §6" + topPlayerName + " §egewann mit §6" + GTC.playerList.get(this.topPlayer) + " §ekill(s)!");
+            player.sendTitle("§3The winner is:", topPlayerName,  10, 70, 20);
+            player.sendMessage("§3GTC §7| §eThe player §6" + topPlayerName + " §ewon with §6" + GTC.playerList.get(this.topPlayer) + " §ekill(s)!");
 
             ScoreboardManager manager = GTC.plugin.getServer().getScoreboardManager();
             if (manager != null)

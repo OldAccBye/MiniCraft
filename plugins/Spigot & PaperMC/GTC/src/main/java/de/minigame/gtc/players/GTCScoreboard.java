@@ -1,30 +1,29 @@
 package de.minigame.gtc.players;
 
 import de.minigame.gtc.GTC;
-import de.minigame.gtc.worldData;
+import de.minigame.gtc.GTCWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class scoreboard {
+public class GTCScoreboard {
     public static void set(Player p) {
         UUID topPlayerUUID = Collections.max(GTC.playerList.entrySet(), Map.Entry.comparingByValue()).getKey();
 
         Player topPlayer = getServer().getPlayer(topPlayerUUID);
         if (topPlayer == null) return;
 
-        worldData wData = GTC.worldLists.get(p.getWorld().getName());
+        GTCWorld wData = GTC.worldLists.get(p.getWorld().getName());
         wData.topPlayer = topPlayerUUID;
 
         ScoreboardManager manager = GTC.plugin.getServer().getScoreboardManager();
         if (manager == null) return;
-        Scoreboard board = manager.getNewScoreboard();
+        org.bukkit.scoreboard.Scoreboard board = manager.getNewScoreboard();
 
         Objective obj = board.registerNewObjective("GTC-ScoreBoard", "dummy", "§8>§7> §3GTC §7<§8<");
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);

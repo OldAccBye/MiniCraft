@@ -1,6 +1,6 @@
 package de.minigame.gtc;
 
-import de.minigame.gtc.listener.player;
+import de.minigame.gtc.listener.PlayerListener;
 import de.minigame.gtc.players.commands.GTCommand;
 
 import org.bukkit.Location;
@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.*;
 
 public class GTC extends JavaPlugin {
-    public final static HashMap<String, worldData> worldLists = new HashMap<>();
+    public final static HashMap<String, GTCWorld> worldLists = new HashMap<>();
     public static final HashMap<UUID, Integer> playerList = new HashMap<>();
     public static GTC plugin;
 
@@ -39,7 +39,7 @@ public class GTC extends JavaPlugin {
                         new WorldCreator(worldName).environment(World.Environment.NORMAL).generateStructures(false).createWorld();
                     }
 
-                    worldData w = new worldData(worldName);
+                    GTCWorld w = new GTCWorld(worldName);
                     w.maxPlayers = cfg.getInt(worldName + ".MaxPlayers");
                     w.playersToStart = cfg.getInt(worldName + ".PlayersToStart");
                     w.preTime = cfg.getInt(worldName + ".PreTime");
@@ -88,7 +88,7 @@ public class GTC extends JavaPlugin {
                 super.getLogger().severe("Datei 'config.yml' konnte nicht gefunden werden!");
         }
 
-        plugin.getServer().getPluginManager().registerEvents(new player(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerListener(), plugin);
         Objects.requireNonNull(plugin.getCommand("gtc")).setExecutor(new GTCommand());
     }
 
