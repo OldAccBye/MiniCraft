@@ -1,0 +1,78 @@
+<%- include('header'); %>
+
+    <main>
+        <div class="jumbotron">
+            <div class="container text-center">
+                <h1 class="display-4 text:shadow-lg">MiniCraft</h1>
+                <p class="lead text:shadow-lg">Dein neuer Minigames Server mit einzigartigen Spielen!</p>
+            </div>
+        </div>
+
+        <% if (typeof error !== 'undefined' || typeof profil === 'undefined') { %>
+        <div class="container my-3">
+            <div class="row">
+                <div class="col">
+                    <div class="shadow-sm p-3 bg-white rounded text-center">
+                        <h3>Spieler konnte nicht gefunden werden!</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } else { %>
+        <div class="container my-3">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="shadow-sm p-3 bg-white rounded text-center">
+                        <img style="max-width: 100%;" src="https://crafatar.com/renders/body/<%= typeof profil !== 'undefined' ? profil.uuid : 0 %>">
+                    </div>
+                </div>
+                <div class="col-sm-8 mt-3 mt-sm-0">
+                    <div class="card shadow-sm text-center">
+                        <div class="card-header">Informationen</div>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="fw-bold">UUID</div>
+                                <div class="ms-auto"><%= typeof profil.uuid !== 'undefined' ? profil.uuid : 'null' %></div>
+                            </div>
+                            <div class="d-flex mt-1">
+                                <div class="fw-bold">Benutzername</div>
+                                <div class="ms-auto"><%= typeof profil.username !== 'undefined' ? profil.username : 'null' %></div>
+                            </div>
+                            <div class="d-flex mt-1">
+                                <div class="fw-bold">Gruppe</div>
+                                <div class="ms-auto"><%= typeof profil.group !== 'undefined' ? profil.group : 'null' %></div>
+                            </div>
+                            <div class="d-flex mt-1">
+                                <div class="fw-bold">Status</div>
+                                <div class="ms-auto"><%- typeof profil.banned !== 'undefined' ? profil.banned === false ? '<span class="badge:green">NICHT GESPERRT</span>' : '<span class="badge:red">GESPERRT</span>' : 'null' %></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="label mt-2">Minigames</h3>
+            <div class="row mt-3">
+                <div class="col-sm-6 col-lg-4">
+                    <div class="card bg-dark text-white">
+                        <img src="/assets/img/mgffa.png" class="card-img" alt="...">
+                        <div class="card-img-overlay p-0">
+                            <h5 class="card-title text-center p-1" style="background-color: #000000a3;">Free-For-All</h5>
+                        </div>
+                    </div>
+                    <div class="mt-2 shadow-sm p-3 bg-white rounded text-center">
+                        <div class="d-flex">
+                            <div class="fw-bold">Kills</div>
+                            <div class="ms-auto"><span class="badge:green"><%- typeof profil.ffa !== 'undefined' ? profil.ffa.kills : '0' %></span></div>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <div class="fw-bold">Tode</div>
+                            <div class="ms-auto"><span class="badge:green"><%- typeof profil.ffa !== 'undefined' ? profil.ffa.deaths : '0' %></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </main>
+
+<%- include('footer'); %>

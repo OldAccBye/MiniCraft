@@ -1,0 +1,35 @@
+.text {
+    &\:shadow {
+        &-lg {
+            text-shadow: -1px 2px black;
+        }
+
+        &-sm {
+            text-shadow: 0px 1px black;
+        }
+    }
+}
+
+.btn {
+    &\:green {
+        border-color: #4a9e3f;
+        background-color: #5dbd50;
+        color: #fff !important;
+
+        &:hover,
+        &:focus {
+            background-color: #53ab47;
+        }
+    }
+
+    &\:discord {
+        border-color: #647fd6;
+        background-color: #6e8ae6;
+        color: #fff !important;
+
+        &:hover,
+        &:focus {
+            background-color: #647fd8;
+        }
+    }
+}

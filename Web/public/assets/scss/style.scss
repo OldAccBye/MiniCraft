@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+:root {
+    --primary-color: #6cdc5c;
+}
+
+* {
+    font-family: 'Open Sans', sans-serif;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+html,
+body {
+    background-color: #fafafa;
+}
+
+header {
+    nav {
+        background-color: #65d056;
+        border-bottom: 5px solid #5dbd50;
+        
+        a {
+            color: #fff;
+
+            &:hover {
+                color: #f0f0f0;
+            }
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .navbar-toggler {
+            -webkit-box-shadow: 0px 0px 0px 3px #fff; 
+            box-shadow: 0px 0px 0px 3px #fff;
+            padding: 0;
+            margin: 0;
+
+            &:focus {
+                -webkit-box-shadow: 0px 0px 0px 3px #fff; 
+                box-shadow: 0px 0px 0px 3px #fff;
+            }
+
+            div {
+                width: 35px;
+                height: 5px;
+                background-color: #fff;
+
+                &:not(:last-child) {
+                    margin-bottom: 6px;
+                }
+            }
+        }
+    }
+
+    .sub-navbar {
+        background-color: #fff;
+    }
+}
+
+main {
+    .jumbotron {
+        background-image: url(/assets/img/banner.png);
+        background-size: cover;
+        padding: 100px 0px;
+        color: #fff;
+    }
+}
+
+@media only screen and (max-width: 991.98px) {
+    main {
+        .jumbotron {
+            padding: 50px 0px;
+        }
+    }
+}
+
+footer {
+    background-color: #65d056;
+    border-top: 5px solid #5dbd50;
+    color: #fff;
+}
+
+.label {
+    font-weight: 600;
+    border-bottom: 2px solid #e4e4e4;
+    width: 100%;
+    display: block;
+
+    &\:red {
+        font-weight: 600;
+        border-bottom: 2px solid #c03;
+        width: 100%;
+        display: block;
+    }
+
+    &\:blue {
+        font-weight: 600;
+        border-bottom: 2px solid rgb(0, 129, 204);
+        width: 100%;
+        display: block;
+    }
+}
+
+.badge {
+    &\:grey {
+        padding: 2px 5px;
+        background: #6c757d;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 15px;
+        border: 1px solid #626b72;
+        border-bottom-width: 3px;
+    }
+
+    &\:green {
+        padding: 2px 5px;
+        background: #65d056;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 15px;
+        border: 1px solid #5dbd50;
+        border-bottom-width: 3px;
+    }
+
+    &\:red {
+        padding: 2px 5px;
+        background: #d05656;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 15px;
+        border: 1px solid #bd5050;
+        border-bottom-width: 3px;
+    }
+}
+
+// ===== TEAM =====
+.avatar {
+    position: relative;
+    border-radius: 1rem;
+    white-space: nowrap;
+    font-weight: 700;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    box-shadow: 0 5px 10px 0 rgba(50, 50, 50, .15);
+    color: #fff;
+    border: none;
+    background: #31c971 linear-gradient(45deg, #31c971, #3dc931);
+    width: 48px !important;
+    height: 48px !important;
+
+    img {
+        border-radius: inherit;
+        width: 100%;
+    }
+}
+
+.list-item {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: .75rem .625rem;
+}
