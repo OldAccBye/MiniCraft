@@ -85,23 +85,26 @@ footer {
 }
 
 .label {
-    font-weight: 600;
     border-bottom: 2px solid #e4e4e4;
-    width: 100%;
-    display: block;
+
+    &\:darkred {
+        border-bottom: 2px solid #be0000;
+    }
 
     &\:red {
-        font-weight: 600;
-        border-bottom: 2px solid #c03;
-        width: 100%;
-        display: block;
+        border-bottom: 2px solid #fe3f3f;
     }
 
     &\:blue {
-        font-weight: 600;
-        border-bottom: 2px solid rgb(0, 129, 204);
-        width: 100%;
-        display: block;
+        border-bottom: 2px solid #3f3ffe;
+    }
+
+    &\:green {
+        border-bottom: 2px solid #00be00;
+    }
+
+    &\:black {
+        border-bottom: 2px solid #000;
     }
 }
 
