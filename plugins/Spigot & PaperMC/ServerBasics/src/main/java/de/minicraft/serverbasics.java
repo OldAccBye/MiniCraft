@@ -3,6 +3,8 @@ package de.minicraft;
 import de.minicraft.listener.BlockListener;
 import de.minicraft.listener.ChatListener;
 import de.minicraft.listener.PlayerListener;
+import de.minicraft.players.PlayerApi;
+import de.minicraft.players.PlayerData;
 import de.minicraft.players.commands.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,18 +32,18 @@ public final class ServerBasics extends JavaPlugin {
                 return;
             }
 
-            Configs.setConfig(YamlConfiguration.loadConfiguration(file));
+            Configs.config = YamlConfiguration.loadConfiguration(file);
         }
 
-        // language
+        // prefix
         {
-            file = new File(getDataFolder().getPath(), "language.yml");
+            file = new File(getDataFolder().getPath(), "prefix.yml");
             if (!file.exists()) {
-                super.getLogger().severe(">>>>> [CONFIG] language.yml existiert nicht! <<<<<");
+                super.getLogger().severe(">>>>> [CONFIG] prefix.yml existiert nicht! <<<<<");
                 return;
             }
 
-            Configs.setLanguage(YamlConfiguration.loadConfiguration(file));
+            Configs.prefix = YamlConfiguration.loadConfiguration(file);
         }
 
         // commands
@@ -52,7 +54,7 @@ public final class ServerBasics extends JavaPlugin {
                 return;
             }
 
-            Configs.setCommandList(YamlConfiguration.loadConfiguration(file));
+            Configs.commandList =YamlConfiguration.loadConfiguration(file);
         }
 
         // permissions
@@ -63,7 +65,7 @@ public final class ServerBasics extends JavaPlugin {
                 return;
             }
 
-            Configs.setPermissionsList(YamlConfiguration.loadConfiguration(file));
+            Configs.permissionsList = YamlConfiguration.loadConfiguration(file);
         }
 
         /* ===== DATABASE - START ===== */
@@ -71,7 +73,6 @@ public final class ServerBasics extends JavaPlugin {
         /* ===== DATABASE - END ===== */
 
         /* ===== COMMANDS - START ===== */
-        Objects.requireNonNull(plugin.getCommand("setlanguage")).setExecutor(new SetlanguageCommand());
         Objects.requireNonNull(plugin.getCommand("setgroup")).setExecutor(new SetgroupCommand());
         Objects.requireNonNull(plugin.getCommand("build")).setExecutor(new BuildCommand());
         Objects.requireNonNull(plugin.getCommand("bc")).setExecutor(new BroadcastCommand());
@@ -80,14 +81,14 @@ public final class ServerBasics extends JavaPlugin {
         /* ===== COMMANDS - END ===== */
 
         /* ===== LISTENER - START ===== */
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        getServer().getPluginManager().registerEvents(new BlockListener(), this);
-        getServer().getPluginManager().registerEvents(new ChatListener(), this);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        plugin.getServer().getPluginManager().registerEvents(new BlockListener(), this);
+        plugin.getServer().getPluginManager().registerEvents(new ChatListener(), this);
         /* ===== LISTENER - END ===== */
 
         /* ===== CHANNELS - START ===== */
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "basics:command");
+        plugin.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        plugin.getServer().getMessenger().registerOutgoingPluginChannel(this, "basics:command");
         /* ===== CHANNELS - END ===== */
 
         System.out.println(" ");
@@ -100,6 +101,16 @@ public final class ServerBasics extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        plugin.getServer().getOnlinePlayers().forEach(players -> {
+            PlayerData pData = PlayerApi.get(players.getUniqueId());
+            if (pData == null) {
+                ServerBasics.plugin.getLogger().severe("Spieler [" + players.getName() + "] konnte nicht gespeichert werden!");
+                return;
+            }
+
+            PlayerApi.saveAll(players.getUniqueId());
+        });
+
         System.out.println(" ");
         System.out.println("###################################");
         System.out.println("# ServerBasics wurde deaktiviert!");

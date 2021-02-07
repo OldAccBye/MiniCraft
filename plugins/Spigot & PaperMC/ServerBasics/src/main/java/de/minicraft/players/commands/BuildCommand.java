@@ -17,7 +17,7 @@ public class BuildCommand implements CommandExecutor {
 
         PlayerData pData = PlayerApi.get(p.getUniqueId());
         if (pData == null) {
-            p.kickPlayer("Player data missing. Try to login again.");
+            p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
             return false;
         }
 

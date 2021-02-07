@@ -27,7 +27,7 @@ public class PlayerListener implements Listener {
 
         PlayerData pData = PlayerApi.get(e.getPlayer().getUniqueId());
         if (pData == null) {
-            ServerBasics.plugin.getLogger().severe("Player data from [" + e.getPlayer().getName() + "] could not be saved!");
+            ServerBasics.plugin.getLogger().severe("Spieler [" + e.getPlayer().getName() + "] konnte nicht gespeichert werden!");
             PlayerApi.removeAllPerm(e.getPlayer().getUniqueId());
             PlayerApi.logout(e.getPlayer().getUniqueId());
             return;

@@ -12,9 +12,11 @@ admin:
   - minigames.commands.bc
   - minigames.commands.tp
   - minigames.commands.tpallhere
+  - minigames.commands.gtc
 owner:
   - minicraft.commands.setgroup
   - minicraft.commands.build
   - minigames.commands.bc
   - minigames.commands.tp
   - minigames.commands.tpallhere
+  - minigames.commands.gtc

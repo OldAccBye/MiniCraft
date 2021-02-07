@@ -31,17 +31,16 @@ public class PlayerApi {
                     .append("bannedFrom", ""));
         } catch (MongoWriteException e) {
             e.printStackTrace();
-            p.kickPlayer("[PlayerApi->register] Player could not be saved.");
+            p.kickPlayer("[PlayerApi->register] Daten konnte nicht gespeichert werden.");
             return;
         } catch (MongoException e) {
             e.printStackTrace();
-            p.kickPlayer("[PlayerApi->register] Something went wrong.");
+            p.kickPlayer("[PlayerApi->register] Irgendetwas ist schief gelaufen.");
             return;
         }
 
         PlayerData data = new PlayerData(p.addAttachment(ServerBasics.plugin));
         data.username = p.getName();
-        data.language = "en";
         data.group = "default";
         data.banned = false;
         data.banSinceTimestamp = 0L;
@@ -49,8 +48,6 @@ public class PlayerApi {
         data.banReason = "";
         data.bannedFrom = "";
         playerList.put(pUUID, data);
-
-        p.sendMessage(Configs.getLanguageText(pUUID, "languageSetTo").replace("%l%", "en"));
     }
 
     public static boolean login(UUID pUUID) {
@@ -71,7 +68,7 @@ public class PlayerApi {
             }
         } catch (MongoException e) {
             e.printStackTrace();
-            p.kickPlayer("[PlayerApi->login] Something went wrong.");
+            p.kickPlayer("[PlayerApi->login] Irgendetwas ist schief gelaufen.");
             return false;
         }
 
@@ -79,19 +76,17 @@ public class PlayerApi {
             Date date = new Date();
             Long currentDateTime = date.getTime();
             if (playerDoc.getLong("banExpiresTimestamp") > currentDateTime) {
-                p.kickPlayer("§cYou have been banned from this network." +
-                        "\n\nTime zone §7>>§f Europe/Berlin" +
-                        "\n§cDate and time §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentDateTime) +
-                        "\n§cBanned until §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(playerDoc.getLong("banExpiresTimestamp")) +
-                        "\n§cReason §7>>§f " + playerDoc.getString("banReason") +
-                        "\n§cBanned from §7>>§f " + playerDoc.getString("bannedFrom"));
+                p.kickPlayer("§cDu wurdest von diesem Netzwerk ausgeschlossen." +
+                        "\n\n§cDatum und Uhrzeit §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentDateTime) +
+                        "\n§cAusgeschlossen bis §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(playerDoc.getLong("banExpiresTimestamp")) +
+                        "\n§cBegründung §7>>§f " + playerDoc.getString("banReason") +
+                        "\n§cAusgeschlossen von §7>>§f " + playerDoc.getString("bannedFrom"));
                 return false;
             }
         }
 
         PlayerData data = new PlayerData(p.addAttachment(ServerBasics.plugin));
         data.username = p.getName();
-        data.language = playerDoc.getString("language");
         data.group = playerDoc.getString("perm_group");
         data.banned = false;
         data.banSinceTimestamp = 0L;
@@ -99,8 +94,6 @@ public class PlayerApi {
         data.banReason = "";
         data.bannedFrom = "";
         playerList.put(pUUID, data);
-
-        p.sendMessage(Configs.getLanguageText(pUUID, "languageSetTo").replace("%l%", playerDoc.getString("language")));
         return true;
     }
 
@@ -108,7 +101,7 @@ public class PlayerApi {
         if (!playerList.containsKey(pUUID)) {
             Player p = ServerBasics.plugin.getServer().getPlayer(pUUID);
             if (p != null)
-                p.kickPlayer("[ERROR-03] Please contact the support!");
+                p.kickPlayer("[ERROR-03] Bitte kontaktiere den Support!");
             return null;
         }
 
@@ -122,7 +115,7 @@ public class PlayerApi {
             Document found = ServerBasics.mongo.collections.get("players").find(Filters.eq("UUID", pUUID.toString())).first();
 
             if (found == null) {
-                ServerBasics.plugin.getLogger().severe("[PlayerData->saveAll] Player [" + pUUID.toString() + "] not found!");
+                ServerBasics.plugin.getLogger().severe("[PlayerApi->saveAll] Spieler [" + pUUID.toString() + "] nicht gefunden!");
                 return;
             }
 
@@ -136,13 +129,13 @@ public class PlayerApi {
         Player p = ServerBasics.plugin.getServer().getPlayer(pUUID);
 
         if (p == null) {
-            ServerBasics.plugin.getLogger().severe("[Permissions] PlayerListener = null");
+            ServerBasics.plugin.getLogger().severe("[PlayerApi->addAllPerm] p = null");
             return;
         }
 
         PlayerData pData = get(pUUID);
         if (pData == null) {
-            p.kickPlayer("Player data missing. Try to login again.");
+            p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
             return;
         }
 
@@ -155,13 +148,13 @@ public class PlayerApi {
         Player p = ServerBasics.plugin.getServer().getPlayer(pUUID);
 
         if (p == null) {
-            ServerBasics.plugin.getLogger().severe("[Permissions] PlayerListener = null");
+            ServerBasics.plugin.getLogger().severe("[PlayerApi->removeAllPerm] p = null");
             return;
         }
 
         PlayerData pData = get(pUUID);
         if (pData == null) {
-            p.kickPlayer("Player data missing. Try to login again.");
+            p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
             return;
         }
 

@@ -21,7 +21,7 @@ public class ChatListener implements Listener {
 
         PlayerData pData = PlayerApi.get(p.getUniqueId());
         if (pData == null) {
-            p.kickPlayer("Player data missing. Try to login again.");
+            p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
             return;
         }
 
@@ -29,18 +29,19 @@ public class ChatListener implements Listener {
         e.setCancelled(true);
 
         if (tempMsg.contains("@")) {
-            String t = tempMsg.substring(tempMsg.indexOf("@") + 1).split(" ")[0];
+            String tName = tempMsg.substring(tempMsg.indexOf("@") + 1).split(" ")[0];
+            Player t = ServerBasics.plugin.getServer().getPlayerExact(tName);
 
-            if (ServerBasics.plugin.getServer().getPlayerExact(t) == null)
-                p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "playerNotFound"));
-            else if (!t.equals(p.getName())) {
-                p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "playerHasBeenMarked").replace("%username%", p.getName()));
+            if (t == null)
+                p.sendMessage("§c[FEHLER]: §fSpieler nicht gefunden!");
+            else if (!tName.equals(p.getName())) {
+                t.sendMessage("§3§l[§2SERVER§3§l] §aDu wurdest von " + p.getName() + " erwähnt.");
                 tempMsg = tempMsg.replace("@" + p.getName(), "§b@" + p.getName() + "§r");
             }
         }
 
         for (Player t : p.getWorld().getPlayers())
-            t.sendMessage(Configs.getLanguageText(p.getUniqueId(), "prefix." + pData.group) + p.getName() + ": " + tempMsg);
+            t.sendMessage(Configs.prefix.getString(pData.group) + p.getName() + " >> " + tempMsg);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -50,13 +51,13 @@ public class ChatListener implements Listener {
         String firstWord = e.getMessage().split(" ")[0].replace("/", "");
         if (!Configs.commandList.getKeys(true).contains(firstWord)) {
             e.setCancelled(true);
-            p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "cmdNotExists"));
+            p.sendMessage("§c[FEHLER]: §fDieser Befehl existiert nicht!");
             return;
         }
 
         if (!p.hasPermission(Objects.requireNonNull(Configs.commandList.getString(firstWord)))) {
             e.setCancelled(true);
-            p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "noPermission"));
+            p.sendMessage("§c[FEHLER]: §fDu kannst diesen Befehl nicht ausführen!");
         }
     }
 

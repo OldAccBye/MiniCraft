@@ -1,9 +1,9 @@
 # Die oberste Welt gilt quasi als der erste Server
 world: # Der Name deiner Welt
   MaxPlayers: 8 # Wie viele Spieler auf dieser Welt sein dürfen
-  PlayersToStart: 6 # Wie viele Spieler zum starten benötigt werden
+  PlayersToStart: 4 # Wie viele Spieler zum starten benötigt werden
   PreTime: 15 # Die benötigte Zeit in Sekunden bis das Spiel beginnt
-  PlayTime: 20 # Die Zeit die man hat bis das Spiel vorbei ist in Sekunden
+  PlayTime: 35 # Die Zeit die man hat bis das Spiel vorbei ist in Sekunden
   Spawn: # Die Position an die diese Person teleportiert werden soll sobald diese Person den Server betritt
     x: 0.486
     y: 61.00000

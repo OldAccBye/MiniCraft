@@ -37,20 +37,20 @@ public class SetgroupCommand implements TabCompleter, CommandExecutor {
         Player p = (Player) sender;
 
         if (!Configs.permissionsList.getKeys(true).contains(args[1])) {
-            p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "groupNotExists"));
+            p.sendMessage("§c[FEHLER]: §fDiese Gruppe existiert nicht!");
             return false;
         }
 
         Player t = Bukkit.getPlayerExact(args[0]);
         if (t == null) {
-            p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "playerNotFound"));
+            p.sendMessage("§c[FEHLER]: §fSpieler nicht gefunden!");
             return false;
         }
 
         PlayerData pData = PlayerApi.get(t.getUniqueId());
         if (pData == null) {
-            p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "error"));
-            t.kickPlayer("Player data missing. Try to login again.");
+            p.sendMessage("§c[FEHLER]: §fEin Fehler ist aufgetreten.");
+            t.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
             return false;
         }
 
@@ -58,8 +58,8 @@ public class SetgroupCommand implements TabCompleter, CommandExecutor {
         pData.group = args[1];
         PlayerApi.addAllPerm(t.getUniqueId());
 
-        p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "setPlayerRank").replace("%username%", t.getName()) + args[1] + ".");
-        t.sendMessage(Configs.getLanguageText(p.getUniqueId(), "getPlayerRank") + args[1] + ".");
+        p.sendMessage("§3§l[§2SERVER§3§l] §aSpieler " + t.getName() + " erhielt die Gruppe" + args[1]);
+        t.sendMessage("§3§l[§2SERVER§3§l] §aDu erhielst die Gruppe " + args[1]);
         t.updateCommands();
         return true;
     }

@@ -5,8 +5,6 @@ main: de.minicraft.ServerBasics
 author: EntenKoeniq
 
 commands:
-  setlanguage:
-    uage: /setlanguage <LANGUAGE>
   setgroup:
     usage: /setgroup <USERNAME> <GROUP>
   build:

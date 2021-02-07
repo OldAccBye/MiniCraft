@@ -49,9 +49,9 @@ public class BlockListener implements Listener {
             }
 
             if ((pData.blockBreakEventCounter > 10) && (pData.blockBreakEventCounter <= 15))
-                p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "doNotDoThat"));
+                p.sendMessage("§3§l[§2SERVER§3§l] §aTu das bitte nicht :(");
             else if (pData.blockBreakEventCounter > 15)
-                p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "youCanGetBanned"));
+                p.sendMessage("§e[WARNUNG]: §fDu könntest durch eine Wiederholung von diesem Netzwerk verbannt werden!");
         }
     }
 }
