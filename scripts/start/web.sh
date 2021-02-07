@@ -1,0 +1,1 @@
+screen -mdS MiniWeb node /home/MiniCraft/Web/app.js
