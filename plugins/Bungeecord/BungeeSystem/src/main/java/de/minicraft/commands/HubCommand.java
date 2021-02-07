@@ -18,7 +18,7 @@ public class HubCommand extends Command {
         ProxiedPlayer p = (ProxiedPlayer) cmdSender;
 
         if (p.getServer().getInfo().getName().equals("lobby")) {
-            p.sendMessage(new TextComponent("Du befindest dich bereits in der Lobby!"));
+            p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aDu befindest dich bereits in der Lobby!"));
             return;
         }
 

@@ -50,6 +50,8 @@ public class PluginMessageReceiver implements Listener {
                     // COMMAND (SWITCH) -> BROADCAST
                     case "broadcast" -> BungeeSystem.plugin.getProxy().getPlayers().forEach(players -> players.sendMessage(new TextComponent(in.readUTF())));
                     case "tpallhere" -> { // COMMAND (SWITCH) -> TPALL
+                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler werden teleportiert..."));
+
                         ServerInfo pServerInfo = p.getServer().getInfo();
                         for (ProxiedPlayer players : BungeeSystem.plugin.getProxy().getPlayers()) {
                             if (players.getName().equals(p.getName())) continue;

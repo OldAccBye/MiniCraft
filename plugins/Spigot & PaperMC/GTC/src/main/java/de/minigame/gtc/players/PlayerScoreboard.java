@@ -1,7 +1,7 @@
 package de.minigame.gtc.players;
 
 import de.minigame.gtc.GTC;
-import de.minigame.gtc.GTCWorld;
+import de.minigame.gtc.WorldData;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -11,14 +11,14 @@ import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class GTCScoreboard {
+public class PlayerScoreboard {
     public static void set(Player p) {
         UUID topPlayerUUID = Collections.max(GTC.playerList.entrySet(), Map.Entry.comparingByValue()).getKey();
 
         Player topPlayer = getServer().getPlayer(topPlayerUUID);
         if (topPlayer == null) return;
 
-        GTCWorld wData = GTC.worldLists.get(p.getWorld().getName());
+        WorldData wData = GTC.worldLists.get(p.getWorld().getName());
         wData.topPlayer = topPlayerUUID;
 
         ScoreboardManager manager = GTC.plugin.getServer().getScoreboardManager();

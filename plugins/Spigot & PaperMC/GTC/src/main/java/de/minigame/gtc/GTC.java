@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.*;
 
 public class GTC extends JavaPlugin {
-    public final static HashMap<String, GTCWorld> worldLists = new HashMap<>();
+    public final static HashMap<String, WorldData> worldLists = new HashMap<>();
     public static final HashMap<UUID, Integer> playerList = new HashMap<>();
     public static GTC plugin;
 
@@ -39,7 +39,7 @@ public class GTC extends JavaPlugin {
                         new WorldCreator(worldName).environment(World.Environment.NORMAL).generateStructures(false).createWorld();
                     }
 
-                    GTCWorld w = new GTCWorld(worldName);
+                    WorldData w = new WorldData(worldName);
                     w.maxPlayers = cfg.getInt(worldName + ".MaxPlayers");
                     w.playersToStart = cfg.getInt(worldName + ".PlayersToStart");
                     w.preTime = cfg.getInt(worldName + ".PreTime");

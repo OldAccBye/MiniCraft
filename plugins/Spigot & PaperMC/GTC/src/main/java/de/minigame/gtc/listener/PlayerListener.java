@@ -1,8 +1,8 @@
 package de.minigame.gtc.listener;
 
 import de.minigame.gtc.GTC;
-import de.minigame.gtc.players.GTCScoreboard;
-import de.minigame.gtc.GTCWorld;
+import de.minigame.gtc.players.PlayerScoreboard;
+import de.minigame.gtc.WorldData;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -20,9 +20,9 @@ public class PlayerListener implements Listener {
     public static void onJoin(PlayerJoinEvent e) {
         org.bukkit.entity.Player p = e.getPlayer();
 
-        for (Map.Entry<String, GTCWorld> data : GTC.worldLists.entrySet()) {
+        for (Map.Entry<String, WorldData> data : GTC.worldLists.entrySet()) {
             String key = data.getKey();
-            GTCWorld value = data.getValue();
+            WorldData value = data.getValue();
             if (value.players >= value.maxPlayers || value.roundStarted) continue;
 
             GTC.playerList.put(p.getUniqueId(), 0);
@@ -44,7 +44,7 @@ public class PlayerListener implements Listener {
     public static void onQuit(PlayerQuitEvent e) {
         org.bukkit.entity.Player p = e.getPlayer();
         String worldName = p.getWorld().getName();
-        GTCWorld wData = GTC.worldLists.get(worldName);
+        WorldData wData = GTC.worldLists.get(worldName);
         GTC.playerList.remove(p.getUniqueId());
 
         if (wData.preRoundStarted) {
@@ -76,7 +76,7 @@ public class PlayerListener implements Listener {
             GTC.playerList.computeIfPresent(killer.getUniqueId(), (k, v) -> v += 1);
             w.getPlayers().forEach(players -> {
                 players.sendMessage("§3GTC §7| §eThe player §6" + killer.getName() + " §ekilled a chicken!");
-                GTCScoreboard.set(players);
+                PlayerScoreboard.set(players);
             });
         }
 

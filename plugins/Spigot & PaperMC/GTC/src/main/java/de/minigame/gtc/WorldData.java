@@ -1,7 +1,7 @@
 package de.minigame.gtc;
 
-import de.minigame.gtc.players.GTCInventory;
-import de.minigame.gtc.players.GTCScoreboard;
+import de.minigame.gtc.players.PlayerInventory;
+import de.minigame.gtc.players.PlayerScoreboard;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GTCWorld {
+public class WorldData {
     public final World world;
     public boolean roundStarted = false, preRoundStarted = false;
     public int lastTaskId, preRoundSeconds, roundSeconds, playTime, preTime, players, maxPlayers, playersToStart;
@@ -23,7 +23,7 @@ public class GTCWorld {
     public Entity lastChicken;
     public UUID topPlayer;
 
-    GTCWorld(String worldName) { this.world = GTC.plugin.getServer().getWorld(worldName); }
+    WorldData(String worldName) { this.world = GTC.plugin.getServer().getWorld(worldName); }
 
     public void startPreRound() {
         this.preRoundStarted = true;
@@ -57,8 +57,8 @@ public class GTCWorld {
         this.world.getPlayers().forEach(player -> {
             GTC.playerList.computeIfPresent(player.getUniqueId(), (k, v) -> v = 0);
             player.teleport(this.roundLocation);
-            GTCInventory.reset(player);
-            GTCScoreboard.set(player);
+            PlayerInventory.reset(player);
+            PlayerScoreboard.set(player);
             player.sendTitle("§3GTC", "Good luck!",  10, 70, 20);
             player.setExp(0.99f);
             player.setLevel(20);

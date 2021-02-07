@@ -17,6 +17,15 @@ public class TpCommand implements CommandExecutor {
         String p1Name = args[0];
         String p2Name = args[1];
 
+        Player p1 = ServerBasics.plugin.getServer().getPlayerExact(p1Name);
+        Player p2 = ServerBasics.plugin.getServer().getPlayerExact(p2Name);
+        if (p1 != null && p2 != null) {
+            p1.teleport(p2.getLocation());
+            p1.sendMessage("§3§l[§2SERVER§3§l] §aDu wurdest zu §6" + p2Name + " §ateleportiert!");
+            p2.sendMessage("§3§l[§2SERVER§3§l] §6" + p1Name + " §awurde zu dir teleportiert!");
+            return true;
+        }
+
         ByteArrayDataOutput get = ByteStreams.newDataOutput();
         get.writeUTF("tp");
         get.writeUTF(p1Name);
