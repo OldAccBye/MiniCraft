@@ -20,6 +20,7 @@ public final class BungeeSystem extends Plugin {
         plugin.getProxy().getPluginManager().registerCommand(plugin, new HubCommand());
 
         // Channels
-        plugin.getProxy().registerChannel("lobby:getserverinfo");
+        plugin.getProxy().registerChannel("lobby:server");
+        plugin.getProxy().registerChannel("basics:command");
     }
 }

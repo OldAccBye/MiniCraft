@@ -3,14 +3,14 @@ package de.minicraft.players;
 import org.bson.Document;
 import org.bukkit.permissions.PermissionAttachment;
 
-public class SBPlayerData {
+public class PlayerData {
     public String username, language, group, banReason, bannedFrom;
     public Boolean banned;
     public Long banSinceTimestamp, banExpiresTimestamp, blockBreakEventTimestamp;
     public Integer blockBreakEventCounter;
     public PermissionAttachment permissions;
 
-    SBPlayerData(PermissionAttachment permAttachment) { this.permissions = permAttachment; }
+    PlayerData(PermissionAttachment permAttachment) { this.permissions = permAttachment; }
 
     public Document getDoc() {
         return new Document("$set", new Document("username", this.username)

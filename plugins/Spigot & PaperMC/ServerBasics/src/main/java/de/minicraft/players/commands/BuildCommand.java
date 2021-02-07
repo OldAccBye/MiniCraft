@@ -1,7 +1,7 @@
 package de.minicraft.players.commands;
 
-import de.minicraft.players.SBPlayerApi;
-import de.minicraft.players.SBPlayerData;
+import de.minicraft.players.PlayerApi;
+import de.minicraft.players.PlayerData;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,7 +15,7 @@ public class BuildCommand implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        SBPlayerData pData = SBPlayerApi.get(p.getUniqueId());
+        PlayerData pData = PlayerApi.get(p.getUniqueId());
         if (pData == null) {
             p.kickPlayer("Player data missing. Try to login again.");
             return false;

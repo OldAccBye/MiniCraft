@@ -6,8 +6,14 @@ author: EntenKoeniq
 
 commands:
   setlanguage:
-    uage: /setlanguage <lang>
+    uage: /setlanguage <LANGUAGE>
   setgroup:
-    usage: /setgroup <USERNAME> <group>
+    usage: /setgroup <USERNAME> <GROUP>
   build:
     usage: /build
+  bc:
+    usage: /broadcast <MESSAGE>
+  tp:
+    usage: /tp <PLAYER1> <PLAYER2>
+  tpallhere:
+    usage: /tpallhere

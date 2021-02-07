@@ -1,7 +1,7 @@
 package de.minicraft.listener;
 
-import de.minicraft.players.SBPlayerApi;
-import de.minicraft.players.SBPlayerData;
+import de.minicraft.players.PlayerApi;
+import de.minicraft.players.PlayerData;
 import de.minicraft.ServerBasics;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,26 +15,26 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        if (SBPlayerApi.login(e.getPlayer().getUniqueId())) {
-            SBPlayerApi.addAllPerm(e.getPlayer().getUniqueId());
+        if (PlayerApi.login(e.getPlayer().getUniqueId())) {
+            PlayerApi.addAllPerm(e.getPlayer().getUniqueId());
             e.getPlayer().updateCommands();
         }
     }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
-        if (!SBPlayerApi.playerList.containsKey(e.getPlayer().getUniqueId())) return;
+        if (!PlayerApi.playerList.containsKey(e.getPlayer().getUniqueId())) return;
 
-        SBPlayerData pData = SBPlayerApi.get(e.getPlayer().getUniqueId());
+        PlayerData pData = PlayerApi.get(e.getPlayer().getUniqueId());
         if (pData == null) {
             ServerBasics.plugin.getLogger().severe("Player data from [" + e.getPlayer().getName() + "] could not be saved!");
-            SBPlayerApi.removeAllPerm(e.getPlayer().getUniqueId());
-            SBPlayerApi.logout(e.getPlayer().getUniqueId());
+            PlayerApi.removeAllPerm(e.getPlayer().getUniqueId());
+            PlayerApi.logout(e.getPlayer().getUniqueId());
             return;
         }
 
-        SBPlayerApi.saveAll(e.getPlayer().getUniqueId());
-        SBPlayerApi.removeAllPerm(e.getPlayer().getUniqueId());
-        SBPlayerApi.logout(e.getPlayer().getUniqueId());
+        PlayerApi.saveAll(e.getPlayer().getUniqueId());
+        PlayerApi.removeAllPerm(e.getPlayer().getUniqueId());
+        PlayerApi.logout(e.getPlayer().getUniqueId());
     }
 }

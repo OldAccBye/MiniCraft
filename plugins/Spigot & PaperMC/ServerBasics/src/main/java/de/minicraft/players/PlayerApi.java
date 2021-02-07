@@ -8,15 +8,15 @@ import java.util.UUID;
 import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.model.Filters;
-import de.minicraft.SBConfig;
+import de.minicraft.Configs;
 import de.minicraft.ServerBasics;
 import org.bson.Document;
 
 import org.bukkit.entity.Player;
 
-public class SBPlayerApi {
+public class PlayerApi {
     // Eine Liste an Spieler welche sich mit einem Server verbunden haben
-    public static final HashMap<UUID, SBPlayerData> playerList = new HashMap<>();
+    public static final HashMap<UUID, PlayerData> playerList = new HashMap<>();
 
     private static void register(UUID pUUID, Player p) {
         try {
@@ -31,15 +31,15 @@ public class SBPlayerApi {
                     .append("bannedFrom", ""));
         } catch (MongoWriteException e) {
             e.printStackTrace();
-            p.kickPlayer("[SBPlayerApi->register] Player could not be saved.");
+            p.kickPlayer("[PlayerApi->register] Player could not be saved.");
             return;
         } catch (MongoException e) {
             e.printStackTrace();
-            p.kickPlayer("[SBPlayerApi->register] Something went wrong.");
+            p.kickPlayer("[PlayerApi->register] Something went wrong.");
             return;
         }
 
-        SBPlayerData data = new SBPlayerData(p.addAttachment(ServerBasics.plugin));
+        PlayerData data = new PlayerData(p.addAttachment(ServerBasics.plugin));
         data.username = p.getName();
         data.language = "en";
         data.group = "default";
@@ -50,7 +50,7 @@ public class SBPlayerApi {
         data.bannedFrom = "";
         playerList.put(pUUID, data);
 
-        p.sendMessage(SBConfig.getLanguageText(pUUID, "languageSetTo").replace("%l%", "en"));
+        p.sendMessage(Configs.getLanguageText(pUUID, "languageSetTo").replace("%l%", "en"));
     }
 
     public static boolean login(UUID pUUID) {
@@ -71,7 +71,7 @@ public class SBPlayerApi {
             }
         } catch (MongoException e) {
             e.printStackTrace();
-            p.kickPlayer("[SBPlayerApi->login] Something went wrong.");
+            p.kickPlayer("[PlayerApi->login] Something went wrong.");
             return false;
         }
 
@@ -89,7 +89,7 @@ public class SBPlayerApi {
             }
         }
 
-        SBPlayerData data = new SBPlayerData(p.addAttachment(ServerBasics.plugin));
+        PlayerData data = new PlayerData(p.addAttachment(ServerBasics.plugin));
         data.username = p.getName();
         data.language = playerDoc.getString("language");
         data.group = playerDoc.getString("perm_group");
@@ -100,11 +100,11 @@ public class SBPlayerApi {
         data.bannedFrom = "";
         playerList.put(pUUID, data);
 
-        p.sendMessage(SBConfig.getLanguageText(pUUID, "languageSetTo").replace("%l%", playerDoc.getString("language")));
+        p.sendMessage(Configs.getLanguageText(pUUID, "languageSetTo").replace("%l%", playerDoc.getString("language")));
         return true;
     }
 
-    public static SBPlayerData get(UUID pUUID) {
+    public static PlayerData get(UUID pUUID) {
         if (!playerList.containsKey(pUUID)) {
             Player p = ServerBasics.plugin.getServer().getPlayer(pUUID);
             if (p != null)
@@ -122,7 +122,7 @@ public class SBPlayerApi {
             Document found = ServerBasics.mongo.collections.get("players").find(Filters.eq("UUID", pUUID.toString())).first();
 
             if (found == null) {
-                ServerBasics.plugin.getLogger().severe("[SBPlayerData->saveAll] Player [" + pUUID.toString() + "] not found!");
+                ServerBasics.plugin.getLogger().severe("[PlayerData->saveAll] Player [" + pUUID.toString() + "] not found!");
                 return;
             }
 
@@ -140,14 +140,14 @@ public class SBPlayerApi {
             return;
         }
 
-        SBPlayerData pData = get(pUUID);
+        PlayerData pData = get(pUUID);
         if (pData == null) {
             p.kickPlayer("Player data missing. Try to login again.");
             return;
         }
 
         // Setzt dem Spieler die neuen vorgegebenen Permissions aus "permissionsList" und wählt die anhand von der Gruppe des Spielers.
-        for (String perm : SBConfig.permissionsList.getStringList(pData.group))
+        for (String perm : Configs.permissionsList.getStringList(pData.group))
             pData.permissions.setPermission(perm, true);
     }
 
@@ -159,14 +159,14 @@ public class SBPlayerApi {
             return;
         }
 
-        SBPlayerData pData = get(pUUID);
+        PlayerData pData = get(pUUID);
         if (pData == null) {
             p.kickPlayer("Player data missing. Try to login again.");
             return;
         }
 
         // Entfernt alle Permissions von diesem Spieler indem alle Permissions aus der jetzigen Gruppe auf "false" gesetzt werden.
-        for (String perm : SBConfig.permissionsList.getStringList(pData.group))
+        for (String perm : Configs.permissionsList.getStringList(pData.group))
             pData.permissions.setPermission(perm, false);
     }
 }

@@ -11,7 +11,7 @@ public class Lobby extends JavaPlugin {
         plugin = this;
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "lobby:getserverinfo");
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "lobby:server");
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 

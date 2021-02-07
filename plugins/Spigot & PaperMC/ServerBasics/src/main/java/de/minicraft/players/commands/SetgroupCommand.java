@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.minicraft.players.SBPlayerApi;
-import de.minicraft.players.SBPlayerData;
+import de.minicraft.Configs;
+import de.minicraft.players.PlayerApi;
+import de.minicraft.players.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
-import de.minicraft.SBConfig;
 
 public class SetgroupCommand implements TabCompleter, CommandExecutor {
     @Override
@@ -28,7 +27,7 @@ public class SetgroupCommand implements TabCompleter, CommandExecutor {
             for (Player t : p.getWorld().getPlayers())
                 results.add(t.getName());
 
-        return args.length == 1 ? results : Collections.singletonList(SBConfig.permissionsList.getKeys(true).toString());
+        return args.length == 1 ? results : Collections.singletonList(Configs.permissionsList.getKeys(true).toString());
     }
 
     @Override
@@ -37,30 +36,30 @@ public class SetgroupCommand implements TabCompleter, CommandExecutor {
 
         Player p = (Player) sender;
 
-        if (!SBConfig.permissionsList.getKeys(true).contains(args[1])) {
-            p.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "groupNotExists"));
+        if (!Configs.permissionsList.getKeys(true).contains(args[1])) {
+            p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "groupNotExists"));
             return false;
         }
 
         Player t = Bukkit.getPlayerExact(args[0]);
         if (t == null) {
-            p.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "playerNotFound"));
+            p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "playerNotFound"));
             return false;
         }
 
-        SBPlayerData pData = SBPlayerApi.get(t.getUniqueId());
+        PlayerData pData = PlayerApi.get(t.getUniqueId());
         if (pData == null) {
-            p.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "error"));
+            p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "error"));
             t.kickPlayer("Player data missing. Try to login again.");
             return false;
         }
 
-        SBPlayerApi.removeAllPerm(t.getUniqueId());
+        PlayerApi.removeAllPerm(t.getUniqueId());
         pData.group = args[1];
-        SBPlayerApi.addAllPerm(t.getUniqueId());
+        PlayerApi.addAllPerm(t.getUniqueId());
 
-        p.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "setPlayerRank").replace("%username%", t.getName()) + args[1] + ".");
-        t.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "getPlayerRank") + args[1] + ".");
+        p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "setPlayerRank").replace("%username%", t.getName()) + args[1] + ".");
+        t.sendMessage(Configs.getLanguageText(p.getUniqueId(), "getPlayerRank") + args[1] + ".");
         t.updateCommands();
         return true;
     }

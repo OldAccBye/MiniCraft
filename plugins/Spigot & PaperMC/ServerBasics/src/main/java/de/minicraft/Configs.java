@@ -1,13 +1,13 @@
 package de.minicraft;
 
-import de.minicraft.players.SBPlayerApi;
-import de.minicraft.players.SBPlayerData;
+import de.minicraft.players.PlayerApi;
+import de.minicraft.players.PlayerData;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class SBConfig {
+public class Configs {
     public static Configuration config;
     public static Configuration language;
     public static Configuration commandList;
@@ -26,7 +26,7 @@ public class SBConfig {
             return "null";
         }
 
-        SBPlayerData pData = SBPlayerApi.get(pUUID);
+        PlayerData pData = PlayerApi.get(pUUID);
         if (pData == null) {
             p.kickPlayer("Player data missing. Try to login again.");
             return "null";

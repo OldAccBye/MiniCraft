@@ -91,14 +91,14 @@ public class PlayerListener implements Listener {
 
         if (e.getCurrentItem().getType() == Material.DIAMOND_SWORD && meta.getDisplayName().equalsIgnoreCase("§c§lFFA")) {
             ByteArrayDataOutput get = ByteStreams.newDataOutput();
-            get.writeUTF("getServerStatus");
+            get.writeUTF("connect");
             get.writeUTF("FFA");
-            p.sendPluginMessage(Lobby.plugin, "lobby:getserverinfo", get.toByteArray());
+            p.sendPluginMessage(Lobby.plugin, "lobby:server", get.toByteArray());
         } else if (e.getCurrentItem().getType() == Material.CHICKEN_SPAWN_EGG && meta.getDisplayName().equalsIgnoreCase("§c§lGTC")) {
             ByteArrayDataOutput get = ByteStreams.newDataOutput();
-            get.writeUTF("getServerStatus");
+            get.writeUTF("connect");
             get.writeUTF("GTC");
-            p.sendPluginMessage(Lobby.plugin, "lobby:getserverinfo", get.toByteArray());
+            p.sendPluginMessage(Lobby.plugin, "lobby:server", get.toByteArray());
         }
     }
 

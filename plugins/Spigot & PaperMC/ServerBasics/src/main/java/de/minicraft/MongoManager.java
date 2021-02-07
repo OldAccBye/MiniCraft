@@ -10,19 +10,19 @@ import org.bson.Document;
 import java.util.HashMap;
 import java.util.List;
 
-public class SBMM {
+public class MongoManager {
     public HashMap<String, MongoCollection<Document>> collections = new HashMap<>();
 
     public void connect() {
-        String username = SBConfig.config.getString("mongodb.username"),
-                password = SBConfig.config.getString("mongodb.password"),
-                host = SBConfig.config.getString("mongodb.host"),
-                database = SBConfig.config.getString("mongodb.database");
+        String username = Configs.config.getString("mongodb.username"),
+                password = Configs.config.getString("mongodb.password"),
+                host = Configs.config.getString("mongodb.host"),
+                database = Configs.config.getString("mongodb.database");
 
-        List<String> collectionsList = SBConfig.config.getStringList("mongodb.collections");
+        List<String> collectionsList = Configs.config.getStringList("mongodb.collections");
 
         if (username == null || password == null || host == null || database == null || collections == null) {
-            ServerBasics.plugin.getLogger().severe("[SBMM->connect] Please fill out all fields in the SBConfig.yml.");
+            ServerBasics.plugin.getLogger().severe("[MongoManager->connect] Please fill out all fields in the Configs.yml.");
             ServerBasics.plugin.getServer().shutdown();
             return;
         }

@@ -1,8 +1,8 @@
 package de.minicraft.listener;
 
-import de.minicraft.SBConfig;
-import de.minicraft.players.SBPlayerData;
-import de.minicraft.players.SBPlayerApi;
+import de.minicraft.Configs;
+import de.minicraft.players.PlayerApi;
+import de.minicraft.players.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +15,7 @@ public class BlockListener implements Listener {
     public void onBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
 
-        SBPlayerData pData = SBPlayerApi.get(p.getUniqueId());
+        PlayerData pData = PlayerApi.get(p.getUniqueId());
         if (pData == null) {
             p.kickPlayer("Player data missing. Try to login again.");
             return;
@@ -49,9 +49,9 @@ public class BlockListener implements Listener {
             }
 
             if ((pData.blockBreakEventCounter > 10) && (pData.blockBreakEventCounter <= 15))
-                p.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "doNotDoThat"));
+                p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "doNotDoThat"));
             else if (pData.blockBreakEventCounter > 15)
-                p.sendMessage(SBConfig.getLanguageText(p.getUniqueId(), "youCanGetBanned"));
+                p.sendMessage(Configs.getLanguageText(p.getUniqueId(), "youCanGetBanned"));
         }
     }
 }
