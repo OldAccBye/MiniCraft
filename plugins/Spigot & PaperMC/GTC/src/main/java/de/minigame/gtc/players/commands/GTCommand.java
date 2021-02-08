@@ -26,7 +26,7 @@ public class GTCommand implements CommandExecutor {
                     if (world.preRoundStarted && !world.roundStarted)
                         world.stopPreRound();
                 }
-                default -> p.sendMessage("Wähle zwischen start und stop.");
+                default -> p.sendMessage("§3GTC §7| §6Wähle zwischen start und stop.");
             }
         }
 

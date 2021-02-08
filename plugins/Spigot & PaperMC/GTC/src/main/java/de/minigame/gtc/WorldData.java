@@ -8,7 +8,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +29,11 @@ public class WorldData {
         this.preRoundSeconds = this.preTime;
 
         for (Player p : world.getPlayers())
-            p.sendMessage("§3GTC §7| §fThe game starts in §a" + this.preRoundSeconds + " seconds§f!");
+            p.sendMessage("§3GTC §7| §fDie Runde startet in §a" + this.preRoundSeconds + " Sekunden§f!");
 
         this.lastTaskId = GTC.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(GTC.plugin, () -> {
             if (this.preRoundSeconds > 0 && this.preRoundSeconds <= 5)
-                world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §fThe game starts in §a" + this.preRoundSeconds + " second(n)§f!"));
+                world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §fDie Runde startet in §a" + this.preRoundSeconds + " Sekunde(n)§f!"));
             else if (this.preRoundSeconds == 0)
                 startRound();
 
@@ -59,7 +58,7 @@ public class WorldData {
             player.teleport(this.roundLocation);
             PlayerInventory.reset(player);
             PlayerScoreboard.set(player);
-            player.sendTitle("§3GTC", "Good luck!",  10, 70, 20);
+            player.sendTitle("§3GTC", "Viel Glück!",  10, 70, 20);
             player.setExp(0.99f);
             player.setLevel(20);
         });
@@ -86,7 +85,7 @@ public class WorldData {
             }
 
             switch (this.roundSeconds) {
-                case 5 -> world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §fThe round ends in §a5 seconds§f!"));
+                case 5 -> world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §fDie Runde endet in §a5 Sekunden§f!"));
                 case 0 -> stopRound();
             }
         }, 0, 20);
@@ -100,18 +99,14 @@ public class WorldData {
         Player topPlayer = GTC.plugin.getServer().getPlayer(this.topPlayer);
         String topPlayerName = (topPlayer != null) ? topPlayer.getName() : "null";
 
-        this.world.getPlayers().forEach(player -> {
-            player.sendTitle("§3The winner is:", topPlayerName,  10, 70, 20);
-            player.sendMessage("§3GTC §7| §eThe player §6" + topPlayerName + " §ewon with §6" + GTC.playerList.get(this.topPlayer) + " §ekill(s)!");
-
-            ScoreboardManager manager = GTC.plugin.getServer().getScoreboardManager();
-            if (manager != null)
-                player.setScoreboard(manager.getNewScoreboard());
-
-            player.teleport(this.spawnLocation);
-            player.getInventory().clear();
-            player.setExp(0.0f);
-            player.setLevel(0);
+        this.world.getPlayers().forEach(players -> {
+            players.sendTitle("§3Gewinner:", topPlayerName,  10, 70, 20);
+            players.sendMessage("§3GTC §7| §eDer Spieler §6" + topPlayerName + " §egewann mit §6" + GTC.playerList.get(this.topPlayer) + " §ekill(s)!");
+            PlayerScoreboard.set(players);
+            players.teleport(this.spawnLocation);
+            players.getInventory().clear();
+            players.setExp(0.0f);
+            players.setLevel(0);
         });
 
         if (this.lastChicken != null && !this.lastChicken.isDead())

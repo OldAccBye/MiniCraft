@@ -27,17 +27,18 @@ public class PlayerListener implements Listener {
 
             GTC.playerList.put(p.getUniqueId(), 0);
             p.teleport(value.spawnLocation);
-            p.sendTitle("§3GTC", "§aWelcome!", 10, 70, 20);
+            PlayerScoreboard.set(p);
+            p.sendTitle("§3GTC", "§aWillkommen!", 10, 70, 20);
 
             if (!value.preRoundStarted && GTC.plugin.getServer().getOnlinePlayers().size() >= value.playersToStart)
                 GTC.worldLists.get(key).startPreRound();
             else if (!value.preRoundStarted)
-                value.world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §6" + value.world.getPlayers().size() + "§e/§6" + value.playersToStart + " §ePlayers until the start!"));
+                value.world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §6" + value.world.getPlayers().size() + "§e/§6" + value.playersToStart + " §eSpieler bis zum Start!"));
 
             return;
         }
 
-        p.kickPlayer("No free round found!");
+        p.kickPlayer("Keine freie Runde gefunden! :(");
     }
 
     @EventHandler
@@ -50,7 +51,7 @@ public class PlayerListener implements Listener {
         if (wData.preRoundStarted) {
             if (wData.world.getPlayers().size() < wData.playersToStart) {
                 GTC.worldLists.get(worldName).stopPreRound();
-                wData.world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §6" + wData.world.getPlayers().size() + "§e/§6" + wData.playersToStart + " §ePlayers until the start!"));
+                wData.world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §6" + wData.world.getPlayers().size() + "§e/§6" + wData.playersToStart + " §eSpieler bis zum Start!"));
             }
         }
     }
@@ -75,7 +76,7 @@ public class PlayerListener implements Listener {
 
             GTC.playerList.computeIfPresent(killer.getUniqueId(), (k, v) -> v += 1);
             w.getPlayers().forEach(players -> {
-                players.sendMessage("§3GTC §7| §eThe player §6" + killer.getName() + " §ekilled a chicken!");
+                players.sendMessage("§3GTC §7| §eDer Spieler §6" + killer.getName() + " §ehat ein Huhn getötet!");
                 PlayerScoreboard.set(players);
             });
         }

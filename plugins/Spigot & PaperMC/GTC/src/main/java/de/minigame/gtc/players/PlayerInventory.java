@@ -9,11 +9,11 @@ public class PlayerInventory {
     public static void reset(Player p) {
         p.getInventory().clear();
         p.getInventory().setArmorContents(null);
-        p.getInventory().setHelmet(createItemStack(Material.LEATHER_HELMET, "§aHelmet"));
-        p.getInventory().setChestplate(createItemStack(Material.LEATHER_CHESTPLATE, "§aChestplate"));
-        p.getInventory().setLeggings(createItemStack(Material.LEATHER_LEGGINGS, "§aLeggings"));
-        p.getInventory().setBoots(createItemStack(Material.LEATHER_BOOTS,  "§aBoots"));
-        p.getInventory().setItem(0, createItemStack(Material.STONE_SWORD, "§aSword"));
+        p.getInventory().setHelmet(createItemStack(Material.LEATHER_HELMET, "§aHelm"));
+        p.getInventory().setChestplate(createItemStack(Material.LEATHER_CHESTPLATE, "§aBrustpanzer"));
+        p.getInventory().setLeggings(createItemStack(Material.LEATHER_LEGGINGS, "§aHose"));
+        p.getInventory().setBoots(createItemStack(Material.LEATHER_BOOTS,  "§aSchuhe"));
+        p.getInventory().setItem(0, createItemStack(Material.STONE_SWORD, "§aSchwert"));
         p.setHealth(20);
         p.setFoodLevel(20);
     }
