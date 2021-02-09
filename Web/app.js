@@ -36,19 +36,28 @@ router.get('/top', async (req, res) => {
     res.render('topPlayers', { userCount: await players.countDocuments(), ffa: { uuid: FFAPlayer[0].UUID, username: player.username, kills: FFAPlayer[0].kills, deaths: FFAPlayer[0].deaths }});
 });
 
+router.get('/canditature', async (req, res) => {
+    res.render('bewerbung', { userCount: await players.countDocuments() })
+});
+
+router.get('/complaint', async (req, res) => {
+    res.render('beschwerde', { userCount: await players.countDocuments() })
+});
+
 router.get('/p/:username', async (req, res) => {
     const username = req.params.username;
     const player = await players.findOne({ username: username });
-    if (player === null) {
-        res.render('profil', { userCount: await players.countDocuments(), error: 'notFound' });
-        return;
-    }
+    if (player === null)
+        return res.render('profil', { userCount: await players.countDocuments(), error: 'notFound' });
 
     const playerFFA = await playersFFA.findOne({ UUID: player.UUID });
     if (playerFFA === null)
         return res.render('profil', { userCount: await players.countDocuments(), profil: { uuid: player.UUID, username: username, banned: player.banned, group: player.perm_group } });
     
-    res.render('profil', { userCount: await players.countDocuments(), profil: { uuid: player.UUID, username: username, banned: player.banned, group: player.perm_group, ffa: { kills: playerFFA.kills, deaths: playerFFA.deaths } } });
+    const FFAData = { kills: playerFFA.kills, deaths: playerFFA.deaths };
+    const profilData = { uuid: player.UUID, username: username, banned: player.banned, group: player.perm_group, ffa: FFAData };
+
+    res.render('profil', { userCount: await players.countDocuments(), profil: profilData });
 });
 
 // Extras

@@ -1,0 +1,41 @@
+<%- include('header'); %>
+
+    <main>
+        <div class="jumbotron">
+            <div class="container text-center">
+                <h1 class="display-4 text:shadow-lg">MiniCraft</h1>
+                <p class="lead text:shadow-lg">Dein neuer Minigames Server mit einzigartigen Spielen!</p>
+            </div>
+        </div>
+
+        <div class="container my-3">
+            <div class="alert alert-warning" role="alert">
+                Momentan werden keine weiteren Teammitglieder erfordert. Bitte versuche es ein anderes Mal.
+              </div>
+
+            <form action="" method="post">
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="floatingSelectGrid" required>
+                      <option value="1">Builder</option>
+                      <option value="2">Supporter</option>
+                    </select>
+                    <label for="floatingSelectGrid">Bewerbung als...</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingUsername" placeholder="Benutzername" required>
+                    <label for="floatingUsername">Benutzername</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="floatingEmail" placeholder="E-Mail-Adresse" required>
+                    <label for="floatingEmail">E-Mail-Adresse</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Bewerbung" id="floatingText" style="min-height: 300px; max-height: 300px; resize: none;" required></textarea>
+                    <label for="floatingText">Bewerbung</label>
+                </div>
+                <button class="w-100 btn btn:green" disabled>Abschicken</button>
+            </form>
+        </div>
+    </main>
+
+<%- include('footer'); %>
