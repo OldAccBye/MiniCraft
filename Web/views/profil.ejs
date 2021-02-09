@@ -10,12 +10,11 @@
 
         <% if (typeof error !== 'undefined' || typeof profil === 'undefined') { %>
         <div class="container my-3">
-            <div class="row">
-                <div class="col">
-                    <div class="shadow-sm p-3 bg-white rounded text-center">
-                        <h3>Spieler konnte nicht gefunden werden!</h3>
-                    </div>
-                </div>
+            <div class="alert alert-danger text-center" role="alert">
+                <h4 class="alert-heading">Hoppla!</h4>
+                <p class="mb-0">
+                    Dieser Spieler konnte in unserer Datenbank nicht gefunden werden :/
+                </p>
             </div>
         </div>
         <% } else { %>

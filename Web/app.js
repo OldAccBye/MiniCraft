@@ -44,6 +44,10 @@ router.get('/complaint', async (req, res) => {
     res.render('beschwerde', { userCount: await players.countDocuments() })
 });
 
+router.get('/about', async (req, res) => {
+    res.render('über', { userCount: await players.countDocuments() })
+});
+
 router.get('/p/:username', async (req, res) => {
     const username = req.params.username;
     const player = await players.findOne({ username: username });
