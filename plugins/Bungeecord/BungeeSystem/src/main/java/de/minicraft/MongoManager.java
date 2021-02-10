@@ -22,8 +22,8 @@ public class MongoManager {
         List<String> collectionsList = Configs.config.getStringList("mongodb.collections");
 
         if (username == null || password == null || host == null || database == null || collections == null) {
-            ServerBasics.plugin.getLogger().severe("[MongoManager->connect] Please fill out all fields in the Configs.yml.");
-            ServerBasics.plugin.getServer().shutdown();
+            BungeeSystem.plugin.getLogger().severe("[MongoManager->connect] Bitte füll alle Daten in der config.yml aus.");
+            BungeeSystem.plugin.getProxy().stop();
             return;
         }
 
@@ -34,7 +34,7 @@ public class MongoManager {
                 this.collections.put(collectionName, mongoDatabase.getCollection(collectionName));
         } catch (MongoException e) {
             e.printStackTrace();
-            ServerBasics.plugin.getServer().shutdown();
+            BungeeSystem.plugin.getProxy().stop();
         }
     }
 }

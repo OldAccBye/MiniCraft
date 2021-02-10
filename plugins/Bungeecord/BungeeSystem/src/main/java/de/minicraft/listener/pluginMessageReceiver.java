@@ -6,17 +6,19 @@ import de.minicraft.BungeeSystem;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class PluginMessageReceiver implements Listener {
     @EventHandler
-    public void on(PluginMessageEvent e) {
+    public void onPluginMessage(PluginMessageEvent e) {
+        if (!Arrays.asList("lobby:server", "basics:command").contains(e.getTag())) return;
+
         if (!(e.getReceiver() instanceof ProxiedPlayer)) return;
         ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
 
@@ -81,6 +83,5 @@ public class PluginMessageReceiver implements Listener {
                 }
             }
         }
-
     }
 }

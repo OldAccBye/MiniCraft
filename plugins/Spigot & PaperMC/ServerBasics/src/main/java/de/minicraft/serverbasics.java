@@ -3,18 +3,20 @@ package de.minicraft;
 import de.minicraft.listener.BlockListener;
 import de.minicraft.listener.ChatListener;
 import de.minicraft.listener.PlayerListener;
-import de.minicraft.players.PlayerApi;
+import de.minicraft.listener.PluginMessageReceiver;
 import de.minicraft.players.PlayerData;
 import de.minicraft.players.commands.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.UUID;
 
 public final class ServerBasics extends JavaPlugin {
     public static ServerBasics plugin;
-    public static MongoManager mongo = new MongoManager();
+    public static final HashMap<UUID, PlayerData> playerList = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -24,24 +26,11 @@ public final class ServerBasics extends JavaPlugin {
         if (!getDataFolder().exists())
             if (!getDataFolder().mkdir()) plugin.getLogger().severe("[FILE] A new directory cannot be created!");
 
-        // Config
-        {
-            file = new File(getDataFolder().getPath(), "config.yml");
-            if (!file.exists()) {
-                super.getLogger().severe(">>>>> [CONFIG] config.yml existiert nicht! <<<<<");
-                return;
-            }
-
-            Configs.config = YamlConfiguration.loadConfiguration(file);
-        }
-
         // prefix
         {
             file = new File(getDataFolder().getPath(), "prefix.yml");
-            if (!file.exists()) {
+            if (!file.exists())
                 super.getLogger().severe(">>>>> [CONFIG] prefix.yml existiert nicht! <<<<<");
-                return;
-            }
 
             Configs.prefix = YamlConfiguration.loadConfiguration(file);
         }
@@ -49,28 +38,20 @@ public final class ServerBasics extends JavaPlugin {
         // commands
         {
             file = new File(getDataFolder().getPath(), "commands.yml");
-            if (!file.exists()) {
+            if (!file.exists())
                 super.getLogger().severe(">>>>> [CONFIG] commands.yml existiert nicht! <<<<<");
-                return;
-            }
 
-            Configs.commandList =YamlConfiguration.loadConfiguration(file);
+            Configs.commandList = YamlConfiguration.loadConfiguration(file);
         }
 
         // permissions
         {
             file = new File(getDataFolder().getPath(), "permissions.yml");
-            if (!file.exists()) {
+            if (!file.exists())
                 super.getLogger().severe(">>>>> [CONFIG] permissions.yml existiert nicht! <<<<<");
-                return;
-            }
 
             Configs.permissionsList = YamlConfiguration.loadConfiguration(file);
         }
-
-        /* ===== DATABASE - START ===== */
-        mongo.connect();
-        /* ===== DATABASE - END ===== */
 
         /* ===== COMMANDS - START ===== */
         Objects.requireNonNull(plugin.getCommand("setgroup")).setExecutor(new SetgroupCommand());
@@ -87,8 +68,11 @@ public final class ServerBasics extends JavaPlugin {
         /* ===== LISTENER - END ===== */
 
         /* ===== CHANNELS - START ===== */
-        plugin.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        // Outgoing
         plugin.getServer().getMessenger().registerOutgoingPluginChannel(this, "basics:command");
+
+        // Incoming
+        plugin.getServer().getMessenger().registerIncomingPluginChannel( this, "bungeesystem:player", new PluginMessageReceiver());
         /* ===== CHANNELS - END ===== */
 
         System.out.println(" ");
@@ -101,16 +85,6 @@ public final class ServerBasics extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        plugin.getServer().getOnlinePlayers().forEach(players -> {
-            PlayerData pData = PlayerApi.get(players.getUniqueId());
-            if (pData == null) {
-                ServerBasics.plugin.getLogger().severe("Spieler [" + players.getName() + "] konnte nicht gespeichert werden!");
-                return;
-            }
-
-            PlayerApi.saveAll(players.getUniqueId());
-        });
-
         System.out.println(" ");
         System.out.println("###################################");
         System.out.println("# ServerBasics wurde deaktiviert!");

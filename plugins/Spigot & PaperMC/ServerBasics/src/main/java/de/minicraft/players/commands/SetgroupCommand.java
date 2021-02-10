@@ -54,9 +54,9 @@ public class SetgroupCommand implements TabCompleter, CommandExecutor {
             return false;
         }
 
-        PlayerApi.removeAllPerm(t.getUniqueId());
+        PlayerApi.removeAllPerm(t);
         pData.group = args[1];
-        PlayerApi.addAllPerm(t.getUniqueId());
+        PlayerApi.addAllPerm(t);
 
         p.sendMessage("§3§l[§2SERVER§3§l] §aSpieler " + t.getName() + " erhielt die Gruppe" + args[1]);
         t.sendMessage("§3§l[§2SERVER§3§l] §aDu erhielst die Gruppe " + args[1]);

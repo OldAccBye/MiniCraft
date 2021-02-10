@@ -1,6 +1,5 @@
 package de.minicraft.listener;
 
-import de.minicraft.Configs;
 import de.minicraft.players.PlayerApi;
 import de.minicraft.players.PlayerData;
 import org.bukkit.entity.Player;
@@ -38,7 +37,7 @@ public class BlockListener implements Listener {
 
             pData.blockBreakEventCounter += 1;
 
-            if (pData.blockBreakEventCounter >= 20) {
+            /*if (pData.blockBreakEventCounter >= 20) {
                 pData.banned = true;
                 pData.banSinceTimestamp = currentDateTime;
                 pData.banExpiresTimestamp = (currentDateTime + 120000);
@@ -46,7 +45,7 @@ public class BlockListener implements Listener {
                 pData.bannedFrom = "SYSTEM";
                 p.kickPlayer("BANNED!");
                 return;
-            }
+            }*/
 
             if ((pData.blockBreakEventCounter > 10) && (pData.blockBreakEventCounter <= 15))
                 p.sendMessage("§3§l[§2SERVER§3§l] §aTu das bitte nicht :(");

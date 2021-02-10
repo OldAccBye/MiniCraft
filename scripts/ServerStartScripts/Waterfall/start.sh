@@ -1,0 +1,1 @@
+screen -mdS Waterfall java -Xms128M -Xmx256M -jar ./waterfall-1.16-395.jar -nogui
