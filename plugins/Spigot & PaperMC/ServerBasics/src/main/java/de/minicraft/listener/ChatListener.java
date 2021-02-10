@@ -3,8 +3,8 @@ package de.minicraft.listener;
 import java.util.Objects;
 
 import de.minicraft.Configs;
-import de.minicraft.players.PlayerApi;
-import de.minicraft.players.PlayerData;
+import de.minicraft.player.PlayerApi;
+import de.minicraft.player.PlayerData;
 import de.minicraft.ServerBasics;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

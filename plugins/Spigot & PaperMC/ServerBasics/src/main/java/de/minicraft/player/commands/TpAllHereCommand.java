@@ -1,4 +1,4 @@
-package de.minicraft.players.commands;
+package de.minicraft.player.commands;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;

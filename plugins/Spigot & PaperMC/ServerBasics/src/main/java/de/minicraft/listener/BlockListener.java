@@ -1,7 +1,7 @@
 package de.minicraft.listener;
 
-import de.minicraft.players.PlayerApi;
-import de.minicraft.players.PlayerData;
+import de.minicraft.player.PlayerApi;
+import de.minicraft.player.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

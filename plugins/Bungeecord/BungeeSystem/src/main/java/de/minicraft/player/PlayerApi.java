@@ -4,7 +4,6 @@ import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.model.Filters;
 import de.minicraft.BungeeSystem;
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.bson.Document;
 

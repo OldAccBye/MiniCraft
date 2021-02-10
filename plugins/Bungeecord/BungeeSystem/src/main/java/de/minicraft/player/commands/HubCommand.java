@@ -1,4 +1,4 @@
-package de.minicraft.commands;
+package de.minicraft.player.commands;
 
 import de.minicraft.BungeeSystem;
 import net.md_5.bungee.api.CommandSender;

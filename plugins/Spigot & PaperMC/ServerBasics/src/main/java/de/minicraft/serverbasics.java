@@ -3,9 +3,8 @@ package de.minicraft;
 import de.minicraft.listener.BlockListener;
 import de.minicraft.listener.ChatListener;
 import de.minicraft.listener.PlayerListener;
-import de.minicraft.listener.PluginMessageReceiver;
-import de.minicraft.players.PlayerData;
-import de.minicraft.players.commands.*;
+import de.minicraft.player.PlayerData;
+import de.minicraft.player.commands.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -54,7 +53,6 @@ public final class ServerBasics extends JavaPlugin {
         }
 
         /* ===== COMMANDS - START ===== */
-        Objects.requireNonNull(plugin.getCommand("setgroup")).setExecutor(new SetgroupCommand());
         Objects.requireNonNull(plugin.getCommand("build")).setExecutor(new BuildCommand());
         Objects.requireNonNull(plugin.getCommand("bc")).setExecutor(new BroadcastCommand());
         Objects.requireNonNull(plugin.getCommand("tp")).setExecutor(new TpCommand());

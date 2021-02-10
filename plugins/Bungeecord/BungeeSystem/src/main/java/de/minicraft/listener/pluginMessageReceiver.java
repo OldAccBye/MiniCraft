@@ -26,32 +26,33 @@ public class PluginMessageReceiver implements Listener {
         String subChannel = in.readUTF();
 
         switch (e.getTag()) {
-            case "lobby:server" -> { // LOBBY -> GETSERVER
-                if (subChannel.equals("connect")) { // GETSERVER -> CONNECT
-                    ServerInfo server = BungeeSystem.plugin.getProxy().getServerInfo(in.readUTF());
-                    if (server == null) {
-                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aServer existiert nicht!"));
-                        return;
-                    }
+            case "lobby:server" -> { // LOBBY -> SERVER
+                switch (subChannel) { // SERVER (SWITCH)
+                    case "connect" -> {
+                        ServerInfo server = BungeeSystem.plugin.getProxy().getServerInfo(in.readUTF());
+                        if (server == null) {
+                            p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aServer existiert nicht!"));
+                            return;
+                        }
 
-                    try {
-                        Socket s = new Socket();
-                        s.connect(server.getSocketAddress(), 15);
-                        s.close();
-                    } catch (IOException err) {
-                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aKeine Verbindung zum Server..."));
-                        return;
-                    }
+                        try {
+                            Socket s = new Socket();
+                            s.connect(server.getSocketAddress(), 15);
+                            s.close();
+                        } catch (IOException err) {
+                            p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aKeine Verbindung zum Server..."));
+                            return;
+                        }
 
-                    p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aVerbindung wird hergestellt..."));
-                    p.connect(server);
+                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aVerbindung wird hergestellt..."));
+                        p.connect(server);
+                    }
                 }
             }
-            case "basics:command" -> { // BASICS -> COMMANDS
-                switch (subChannel) { // COMMANDS (SWITCH)
-                    // COMMAND (SWITCH) -> BROADCAST
+            case "basics:command" -> { // BASICS -> COMMAND
+                switch (subChannel) { // COMMAND (SWITCH)
                     case "broadcast" -> BungeeSystem.plugin.getProxy().getPlayers().forEach(players -> players.sendMessage(new TextComponent(in.readUTF())));
-                    case "tpallhere" -> { // COMMAND (SWITCH) -> TPALL
+                    case "tpallhere" -> {
                         p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler werden teleportiert..."));
 
                         ServerInfo pServerInfo = p.getServer().getInfo();
@@ -61,7 +62,7 @@ public class PluginMessageReceiver implements Listener {
                             players.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aDu wurdest teleportiert!"));
                         }
                     }
-                    case "tp" -> { // COMMAND (SWITCH) -> TP
+                    case "tp" -> {
                         String p1Name = in.readUTF();
                         ProxiedPlayer p1 = BungeeSystem.plugin.getProxy().getPlayer(p1Name);
                         if (p1 == null) {

@@ -1,11 +1,13 @@
 package de.minicraft;
 
-import de.minicraft.commands.HubCommand;
+import de.minicraft.player.commands.HubCommand;
+import de.minicraft.listener.ChatListener;
 import de.minicraft.listener.PlayerListener;
 import de.minicraft.listener.PluginMessageReceiver;
 import de.minicraft.listener.Tablist;
 import de.minicraft.player.PlayerApi;
 import de.minicraft.player.PlayerData;
+import de.minicraft.player.commands.SetGroupCommand;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -47,13 +49,47 @@ public final class BungeeSystem extends Plugin {
             }
         }
 
+        // Commands
+        {
+            file = new File(getDataFolder().getPath(), "commands.yml");
+            if (!file.exists()) {
+                super.getLogger().severe(">>>>> [CONFIG] commands.yml existiert nicht! <<<<<");
+                return;
+            }
+
+            try {
+                Configs.commandList = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+
+        // Permissions
+        {
+            file = new File(getDataFolder().getPath(), "permissions.yml");
+            if (!file.exists()) {
+                super.getLogger().severe(">>>>> [CONFIG] permissions.yml existiert nicht! <<<<<");
+                return;
+            }
+
+            try {
+                Configs.permissionsList = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+
         // Listener
         plugin.getProxy().getPluginManager().registerListener(plugin, new PluginMessageReceiver());
         plugin.getProxy().getPluginManager().registerListener(plugin, new Tablist());
         plugin.getProxy().getPluginManager().registerListener(plugin, new PlayerListener());
+        plugin.getProxy().getPluginManager().registerListener(plugin, new ChatListener());
 
         // Commands
         plugin.getProxy().getPluginManager().registerCommand(plugin, new HubCommand());
+        plugin.getProxy().getPluginManager().registerCommand(plugin, new SetGroupCommand());
 
         // Channels
         plugin.getProxy().registerChannel("lobby:server");
@@ -75,12 +111,13 @@ public final class BungeeSystem extends Plugin {
                 ProxiedPlayer p = plugin.getProxy().getPlayer(pData.getKey());
 
                 if (p == null) {
+                    plugin.getProxy().getLogger().warning("[playerList] Spieler " + pData.getValue().username + " wird abgemeldet.");
                     PlayerApi.saveAll(pData.getKey());
                     PlayerApi.logout(pData.getKey());
                 }
             }
 
             plugin.getProxy().getLogger().warning("[playerList] Prüfung beendet!");
-        }, 5, 5, TimeUnit.MINUTES);
+        }, 15, 15, TimeUnit.SECONDS);
     }
 }

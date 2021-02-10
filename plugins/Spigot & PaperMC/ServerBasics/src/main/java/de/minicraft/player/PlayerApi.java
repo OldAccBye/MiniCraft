@@ -1,4 +1,4 @@
-package de.minicraft.players;
+package de.minicraft.player;
 
 import java.util.UUID;
 
@@ -31,8 +31,6 @@ public class PlayerApi {
         // Setzt dem Spieler die neuen vorgegebenen Permissions aus "permissionsList" und wählt die anhand von der Gruppe des Spielers.
         for (String perm : Configs.permissionsList.getStringList(pData.group))
             pData.permissions.setPermission(perm, true);
-
-        p.updateCommands();
     }
 
     public static void removeAllPerm(Player p) {

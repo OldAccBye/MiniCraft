@@ -1,7 +1,7 @@
-package de.minicraft.players.commands;
+package de.minicraft.player.commands;
 
-import de.minicraft.players.PlayerApi;
-import de.minicraft.players.PlayerData;
+import de.minicraft.player.PlayerApi;
+import de.minicraft.player.PlayerData;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

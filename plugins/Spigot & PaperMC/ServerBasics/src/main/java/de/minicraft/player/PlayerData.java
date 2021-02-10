@@ -1,4 +1,4 @@
-package de.minicraft.players;
+package de.minicraft.player;
 
 import org.bukkit.permissions.PermissionAttachment;
 
