@@ -1,7 +1,5 @@
 package de.minicraft.listener;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import de.minicraft.player.PlayerApi;
 import de.minicraft.player.PlayerData;
 import de.minicraft.ServerBasics;
@@ -17,12 +15,10 @@ public class PlayerListener implements Listener {
         PlayerData pData = PlayerApi.get(e.getPlayer().getUniqueId());
         if (pData == null) {
             ServerBasics.plugin.getLogger().severe("Spieler [" + e.getPlayer().getName() + "] konnte nicht gespeichert werden!");
-            PlayerApi.removeAllPerm(e.getPlayer());
             PlayerApi.logout(e.getPlayer().getUniqueId());
             return;
         }
 
-        PlayerApi.removeAllPerm(e.getPlayer());
         PlayerApi.logout(e.getPlayer().getUniqueId());
     }
 }

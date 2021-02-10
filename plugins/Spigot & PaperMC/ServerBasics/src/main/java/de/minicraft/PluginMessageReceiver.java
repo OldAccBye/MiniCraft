@@ -21,13 +21,13 @@ public class PluginMessageReceiver implements PluginMessageListener {
                     Document playerLoginDoc = PlayerApi.preLogin(p, group);
                     if (!playerLoginDoc.getBoolean("boolean")) p.kickPlayer(playerLoginDoc.getString("reason"));
 
-                    PlayerApi.addAllPerm(p);
                     p.updateCommands();
                 }
                 case "Update" -> {
                     switch (in.readUTF()) {
                         case "Group" -> {
                             PlayerApi.get(p.getUniqueId()).group = in.readUTF();
+                            ServerBasics.plugin.getLogger().warning("Group erhalten!");
                         }
                     }
                 }

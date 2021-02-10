@@ -1,7 +1,5 @@
 package de.minicraft.listener;
 
-import java.util.Objects;
-
 import de.minicraft.Configs;
 import de.minicraft.player.PlayerApi;
 import de.minicraft.player.PlayerData;
@@ -41,24 +39,32 @@ public class ChatListener implements Listener {
         }
 
         for (Player t : p.getWorld().getPlayers())
-            t.sendMessage(Configs.prefix.getString(pData.group) + p.getName() + " >> " + tempMsg);
+            t.sendMessage(Configs.prefix.getString(pData.group) + p.getName() + ": " + tempMsg);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(PlayerCommandPreprocessEvent e) {
         Player p = e.getPlayer();
-
-        String firstWord = e.getMessage().split(" ")[0].replace("/", "");
-        if (!Configs.commandList.getKeys(true).contains(firstWord)) {
+        PlayerData pData = PlayerApi.get(e.getPlayer().getUniqueId());
+        if (pData == null) {
             e.setCancelled(true);
-            p.sendMessage("§c[FEHLER]: §fDieser Befehl existiert nicht!");
             return;
         }
 
-        if (!p.hasPermission(Objects.requireNonNull(Configs.commandList.getString(firstWord)))) {
-            e.setCancelled(true);
-            p.sendMessage("§c[FEHLER]: §fDu kannst diesen Befehl nicht ausführen!");
+        for (String command : Configs.commandList.getKeys(false)) {
+            if (!e.getMessage().startsWith("/" + command)) continue;
+
+            if (!Configs.permissionsList.getStringList(pData.group).contains(Configs.commandList.getString(command))) {
+                e.setCancelled(true);
+                p.sendMessage("§c[FEHLER]: §fDu kannst diesen Befehl nicht ausführen!");
+                return;
+            }
+
+            return;
         }
+
+        e.setCancelled(true);
+        p.sendMessage("§c[FEHLER]: §fDieser Befehl existiert nicht!");
     }
 
     @EventHandler
@@ -68,12 +74,8 @@ public class ChatListener implements Listener {
         PlayerData pData = PlayerApi.get(e.getPlayer().getUniqueId());
         if (pData == null) return;
 
-        for (String cmd : Configs.commandList.getKeys(false)) {
-            String cmdPerm = Configs.commandList.getString(cmd);
-            if (cmdPerm == null) return;
-
-            if (e.getPlayer().hasPermission(cmdPerm))
-                e.getCommands().add(cmd);
-        }
+        for (String command : Configs.commandList.getKeys(false))
+            if (Configs.permissionsList.getStringList(pData.group).contains(Configs.commandList.getString(command)))
+                e.getCommands().add(command);
     }
 }

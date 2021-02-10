@@ -63,7 +63,7 @@ public class SetGroupCommand extends Command implements TabExecutor {
         out.writeUTF("Update");
         out.writeUTF("Group");
         out.writeUTF(pData.group);
-        t.getServer().sendData("bungeesystem:player", out.toByteArray());
+        t.getServer().getInfo().sendData("bungeesystem:player", out.toByteArray());
 
         pData.group = args[1];
         p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler " + t.getName() + " erhielt die Gruppe" + args[1]));

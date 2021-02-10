@@ -118,6 +118,6 @@ public final class BungeeSystem extends Plugin {
             }
 
             plugin.getProxy().getLogger().warning("[playerList] Prüfung beendet!");
-        }, 15, 15, TimeUnit.SECONDS);
+        }, 5, 5, TimeUnit.MINUTES);
     }
 }
