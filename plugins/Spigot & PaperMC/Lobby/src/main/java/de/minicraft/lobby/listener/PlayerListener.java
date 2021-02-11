@@ -3,9 +3,7 @@ package de.minicraft.lobby.listener;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.minicraft.lobby.Lobby;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,23 +16,42 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
     private final HashMap<UUID, Boolean> doubleJump = new HashMap<>();
+    private final HashMap<UUID, Long> lastEmoteTime = new HashMap<>();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         // Inventory
         {
             e.getPlayer().getInventory().clear();
-            ItemStack i = new ItemStack(Material.COMPASS);
-            ItemMeta im = i.getItemMeta();
-            if (im != null) {
-                im.setDisplayName("§3§lNavigator");
-                i.setItemMeta(im);
-                e.getPlayer().getInventory().setItem(4, i);
+            ItemStack i;
+            ItemMeta im;
+
+            // Navigator
+            {
+                i = new ItemStack(Material.COMPASS);
+                im = i.getItemMeta();
+                if (im != null) {
+                    im.setDisplayName("§3§lNavigator");
+                    i.setItemMeta(im);
+                    e.getPlayer().getInventory().setItem(4, i);
+                }
+            }
+
+            // Emotes
+            {
+                i = new ItemStack(Material.ENDER_EYE);
+                im = i.getItemMeta();
+                if (im != null) {
+                    im.setDisplayName("§3§lEmote");
+                    i.setItemMeta(im);
+                    e.getPlayer().getInventory().setItem(0, i);
+                }
             }
         }
 
@@ -48,31 +65,77 @@ public class PlayerListener implements Listener {
     public void onInteract(PlayerInteractEvent e) {
         if (e.getItem() == null || !(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
 
-        if (e.getItem().getType() == Material.COMPASS) {
-            Inventory i = Bukkit.createInventory(null, 9, "§3§lNavigator");
+        ItemMeta im = e.getItem().getItemMeta();
+        if (im == null) return;
+        Inventory i;
+        ItemStack is;
 
-            // FFA ITEM
-            ItemStack FFA = new ItemStack(Material.DIAMOND_SWORD);
-            ItemMeta FFAM = FFA.getItemMeta();
-            if (FFAM == null) return;
-            FFAM.setDisplayName("§c§lFFA");
-            FFAM.setLore(Collections.singletonList("§eFREE-FOR-ALL"));
-            FFAM.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            FFA.setItemMeta(FFAM);
+        switch (im.getDisplayName()) {
+            case "§3§lNavigator" -> {
+                 i = Bukkit.createInventory(null, 9, "§3§lNavigator");
 
-            // GTC ITEM
-            ItemStack GTC = new ItemStack(Material.CHICKEN_SPAWN_EGG);
-            ItemMeta GTCM = GTC.getItemMeta();
-            if (GTCM == null) return;
-            GTCM.setDisplayName("§c§lGTC");
-            GTCM.setLore(Collections.singletonList("§eGET-THE-CHICKEN"));
-            GTCM.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            GTC.setItemMeta(GTCM);
+                // FFA ITEM
+                is = new ItemStack(Material.DIAMOND_SWORD);
+                im = is.getItemMeta();
+                if (im == null) return;
+                im.setDisplayName("§c§lFFA");
+                im.setLore(Collections.singletonList("§eFREE-FOR-ALL"));
+                im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                is.setItemMeta(im);
 
-            i.setItem(0, FFA);
-            i.setItem(1, GTC);
+                i.setItem(0, is); // Set item
 
-            e.getPlayer().openInventory(i);
+                // GTC ITEM
+                is = new ItemStack(Material.CHICKEN_SPAWN_EGG);
+                im = is.getItemMeta();
+                if (im == null) return;
+                im.setDisplayName("§c§lGTC");
+                im.setLore(Collections.singletonList("§eGET-THE-CHICKEN"));
+                im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                is.setItemMeta(im);
+
+                i.setItem(1, is); // Set item
+
+                e.getPlayer().openInventory(i);
+            }
+            case "§3§lEmote" -> {
+                i = Bukkit.createInventory(null, 9, "§3§lEmote");
+
+                // LIEBE ITEM
+                is = new ItemStack(Material.MUSIC_DISC_CHIRP);
+                im = is.getItemMeta();
+                if (im == null) return;
+                im.setDisplayName("§4§lLiebe");
+                im.setLore(Collections.singletonList("§eZeig etwas Herz <3"));
+                im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                is.setItemMeta(im);
+
+                i.setItem(0, is); // Set item
+
+                // WUT ITEM
+                is = new ItemStack(Material.MUSIC_DISC_BLOCKS);
+                im = is.getItemMeta();
+                if (im == null) return;
+                im.setDisplayName("§c§lWut");
+                im.setLore(Collections.singletonList("§eSei wütend >.<"));
+                im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                is.setItemMeta(im);
+
+                i.setItem(1, is); // Set item
+
+                // FREUDE ITEM
+                is = new ItemStack(Material.MUSIC_DISC_CAT);
+                im = is.getItemMeta();
+                if (im == null) return;
+                im.setDisplayName("§a§lFreude");
+                im.setLore(Collections.singletonList("§eSei fröhlich :D"));
+                im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                is.setItemMeta(im);
+
+                i.setItem(2, is); // Set item
+
+                e.getPlayer().openInventory(i);
+            }
         }
     }
 
@@ -84,22 +147,47 @@ public class PlayerListener implements Listener {
         if (e.getCurrentItem() == null) return;
         e.setCancelled(true);
 
-        ItemMeta meta = e.getCurrentItem().getItemMeta();
-        if (meta == null) return;
+        ItemMeta im = e.getCurrentItem().getItemMeta();
+        if (im == null) return;
 
         Player p = (Player) e.getWhoClicked();
 
-        if (e.getCurrentItem().getType() == Material.DIAMOND_SWORD && meta.getDisplayName().equalsIgnoreCase("§c§lFFA")) {
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("connect");
-            out.writeUTF("FFA");
-            p.sendPluginMessage(Lobby.plugin, "bungeesystem:server", out.toByteArray());
-        } else if (e.getCurrentItem().getType() == Material.CHICKEN_SPAWN_EGG && meta.getDisplayName().equalsIgnoreCase("§c§lGTC")) {
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("connect");
-            out.writeUTF("GTC");
-            p.sendPluginMessage(Lobby.plugin, "bungeesystem:server", out.toByteArray());
+        switch (e.getView().getTitle()) {
+            case "§3§lNavigator" -> {
+                if (im.getDisplayName().equals("§c§lFFA")) {
+                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                    out.writeUTF("connect");
+                    out.writeUTF("FFA");
+                    p.sendPluginMessage(Lobby.plugin, "bungeesystem:server", out.toByteArray());
+                } else if (im.getDisplayName().equals("§c§lGTC")) {
+                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                    out.writeUTF("connect");
+                    out.writeUTF("GTC");
+                    p.sendPluginMessage(Lobby.plugin, "bungeesystem:server", out.toByteArray());
+                }
+            }
+            case "§3§lEmote" -> {
+                Date date = new Date();
+                long currentDateTime = date.getTime();
+
+                if (!lastEmoteTime.containsKey(p.getUniqueId()))
+                    lastEmoteTime.put(p.getUniqueId(), currentDateTime);
+                else if (currentDateTime <= (lastEmoteTime.get(p.getUniqueId()) + 2000)) { // 2000 = 2 Sekunden
+                    p.sendMessage("§c[FEHLER]: §fDu hast vor kurzem bereits ein Emote verwendet!");
+                    return;
+                }
+
+                lastEmoteTime.computeIfPresent(p.getUniqueId(), (k, v) -> v = currentDateTime);
+
+                switch (im.getDisplayName()) {
+                    case "§4§lLiebe" -> p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
+                    case "§c§lWut" -> p.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
+                    case "§a§lFreude" -> p.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
+                }
+            }
         }
+
+        p.closeInventory();
     }
 
     @EventHandler
@@ -118,8 +206,10 @@ public class PlayerListener implements Listener {
     public void onMove(PlayerMoveEvent e) {
         if (!e.getPlayer().getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid()) return;
 
-        doubleJump.computeIfPresent(e.getPlayer().getUniqueId(), (k, v) -> v = false);
-        e.getPlayer().setAllowFlight(true);
+        if (!e.getPlayer().getAllowFlight() && e.getPlayer().getLocation().getY() <= 71.00000) {
+            doubleJump.computeIfPresent(e.getPlayer().getUniqueId(), (k, v) -> v = false);
+            e.getPlayer().setAllowFlight(true);
+        }
     }
 
     @EventHandler
