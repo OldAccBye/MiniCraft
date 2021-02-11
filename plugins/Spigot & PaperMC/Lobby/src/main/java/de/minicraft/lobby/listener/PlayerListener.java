@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
-    private final HashMap<UUID, Boolean> doubleJump = new HashMap<>();
     private final HashMap<UUID, Long> lastEmoteTime = new HashMap<>();
 
     @EventHandler
@@ -53,11 +52,6 @@ public class PlayerListener implements Listener {
                     e.getPlayer().getInventory().setItem(0, i);
                 }
             }
-        }
-
-        // Double jump
-        {
-            doubleJump.put(e.getPlayer().getUniqueId(), false);
         }
     }
 
@@ -196,9 +190,7 @@ public class PlayerListener implements Listener {
 
         e.setCancelled(true);
 
-        if (doubleJump.get(e.getPlayer().getUniqueId())) return;
         e.getPlayer().setVelocity(e.getPlayer().getLocation().getDirection().setY(1));
-        doubleJump.computeIfPresent(e.getPlayer().getUniqueId(), (k, v) -> v = true);
         e.getPlayer().setAllowFlight(false);
     }
 
@@ -206,10 +198,8 @@ public class PlayerListener implements Listener {
     public void onMove(PlayerMoveEvent e) {
         if (!e.getPlayer().getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid()) return;
 
-        if (!e.getPlayer().getAllowFlight() && e.getPlayer().getLocation().getY() <= 71.00000) {
-            doubleJump.computeIfPresent(e.getPlayer().getUniqueId(), (k, v) -> v = false);
+        if (!e.getPlayer().getAllowFlight() && e.getPlayer().getLocation().getY() <= 71.00000)
             e.getPlayer().setAllowFlight(true);
-        }
     }
 
     @EventHandler
