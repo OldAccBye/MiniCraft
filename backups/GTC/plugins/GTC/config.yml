@@ -1,0 +1,104 @@
+world: # Der Name deiner Welt
+  MaxPlayers: 8 # Wie viele Spieler auf dieser Welt sein dürfen
+  PlayersToStart: 4 # Wie viele Spieler zum starten benötigt werden
+  PreTime: 15 # Die benötigte Zeit in Sekunden bis das Spiel beginnt
+  PlayTime: 35 # Die Zeit die man hat bis das Spiel vorbei ist in Sekunden
+  Spawn: # Die Position an die diese Person teleportiert werden soll sobald diese Person den Server betritt
+    x: 0.486
+    y: 61.00000
+    z: 0.426
+    yaw: -0.0
+    pitch: 0.6
+  Round: # Die Position an die diese Person teleportiert werden soll sobald das Spiel startet
+    x: 0.492
+    y: 62.00000
+    z: 53.539
+    yaw: -1.1
+    pitch: 0.4
+  ChickenSpawn: # Von Position1 bis Position2 werden Hühner gespawnt
+    pos1:
+      x: -6.414
+      y: 62.00000
+      z: 68.385
+    pos2:
+      x: 8.378
+      y: 62.00000
+      z: 49.566
+world2: # Der Name deiner Welt
+  MaxPlayers: 8 # Wie viele Spieler auf dieser Welt sein dürfen
+  PlayersToStart: 4 # Wie viele Spieler zum starten benötigt werden
+  PreTime: 15 # Die benötigte Zeit in Sekunden bis das Spiel beginnt
+  PlayTime: 35 # Die Zeit die man hat bis das Spiel vorbei ist in Sekunden
+  Spawn: # Die Position an die diese Person teleportiert werden soll sobald diese Person den Server betritt
+    x: 0.486
+    y: 61.00000
+    z: 0.426
+    yaw: -0.0
+    pitch: 0.6
+  Round: # Die Position an die diese Person teleportiert werden soll sobald das Spiel startet
+    x: 0.492
+    y: 62.00000
+    z: 53.539
+    yaw: -1.1
+    pitch: 0.4
+  ChickenSpawn: # Von Position1 bis Position2 werden Hühner gespawnt
+    pos1:
+      x: -6.414
+      y: 62.00000
+      z: 68.385
+    pos2:
+      x: 8.378
+      y: 62.00000
+      z: 49.566
+world3: # Der Name deiner Welt
+  MaxPlayers: 8 # Wie viele Spieler auf dieser Welt sein dürfen
+  PlayersToStart: 4 # Wie viele Spieler zum starten benötigt werden
+  PreTime: 15 # Die benötigte Zeit in Sekunden bis das Spiel beginnt
+  PlayTime: 35 # Die Zeit die man hat bis das Spiel vorbei ist in Sekunden
+  Spawn: # Die Position an die diese Person teleportiert werden soll sobald diese Person den Server betritt
+    x: 0.486
+    y: 61.00000
+    z: 0.426
+    yaw: -0.0
+    pitch: 0.6
+  Round: # Die Position an die diese Person teleportiert werden soll sobald das Spiel startet
+    x: 0.492
+    y: 62.00000
+    z: 53.539
+    yaw: -1.1
+    pitch: 0.4
+  ChickenSpawn: # Von Position1 bis Position2 werden Hühner gespawnt
+    pos1:
+      x: -6.414
+      y: 62.00000
+      z: 68.385
+    pos2:
+      x: 8.378
+      y: 62.00000
+      z: 49.566
+world4: # Der Name deiner Welt
+  MaxPlayers: 8 # Wie viele Spieler auf dieser Welt sein dürfen
+  PlayersToStart: 4 # Wie viele Spieler zum starten benötigt werden
+  PreTime: 15 # Die benötigte Zeit in Sekunden bis das Spiel beginnt
+  PlayTime: 35 # Die Zeit die man hat bis das Spiel vorbei ist in Sekunden
+  Spawn: # Die Position an die diese Person teleportiert werden soll sobald diese Person den Server betritt
+    x: 0.486
+    y: 61.00000
+    z: 0.426
+    yaw: -0.0
+    pitch: 0.6
+  Round: # Die Position an die diese Person teleportiert werden soll sobald das Spiel startet
+    x: 0.492
+    y: 62.00000
+    z: 53.539
+    yaw: -1.1
+    pitch: 0.4
+  ChickenSpawn: # Von Position1 bis Position2 werden Hühner gespawnt
+    pos1:
+      x: -6.414
+      y: 62.00000
+      z: 68.385
+    pos2:
+      x: 8.378
+      y: 62.00000
+      z: 49.566

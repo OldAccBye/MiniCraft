@@ -1,0 +1,17 @@
+default:
+premium:
+builder:
+  - minicraft.commands.build
+supporter:
+  - minigames.commands.tp
+moderator:
+  - minigames.commands.tp
+  - minigames.commands.gtc
+admin:
+  - minicraft.commands.build
+  - minigames.commands.tp
+  - minigames.commands.gtc
+owner:
+  - minicraft.commands.build
+  - minigames.commands.tp
+  - minigames.commands.gtc

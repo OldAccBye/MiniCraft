@@ -1,0 +1,3 @@
+build: minicraft.commands.build
+tp: minigames.commands.tp
+gtc: minigames.commands.gtc

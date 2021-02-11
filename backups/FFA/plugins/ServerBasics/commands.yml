@@ -1,0 +1,7 @@
+setgroup: minicraft.commands.setgroup
+build: minicraft.commands.build
+setspawn: minigames.commands.setspawn
+bc: minigames.commands.bc
+tp: minigames.commands.tp
+tpallhere: minigames.commands.tpallhere
+gtc: minigames.commands.gtc

@@ -1,0 +1,26 @@
+default:
+  - minicraft.commands.hub
+  - minicraft.commands.lobby
+premium:
+  - minicraft.commands.hub
+  - minicraft.commands.lobby
+builder:
+  - minicraft.commands.hub
+  - minicraft.commands.lobby
+supporter:
+  - minicraft.commands.hub
+  - minicraft.commands.lobby
+  - minicraft.commands.tps
+moderator:
+  - minicraft.commands.hub
+  - minicraft.commands.lobby
+  - minicraft.commands.tps
+admin:
+  - minicraft.commands.hub
+  - minicraft.commands.lobby
+  - minicraft.commands.tps
+owner:
+  - minicraft.commands.hub
+  - minicraft.commands.lobby
+  - minicraft.commands.tps
+  - minicraft.commands.setgroup
