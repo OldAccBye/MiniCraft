@@ -10,6 +10,7 @@ import de.minicraft.player.PlayerData;
 import de.minicraft.player.commands.SetGroupCommand;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
@@ -24,6 +25,7 @@ public final class BungeeSystem extends Plugin {
     public static BungeeSystem plugin = null;
     public static MongoManager mongo = new MongoManager();
     public static final HashMap<UUID, PlayerData> playerList = new HashMap<>();
+    private static ScheduledTask checkPlayerTask;
 
     @Override
     public void onEnable() {
@@ -99,19 +101,31 @@ public final class BungeeSystem extends Plugin {
         // Mongo
         mongo.connect();
 
-        // Check if player is connected
+        // Check player task
         checkPlayer();
     }
 
+    @Override
+    public void onDisable() {
+        checkPlayerTask.cancel();
+
+        plugin.getProxy().getLogger().warning("[playerList] Daten werden gespeichert...");
+
+        for (Map.Entry<UUID, PlayerData> pData : playerList.entrySet())
+            PlayerApi.saveAll(pData.getKey());
+
+        plugin.getProxy().getLogger().warning("[playerList] Daten wurden gespeichert!");
+    }
+
     private static void checkPlayer() {
-        plugin.getProxy().getScheduler().schedule(plugin, () -> {
+        checkPlayerTask = plugin.getProxy().getScheduler().schedule(plugin, () -> {
             plugin.getProxy().getLogger().warning("[playerList] Prüfung gestartet...");
 
             for (Map.Entry<UUID, PlayerData> pData : playerList.entrySet()) {
                 ProxiedPlayer p = plugin.getProxy().getPlayer(pData.getKey());
 
                 if (p == null) {
-                    plugin.getProxy().getLogger().warning("[playerList] Spieler " + pData.getValue().username + " wird abgemeldet.");
+                    plugin.getProxy().getLogger().info("[playerList] Spieler " + pData.getValue().username + " wird abgemeldet.");
                     PlayerApi.saveAll(pData.getKey());
                     PlayerApi.logout(pData.getKey());
                 }

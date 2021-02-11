@@ -52,8 +52,8 @@ public class SetGroupCommand extends Command implements TabExecutor {
             return;
         }
 
-        PlayerData pData = BungeeSystem.playerList.get(t.getUniqueId());
-        if (pData == null) {
+        PlayerData tData = BungeeSystem.playerList.get(t.getUniqueId());
+        if (tData == null) {
             p.sendMessage(new TextComponent("§c[FEHLER]: §fEin Fehler ist aufgetreten."));
             t.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
             return;
@@ -62,11 +62,11 @@ public class SetGroupCommand extends Command implements TabExecutor {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Update");
         out.writeUTF("Group");
-        out.writeUTF(pData.group);
-        t.getServer().getInfo().sendData("bungeesystem:player", out.toByteArray());
+        out.writeUTF(args[1]);
+        t.getServer().sendData("bungeesystem:player", out.toByteArray());
 
-        pData.group = args[1];
-        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler " + t.getName() + " erhielt die Gruppe" + args[1]));
-        t.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aDu erhielst die Gruppe " + args[1]));
+        tData.group = args[1];
+        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + t.getName() + " §aerhielt die Gruppe §6" + args[1]));
+        t.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aDu erhielst die Gruppe §6" + args[1]));
     }
 }

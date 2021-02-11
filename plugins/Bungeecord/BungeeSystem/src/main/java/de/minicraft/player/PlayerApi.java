@@ -46,7 +46,7 @@ public class PlayerApi {
 
     public static Document login(UUID pUUID) {
         ProxiedPlayer p = BungeeSystem.plugin.getProxy().getPlayer(pUUID);
-        if (p == null) return new Document("status", "error").append("reason", "pNull");
+        if (p == null) return new Document("status", "error").append("reason", "[PlayerApi->login] p = null");
 
         // Diese Funktion prüft ob dieser Spieler bereits eingetragen ist und wenn ja entfernt diese Funktion diesen Eintrag
         logout(pUUID);
