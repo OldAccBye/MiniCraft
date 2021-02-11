@@ -5,3 +5,4 @@ main: de.minicraft.BungeeSystem
 commands:
   hub:
   setgroup:
+  tps:

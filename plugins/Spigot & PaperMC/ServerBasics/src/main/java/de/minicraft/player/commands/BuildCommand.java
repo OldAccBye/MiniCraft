@@ -18,7 +18,7 @@ public class BuildCommand implements CommandExecutor {
         PlayerData pData = PlayerApi.get(p.getUniqueId());
         if (pData == null) {
             p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
-            return false;
+            return true;
         }
 
         if (p.hasPermission("minicraft.blockbreak")) {

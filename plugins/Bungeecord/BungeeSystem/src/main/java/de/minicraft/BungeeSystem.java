@@ -8,6 +8,7 @@ import de.minicraft.listener.Tablist;
 import de.minicraft.player.PlayerApi;
 import de.minicraft.player.PlayerData;
 import de.minicraft.player.commands.SetGroupCommand;
+import de.minicraft.player.commands.TpServerCommand;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
@@ -92,10 +93,10 @@ public final class BungeeSystem extends Plugin {
         // Commands
         plugin.getProxy().getPluginManager().registerCommand(plugin, new HubCommand());
         plugin.getProxy().getPluginManager().registerCommand(plugin, new SetGroupCommand());
+        plugin.getProxy().getPluginManager().registerCommand(plugin, new TpServerCommand());
 
         // Channels
-        plugin.getProxy().registerChannel("lobby:server");
-        plugin.getProxy().registerChannel("basics:command");
+        plugin.getProxy().registerChannel("bungeesystem:server");
         plugin.getProxy().registerChannel("bungeesystem:player");
 
         // Mongo

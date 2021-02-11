@@ -7,9 +7,5 @@ author: EntenKoeniq
 commands:
   build:
     usage: /build
-  bc:
-    usage: /broadcast <MESSAGE>
   tp:
-    usage: /tp <PLAYER1> <PLAYER2>
-  tpallhere:
-    usage: /tpallhere
+    usage: /tp <PLAYER> <PLAYER>

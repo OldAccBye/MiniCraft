@@ -17,7 +17,7 @@ import java.util.Arrays;
 public class PluginMessageReceiver implements Listener {
     @EventHandler
     public void onPluginMessage(PluginMessageEvent e) {
-        if (!Arrays.asList("lobby:server", "basics:command").contains(e.getTag())) return;
+        if (!Arrays.asList("bungeesystem:server").contains(e.getTag())) return;
 
         if (!(e.getReceiver() instanceof ProxiedPlayer)) return;
         ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
@@ -26,7 +26,7 @@ public class PluginMessageReceiver implements Listener {
         String subChannel = in.readUTF();
 
         switch (e.getTag()) {
-            case "lobby:server" -> { // LOBBY -> SERVER
+            case "bungeesystem:server" -> { // LOBBY -> SERVER
                 switch (subChannel) { // SERVER (SWITCH)
                     case "connect" -> {
                         ServerInfo server = BungeeSystem.plugin.getProxy().getServerInfo(in.readUTF());
@@ -46,40 +46,6 @@ public class PluginMessageReceiver implements Listener {
 
                         p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aVerbindung wird hergestellt..."));
                         p.connect(server);
-                    }
-                }
-            }
-            case "basics:command" -> { // BASICS -> COMMAND
-                switch (subChannel) { // COMMAND (SWITCH)
-                    case "broadcast" -> BungeeSystem.plugin.getProxy().getPlayers().forEach(players -> players.sendMessage(new TextComponent(in.readUTF())));
-                    case "tpallhere" -> {
-                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler werden teleportiert..."));
-
-                        ServerInfo pServerInfo = p.getServer().getInfo();
-                        for (ProxiedPlayer players : BungeeSystem.plugin.getProxy().getPlayers()) {
-                            if (players.getName().equals(p.getName())) continue;
-                            players.connect(pServerInfo);
-                            players.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aDu wurdest teleportiert!"));
-                        }
-                    }
-                    case "tp" -> {
-                        String p1Name = in.readUTF();
-                        ProxiedPlayer p1 = BungeeSystem.plugin.getProxy().getPlayer(p1Name);
-                        if (p1 == null) {
-                            p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + p1Name + " §akonnte nicht gefunden werden!"));
-                            return;
-                        }
-
-                        String p2Name = in.readUTF();
-                        ProxiedPlayer p2 = BungeeSystem.plugin.getProxy().getPlayer(p2Name);
-                        if (p2 == null) {
-                            p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + p2Name + " §akonnte nicht gefunden werden!"));
-                            return;
-                        }
-
-                        p1.connect(p2.getServer().getInfo());
-                        p1.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aDu wurdest zu §6" + p2Name + " §ateleportiert!"));
-                        p2.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §6" + p1Name + " §awurde zu dir teleportiert!"));
                     }
                 }
             }

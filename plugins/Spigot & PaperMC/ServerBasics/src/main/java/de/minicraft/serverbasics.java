@@ -54,9 +54,7 @@ public final class ServerBasics extends JavaPlugin {
 
         /* ===== COMMANDS - START ===== */
         Objects.requireNonNull(plugin.getCommand("build")).setExecutor(new BuildCommand());
-        Objects.requireNonNull(plugin.getCommand("bc")).setExecutor(new BroadcastCommand());
         Objects.requireNonNull(plugin.getCommand("tp")).setExecutor(new TpCommand());
-        Objects.requireNonNull(plugin.getCommand("tpallhere")).setExecutor(new TpAllHereCommand());
         /* ===== COMMANDS - END ===== */
 
         /* ===== LISTENER - START ===== */
@@ -72,22 +70,8 @@ public final class ServerBasics extends JavaPlugin {
         // Incoming
         plugin.getServer().getMessenger().registerIncomingPluginChannel( this, "bungeesystem:player", new PluginMessageReceiver());
         /* ===== CHANNELS - END ===== */
-
-        System.out.println(" ");
-        System.out.println("###################################");
-        System.out.println("# ServerBasics wurde gestartet!");
-        System.out.println("# Plugin by EntenKoeniq.");
-        System.out.println("###################################");
-        System.out.println(" ");
     }
 
     @Override
-    public void onDisable() {
-        System.out.println(" ");
-        System.out.println("###################################");
-        System.out.println("# ServerBasics wurde deaktiviert!");
-        System.out.println("# Plugin by EntenKoeniq.");
-        System.out.println("###################################");
-        System.out.println(" ");
-    }
+    public void onDisable() { }
 }

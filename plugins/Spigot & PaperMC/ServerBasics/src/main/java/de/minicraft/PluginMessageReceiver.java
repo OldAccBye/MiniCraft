@@ -11,7 +11,7 @@ public class PluginMessageReceiver implements PluginMessageListener {
     public void onPluginMessageReceived(String channel, Player p, byte[] bytes) {
         if (channel.equalsIgnoreCase("bungeesystem:player"))
         {
-            ByteArrayDataInput in = ByteStreams.newDataInput( bytes );
+            ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
 
             switch (in.readUTF()) {
                 case "Login" -> {
