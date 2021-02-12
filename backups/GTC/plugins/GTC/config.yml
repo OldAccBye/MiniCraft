@@ -17,13 +17,13 @@ world: # Der Name deiner Welt
     pitch: 0.4
   ChickenSpawn: # Von Position1 bis Position2 werden Hühner gespawnt
     pos1:
-      x: -6.414
-      y: 62.00000
-      z: 68.385
+      x: -3.278
+      y: 57.00000
+      z: 3.754
     pos2:
-      x: 8.378
-      y: 62.00000
-      z: 49.566
+      x: 4.378
+      y: 57.00000
+      z: 20.420
 world2: # Der Name deiner Welt
   MaxPlayers: 8 # Wie viele Spieler auf dieser Welt sein dürfen
   PlayersToStart: 4 # Wie viele Spieler zum starten benötigt werden
@@ -43,13 +43,13 @@ world2: # Der Name deiner Welt
     pitch: 0.4
   ChickenSpawn: # Von Position1 bis Position2 werden Hühner gespawnt
     pos1:
-      x: -6.414
-      y: 62.00000
-      z: 68.385
+      x: -3.278
+      y: 57.00000
+      z: 3.754
     pos2:
-      x: 8.378
-      y: 62.00000
-      z: 49.566
+      x: 4.378
+      y: 57.00000
+      z: 20.420
 world3: # Der Name deiner Welt
   MaxPlayers: 8 # Wie viele Spieler auf dieser Welt sein dürfen
   PlayersToStart: 4 # Wie viele Spieler zum starten benötigt werden
@@ -69,13 +69,13 @@ world3: # Der Name deiner Welt
     pitch: 0.4
   ChickenSpawn: # Von Position1 bis Position2 werden Hühner gespawnt
     pos1:
-      x: -6.414
-      y: 62.00000
-      z: 68.385
+      x: -3.278
+      y: 57.00000
+      z: 3.754
     pos2:
-      x: 8.378
-      y: 62.00000
-      z: 49.566
+      x: 4.378
+      y: 57.00000
+      z: 20.420
 world4: # Der Name deiner Welt
   MaxPlayers: 8 # Wie viele Spieler auf dieser Welt sein dürfen
   PlayersToStart: 4 # Wie viele Spieler zum starten benötigt werden
@@ -95,10 +95,10 @@ world4: # Der Name deiner Welt
     pitch: 0.4
   ChickenSpawn: # Von Position1 bis Position2 werden Hühner gespawnt
     pos1:
-      x: -6.414
-      y: 62.00000
-      z: 68.385
+      x: -3.278
+      y: 57.00000
+      z: 3.754
     pos2:
-      x: 8.378
-      y: 62.00000
-      z: 49.566
+      x: 4.378
+      y: 57.00000
+      z: 20.420

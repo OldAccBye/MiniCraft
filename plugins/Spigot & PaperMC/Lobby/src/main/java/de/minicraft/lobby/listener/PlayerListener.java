@@ -25,6 +25,8 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        e.getPlayer().sendTitle("§3Willkommen", "auf dem §aMiniCraft Netzwerk§r!", 10, 70, 20);
+
         // Inventory
         {
             e.getPlayer().getInventory().clear();
@@ -186,7 +188,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onFly(PlayerToggleFlightEvent e) {
-        if (e.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
+        if (e.getPlayer().getGameMode() != GameMode.ADVENTURE) return;
 
         e.setCancelled(true);
 
@@ -204,7 +206,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onGamemodeChange(PlayerGameModeChangeEvent e) {
-        if (e.getNewGameMode() != GameMode.SURVIVAL) return;
+        if (e.getNewGameMode() != GameMode.ADVENTURE) return;
 
         e.getPlayer().setAllowFlight(true);
     }

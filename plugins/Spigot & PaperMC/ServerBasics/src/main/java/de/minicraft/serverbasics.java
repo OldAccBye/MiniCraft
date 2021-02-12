@@ -1,6 +1,5 @@
 package de.minicraft;
 
-import de.minicraft.listener.BlockListener;
 import de.minicraft.listener.ChatListener;
 import de.minicraft.listener.PlayerListener;
 import de.minicraft.player.PlayerData;
@@ -59,7 +58,6 @@ public final class ServerBasics extends JavaPlugin {
 
         /* ===== LISTENER - START ===== */
         plugin.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        plugin.getServer().getPluginManager().registerEvents(new BlockListener(), this);
         plugin.getServer().getPluginManager().registerEvents(new ChatListener(), this);
         /* ===== LISTENER - END ===== */
 

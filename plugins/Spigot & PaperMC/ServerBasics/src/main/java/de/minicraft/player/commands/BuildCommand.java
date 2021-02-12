@@ -23,7 +23,7 @@ public class BuildCommand implements CommandExecutor {
 
         if (p.hasPermission("minicraft.blockbreak")) {
             pData.permissions.setPermission("minicraft.blockbreak", false);
-            p.setGameMode(GameMode.SURVIVAL);
+            p.setGameMode(GameMode.ADVENTURE);
             p.sendMessage("BuildCommand deaktiviert!");
         } else {
             pData.permissions.setPermission("minicraft.blockbreak", true);
