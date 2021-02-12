@@ -1,6 +1,7 @@
 package de.minicraft.player.commands;
 
 import de.minicraft.BungeeSystem;
+import de.minicraft.Utils;
 import de.minicraft.player.PlayerData;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -39,7 +40,7 @@ public class BanCommand extends Command implements TabExecutor {
         ProxiedPlayer p = (ProxiedPlayer) cmdSender;
 
         if (args.length < 1) {
-            p.sendMessage(new TextComponent("§c[FEHLER]: §fBenutze '/ban <PLAYER> <REASON> <TIMEFORMAT>'!"));
+            p.sendMessage(new TextComponent("§c[FEHLER]: §fBenutze: /ban <PLAYER> <REASON> <TIMEFORMAT>"));
             return;
         } else if (args.length < 3) {
             p.sendMessage(new TextComponent("§c[FEHLER]: §fEs wurde keine Begründung oder Zeit angegeben!"));
@@ -71,7 +72,7 @@ public class BanCommand extends Command implements TabExecutor {
             return;
         }
 
-        String reason = message.toString().replace(args[0], "").replace(banTime + timeFormat, "");
+        String reason = message.toString().replace(args[0] + " ", "").replace(banTime + timeFormat, "");
         long currentDateTime = new Date().getTime();
 
         switch (timeFormat) {
@@ -89,15 +90,22 @@ public class BanCommand extends Command implements TabExecutor {
                 tData.banReason = reason;
                 tData.bannedFrom = p.getName();
             }
+            case "d" -> {
+                tData.banned = true;
+                tData.banSinceTimestamp = currentDateTime;
+                tData.banExpiresTimestamp = currentDateTime + (banTime * 86400000);
+                tData.banReason = reason;
+                tData.bannedFrom = p.getName();
+            }
             default -> {
-                p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst nur Stunden[h] und Minuten[m] als Format wählen!"));
+                p.sendMessage(new TextComponent("§c[FEHLER]: §fDie Zeit muss mit einem 'm', 'h' oder 'd' enden!"));
                 return;
             }
         }
 
         p.disconnect(new TextComponent("§cDu wurdest von diesem Netzwerk ausgeschlossen." +
-                "\n\n§cDatum und Uhrzeit §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentDateTime) +
-                "\n§cAusgeschlossen bis §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tData.banExpiresTimestamp) +
+                "\n\n§cSeit §7>>§f " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(tData.banSinceTimestamp) +
+                "\n§cAufhebung in §7>>§f " + Utils.convertTimestamp(currentDateTime, tData.banExpiresTimestamp) +
                 "\n§cBegründung §7>>§f " + tData.banReason +
                 "\n§cAusgeschlossen von §7>>§f " + tData.bannedFrom));
         p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler " + args[0] + " wurde erfolgreich ausgeschlossen!"));

@@ -7,6 +7,7 @@ import de.minicraft.listener.PluginMessageReceiver;
 import de.minicraft.listener.Tablist;
 import de.minicraft.player.PlayerApi;
 import de.minicraft.player.PlayerData;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
@@ -122,14 +123,19 @@ public final class BungeeSystem extends Plugin {
         checkPlayerTask = plugin.getProxy().getScheduler().schedule(plugin, () -> {
             plugin.getProxy().getLogger().warning("[playerList] Prüfung gestartet...");
 
-            for (Map.Entry<UUID, PlayerData> pData : playerList.entrySet()) {
-                ProxiedPlayer p = plugin.getProxy().getPlayer(pData.getKey());
+            for (ProxiedPlayer players : plugin.getProxy().getPlayers()) {
+                if (playerList.containsKey(players.getUniqueId())) continue;
 
-                if (p == null) {
-                    plugin.getProxy().getLogger().info("[playerList] Spieler " + pData.getValue().username + " wird abgemeldet.");
-                    PlayerApi.saveAll(pData.getKey());
-                    PlayerApi.logout(pData.getKey());
-                }
+                plugin.getLogger().severe("[playerList] Spieler " + players.getName() + " ohne Spielderdaten!");
+                players.disconnect(new TextComponent("Es konnten keine Spielerdaten abgerufen werden. Bitte versuche dich neu anzumelden."));
+            }
+
+            for (Map.Entry<UUID, PlayerData> pData : playerList.entrySet()) {
+                if (plugin.getProxy().getPlayer(pData.getKey()) != null) continue;
+
+                plugin.getProxy().getLogger().info("[playerList] Spielerdaten von " + pData.getValue().username + " werden entfernt.");
+                PlayerApi.saveAll(pData.getKey());
+                BungeeSystem.playerList.remove(pData.getKey());
             }
 
             plugin.getProxy().getLogger().warning("[playerList] Prüfung beendet!");

@@ -42,7 +42,7 @@ public class SetGroupCommand extends Command implements TabExecutor {
         ProxiedPlayer p = (ProxiedPlayer) sender;
 
         if (args.length != 2) {
-            p.sendMessage(new TextComponent("§c[FEHLER]: §fBenutze '/setgroup <PLAYER> <GROUP>'!"));
+            p.sendMessage(new TextComponent("§c[FEHLER]: §fBenutze: /setgroup <PLAYER> <GROUP>"));
             return;
         }
 

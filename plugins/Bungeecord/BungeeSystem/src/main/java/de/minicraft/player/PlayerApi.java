@@ -48,9 +48,6 @@ public class PlayerApi {
         ProxiedPlayer p = BungeeSystem.plugin.getProxy().getPlayer(pUUID);
         if (p == null) return new Document("status", "error").append("reason", "[PlayerApi->login] p = null");
 
-        // Diese Funktion prüft ob dieser Spieler bereits eingetragen ist und wenn ja entfernt diese Funktion diesen Eintrag
-        logout(pUUID);
-
         // Daten aus der Datenbank werden hier zwischen gespeichert
         Document playerDoc;
 
@@ -64,18 +61,6 @@ public class PlayerApi {
             return new Document("status", "error").append("reason", "[PlayerApi->login] Irgendetwas ist schief gelaufen.");
         }
 
-        if (playerDoc.getBoolean("banned")) {
-            Date date = new Date();
-            Long currentDateTime = date.getTime();
-            if (playerDoc.getLong("banExpiresTimestamp") > currentDateTime) {
-                return new Document("status", "error").append("reason", "§cDu wurdest von diesem Netzwerk ausgeschlossen." +
-                        "\n\n§cDatum und Uhrzeit §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentDateTime) +
-                        "\n§cAusgeschlossen bis §7>>§f " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(playerDoc.getLong("banExpiresTimestamp")) +
-                        "\n§cBegründung §7>>§f " + playerDoc.getString("banReason") +
-                        "\n§cAusgeschlossen von §7>>§f " + playerDoc.getString("bannedFrom"));
-            }
-        }
-
         PlayerData data = new PlayerData();
         data.username = p.getName();
         data.group = playerDoc.getString("perm_group");
@@ -87,9 +72,6 @@ public class PlayerApi {
         BungeeSystem.playerList.put(pUUID, data);
         return new Document("status", "success");
     }
-
-    public static void logout(UUID pUUID) { BungeeSystem.playerList.remove(pUUID); }
-    public static boolean exists(UUID pUUID) { return BungeeSystem.playerList.get(pUUID) != null; }
 
     public static void saveAll(UUID pUUID) {
         try {

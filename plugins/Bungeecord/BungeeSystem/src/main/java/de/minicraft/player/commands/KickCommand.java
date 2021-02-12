@@ -38,7 +38,7 @@ public class KickCommand extends Command implements TabExecutor {
         ProxiedPlayer p = (ProxiedPlayer) cmdSender;
 
         if (args.length < 1) {
-            p.sendMessage(new TextComponent("§c[FEHLER]: §fBenutze '/kick <PLAYER> <REASON>'!"));
+            p.sendMessage(new TextComponent("§c[FEHLER]: §fBenutze: /kick <PLAYER> <REASON>"));
             return;
         } else if (args.length < 2) {
             p.sendMessage(new TextComponent("§c[FEHLER]: §fEs wurde keine Begründung angegeben!"));
