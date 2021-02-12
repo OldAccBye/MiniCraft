@@ -2,18 +2,27 @@ package de.minicraft.player;
 
 import org.bson.Document;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class PlayerData {
-    public String username, group, banReason, bannedFrom;
-    public Boolean banned;
-    public Long banSinceTimestamp, banExpiresTimestamp;
+    public String username = "", group = "default", banReason = "", bannedFrom = "";
+    public Boolean banned = false;
+    public Long banSinceTimestamp = 0L, banExpiresTimestamp = 0L;
+    public Integer cookies = 0;
+    public List<String> friends = new ArrayList<>();
+    public HashMap<String, Boolean> friendRequest = new HashMap<>();
 
     public Document getDoc() {
-        return new Document("$set", new Document("username", this.username)
-                .append("perm_group", this.group)
+        return new Document("username", this.username)
+                .append("group", this.group)
                 .append("banned", this.banned)
                 .append("banSinceTimestamp", this.banSinceTimestamp)
                 .append("banExpiresTimestamp", this.banExpiresTimestamp)
                 .append("banReason", this.banReason)
-                .append("bannedFrom", this.bannedFrom));
+                .append("bannedFrom", this.bannedFrom)
+                .append("friends", this.friends)
+                .append("cookies", this.cookies);
     }
 }

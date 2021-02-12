@@ -4,3 +4,4 @@ lobby: minicraft.commands.lobby
 tps: minicraft.commands.tps
 kick: minicraft.commands.kick
 ban: minicraft.commands.ban
+friends: minicraft.commands.friends

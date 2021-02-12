@@ -91,6 +91,7 @@ public final class BungeeSystem extends Plugin {
 
         // Commands
         plugin.getProxy().getPluginManager().registerCommand(plugin, new HubCommand());
+        plugin.getProxy().getPluginManager().registerCommand(plugin, new FriendsCommand());
         plugin.getProxy().getPluginManager().registerCommand(plugin, new SetGroupCommand());
         plugin.getProxy().getPluginManager().registerCommand(plugin, new TpServerCommand());
         plugin.getProxy().getPluginManager().registerCommand(plugin, new KickCommand());

@@ -48,7 +48,8 @@ public class PlayerListener implements Listener {
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Login");
-        out.writeUTF(BungeeSystem.playerList.get(p.getUniqueId()).group);
+        out.writeUTF(pData.group);
+        out.writeInt(pData.cookies);
         e.getTarget().sendData("bungeesystem:player", out.toByteArray());
     }
 }

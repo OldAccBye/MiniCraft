@@ -33,12 +33,6 @@ public class PlayerApi {
 
         PlayerData data = new PlayerData();
         data.username = p.getName();
-        data.group = "default";
-        data.banned = false;
-        data.banSinceTimestamp = 0L;
-        data.banExpiresTimestamp = 0L;
-        data.banReason = "";
-        data.bannedFrom = "";
         BungeeSystem.playerList.put(pUUID, data);
 
         return new Document("status", "success");
@@ -63,12 +57,14 @@ public class PlayerApi {
 
         PlayerData data = new PlayerData();
         data.username = p.getName();
-        data.group = playerDoc.getString("perm_group");
-        data.banned = false;
-        data.banSinceTimestamp = 0L;
-        data.banExpiresTimestamp = 0L;
-        data.banReason = "";
-        data.bannedFrom = "";
+        data.group = playerDoc.getString("group");
+        data.banned = playerDoc.getBoolean("banned");
+        data.banSinceTimestamp = playerDoc.getLong("banSinceTimestamp");
+        data.banExpiresTimestamp = playerDoc.getLong("banExpiresTimestamp");
+        data.banReason = playerDoc.getString("banReason");
+        data.bannedFrom = playerDoc.getString("bannedFrom");
+        data.friends = playerDoc.getList("friends", String.class);
+        data.cookies = playerDoc.getInteger("cookies");
         BungeeSystem.playerList.put(pUUID, data);
         return new Document("status", "success");
     }
@@ -82,7 +78,7 @@ public class PlayerApi {
                 return;
             }
 
-            BungeeSystem.mongo.collections.get("players").findOneAndUpdate(found, BungeeSystem.playerList.get(pUUID).getDoc());
+            BungeeSystem.mongo.collections.get("players").findOneAndUpdate(found, new Document("$set", BungeeSystem.playerList.get(pUUID).getDoc()));
         } catch (MongoException e) {
             e.printStackTrace();
         }
