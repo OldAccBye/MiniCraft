@@ -18,17 +18,21 @@ public class ChatListener implements Listener {
     public void onChat(ChatEvent e) {
         if (e.isCancelled() || !(e.getSender() instanceof ProxiedPlayer) || !e.isProxyCommand() || !e.isCommand()) return;
 
-        for (String command : Configs.commandList.getKeys()) {
-            if (!e.getMessage().startsWith("/" + command)) continue;
+        String command = e.getMessage().contains(" ") ? e.getMessage().split(" ", 2)[0] : e.getMessage();
 
-            ProxiedPlayer p = (ProxiedPlayer) e.getSender();
-            PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
-            if (pData == null) return;
+        if (!Configs.commandList.getKeys().contains(command.replace("/", ""))) return;
 
-            if (!Configs.permissionsList.getStringList(pData.group).contains(Configs.commandList.getString(command))) {
-                e.setCancelled(true);
-                p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst diesen Befehl nicht ausführen!"));
-            }
+        ProxiedPlayer p = (ProxiedPlayer) e.getSender();
+        PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
+        if (pData == null) {
+            e.setCancelled(true);
+            p.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
+            return;
+        }
+
+        if (!Configs.permissionsList.getStringList(pData.group).contains(Configs.commandList.getString(command.replace("/", "")))) {
+            e.setCancelled(true);
+            p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst diesen Befehl nicht ausführen!"));
         }
     }
 
@@ -38,7 +42,10 @@ public class ChatListener implements Listener {
         ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
 
         PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
-        if (pData == null) return;
+        if (pData == null) {
+            p.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
+            return;
+        }
 
         HashMap<String, Command> commandHashMap = new HashMap<>();
 

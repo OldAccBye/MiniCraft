@@ -1,14 +1,12 @@
 package de.minicraft;
 
-import de.minicraft.player.commands.HubCommand;
+import de.minicraft.player.commands.*;
 import de.minicraft.listener.ChatListener;
 import de.minicraft.listener.PlayerListener;
 import de.minicraft.listener.PluginMessageReceiver;
 import de.minicraft.listener.Tablist;
 import de.minicraft.player.PlayerApi;
 import de.minicraft.player.PlayerData;
-import de.minicraft.player.commands.SetGroupCommand;
-import de.minicraft.player.commands.TpServerCommand;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
@@ -94,6 +92,8 @@ public final class BungeeSystem extends Plugin {
         plugin.getProxy().getPluginManager().registerCommand(plugin, new HubCommand());
         plugin.getProxy().getPluginManager().registerCommand(plugin, new SetGroupCommand());
         plugin.getProxy().getPluginManager().registerCommand(plugin, new TpServerCommand());
+        plugin.getProxy().getPluginManager().registerCommand(plugin, new KickCommand());
+        plugin.getProxy().getPluginManager().registerCommand(plugin, new BanCommand());
 
         // Channels
         plugin.getProxy().registerChannel("bungeesystem:server");

@@ -38,8 +38,13 @@ public class SetGroupCommand extends Command implements TabExecutor {
     }
 
     public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof ProxiedPlayer) ||args.length != 2) return;
+        if (!(sender instanceof ProxiedPlayer)) return;
         ProxiedPlayer p = (ProxiedPlayer) sender;
+
+        if (args.length != 2) {
+            p.sendMessage(new TextComponent("§c[FEHLER]: §fBenutze '/setgroup <PLAYER> <GROUP>'!"));
+            return;
+        }
 
         if (!Configs.permissionsList.getKeys().contains(args[1])) {
             p.sendMessage(new TextComponent("§c[FEHLER]: §fDiese Gruppe existiert nicht!"));

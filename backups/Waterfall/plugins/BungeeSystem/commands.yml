@@ -2,3 +2,5 @@ setgroup: minicraft.commands.setgroup
 hub: minicraft.commands.hub
 lobby: minicraft.commands.lobby
 tps: minicraft.commands.tps
+kick: minicraft.commands.kick
+ban: minicraft.commands.ban

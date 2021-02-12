@@ -6,3 +6,5 @@ commands:
   hub:
   setgroup:
   tps:
+  kick:
+  ban:
