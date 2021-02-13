@@ -70,36 +70,29 @@ public class FriendsCommand extends Command implements TabExecutor {
             }
         }
 
-        if (args[0].contains("chat") && args[1].contains(p.getName())) {
-            p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst dir nicht selber eine Freundesanfrage senden!"));
-            return;
-        } if (args[0].contains("chat") && args.length < 3) {
-            p.sendMessage(new TextComponent("§c[FEHLER]: §fGib eine Nachricht an!"));
-            return;
-        }
-
         PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
         if (pData == null) {
             p.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
             return;
         }
 
-        if (args[0].contains("accept") && !pData.friendRequest.containsKey(args[1])) {
-            p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler hat dir keine Anfrage gesendet!"));
-            return;
-        } else if (args[0].contains("add") && pData.friends.contains(args[1])) {
-            p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich bereits in deiner Freundesliste!"));
-            return;
-        } else if ((args[0].contains("add") || args[0].contains("accept")) && pData.friends.size() >= 25) {
-            p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst nicht mehr als 25 Freunde haben!"));
-            return;
-        } else if ((args[0].contains("chat") || args[0].contains("remove")) && !pData.friends.contains(args[1])) {
-            p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich nicht in deiner Freundesliste!"));
-            return;
-        }
-
         switch (args[0]) {
             case "add" -> {
+                { // CHECK
+                    if (args[1].equals(p.getName())) {
+                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst dir nicht selber eine Freundesanfrage senden!"));
+                        return;
+                    }
+                    else if (pData.friends.contains(args[1])) {
+                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich bereits in deiner Freundesliste!"));
+                        return;
+                    }
+                    else if (pData.friends.size() >= 25) {
+                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst nicht mehr als 25 Freunde haben!"));
+                        return;
+                    }
+                } // CHECK
+
                 ProxiedPlayer t = BungeeSystem.plugin.getProxy().getPlayer(args[1]);
                 if (t == null) {
                     p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich nicht auf dem Netzwerk!"));
@@ -113,19 +106,25 @@ public class FriendsCommand extends Command implements TabExecutor {
                 }
 
                 if (tData.friendRequest.containsKey(p.getName())) {
-                    p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler besitzt bereits eine Anfrage von dir!"));
+                    p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler besitzt bereits eine Freundesanfrage von dir!"));
                     return;
                 }
 
                 tData.friendRequest.put(p.getName(), false);
 
-                TextComponent mainComponent = new TextComponent("§3§l[§2SERVER§3§l] §aDer Spieler ");
-                TextComponent playerComponent = new TextComponent("§b" + p.getName());
+                // Components
+                TextComponent mainComponent = new TextComponent("§3§l[§2SERVER§3§l] §aDer Spieler "),
+                        playerComponent = new TextComponent("§b" + p.getName()),
+                        acceptComponent = new TextComponent("§6§l[Annehmen]");
+
+                // Player component
                 playerComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§7<KLICK>§r Profil anzeigen")));
                 playerComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://minicraft.cf/p/" + p.getName()));
                 mainComponent.addExtra(playerComponent);
+
                 mainComponent.addExtra(" §ahat dir eine Freundesanfrage gesendet. ");
-                TextComponent acceptComponent = new TextComponent("§6§l[Annehmen]");
+
+                // Accept component
                 acceptComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§7<KLICK>§r Anfrage annehmen")));
                 acceptComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friends accept " + p.getName()));
                 mainComponent.addExtra(acceptComponent);
@@ -134,10 +133,28 @@ public class FriendsCommand extends Command implements TabExecutor {
                 p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aFreundesanfrage gesendet!"));
             }
             case "remove" -> {
+                { // CHECK
+                    if (!pData.friends.contains(args[1])) {
+                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich nicht in deiner Freundesliste!"));
+                        return;
+                    }
+                } // CHECK
+
                 pData.friends.remove(args[1]);
                 p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + args[1] + " §awurde aus der Freundesliste entfernt!"));
             }
             case "chat" -> {
+                { // CHECK
+                    if (args.length < 3) {
+                        p.sendMessage(new TextComponent("§c[FEHLER]: §fEine Nachricht fehlt!"));
+                        return;
+                    }
+                    else if (!pData.friends.contains(args[1])) {
+                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich nicht in deiner Freundesliste!"));
+                        return;
+                    }
+                } // CHECK
+
                 ProxiedPlayer t = BungeeSystem.plugin.getProxy().getPlayer(args[1]);
                 if (t == null) {
                     p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich nicht auf dem Netzwerk!"));
@@ -152,13 +169,32 @@ public class FriendsCommand extends Command implements TabExecutor {
                 p.sendMessage(new TextComponent("§7[§dFC§7] §r" + p.getName() + ": " + message));
             }
             case "accept" -> {
+                { // CHECK
+                    if (pData.friends.size() >= 25) {
+                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst nicht mehr als 25 Freunde haben!"));
+                        return;
+                    }
+                    else if (!pData.friendRequest.containsKey(args[1])) {
+                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler hat dir keine Anfrage gesendet!"));
+                        return;
+                    }
+                } // CHECK
+
                 ProxiedPlayer t = BungeeSystem.plugin.getProxy().getPlayer(args[1]);
                 if (t == null) {
                     p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich nicht mehr auf dem Netzwerk!"));
                     pData.friendRequest.remove(args[1]);
                     return;
                 }
+                PlayerData tData = BungeeSystem.playerList.get(t.getUniqueId());
+                if (tData == null) {
+                    t.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
+                    p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich nicht auf dem Netzwerk!"));
+                    pData.friendRequest.remove(args[1]);
+                    return;
+                }
 
+                tData.friends.add(p.getName());
                 pData.friends.add(args[1]);
                 pData.friendRequest.remove(args[1]);
                 p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + args[1] + " §awurde in die Freundesliste hinzugefügt!"));
