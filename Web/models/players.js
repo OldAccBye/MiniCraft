@@ -14,7 +14,11 @@ const playerSchema = new Schema({
         type: String,
         required: true
     },
-    language: {
+    cookies: {
+        type: Number,
+        required: true
+    },
+    securitycode: {
         type: String,
         required: true
     },

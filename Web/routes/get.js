@@ -48,9 +48,4 @@ router.get('/p/:username', async (req, res) => {
     res.render('profil', { userCount: await players.countDocuments(), profil: profilData });
 });
 
-// Extras
-router.use(async (req, res, next) => {
-    res.status(404).render('error', { userCount: await players.countDocuments(), title: '404', msg: 'Diese Seite existiert nicht!' });
-});
-
 module.exports = router;

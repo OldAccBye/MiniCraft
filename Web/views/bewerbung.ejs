@@ -9,31 +9,44 @@
         </div>
 
         <div class="container my-3">
-            <div class="alert alert-warning" role="alert">
-                Momentan werden keine weiteren Teammitglieder erfordert. Bitte versuche es ein anderes Mal.
-              </div>
+            <div class="alert alert-warning">
+                <h4 class="alert-heading">Hinweis!</h4>
+                <p class="mb-0">
+                    Du hast Fragen?! evtl. findest du <a href="#">HIER!</a> deine Antworten.
+                </p>
+                <hr>
+                <p class="mb-0">
+                    Das mehrfache Einsenden einer Bewerbung hintereinander kann dazu führen, dass du aus unserem Netzwerk ausgeschlossen wird!
+                </p>
+            </div>
 
-            <form action="" method="post">
+            <div id="message"></div>
+
+            <form id="sendMail">
                 <div class="form-floating mb-3">
-                    <select class="form-select" id="floatingSelectGrid" required>
-                      <option value="1">Builder</option>
-                      <option value="2">Supporter</option>
+                    <select class="form-select" id="floatingSelectGrid" name="group" required>
+                      <option value="builder">Builder</option>
+                      <option value="supporter">Supporter</option>
                     </select>
                     <label for="floatingSelectGrid">Bewerbung als...</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="floatingUsername" placeholder="Benutzername" required>
+                    <input type="text" class="form-control" id="floatingUsername" placeholder="Benutzername" name="username" required>
                     <label for="floatingUsername">Benutzername</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="floatingEmail" placeholder="E-Mail-Adresse" required>
+                    <input type="password" class="form-control" id="floatingCode" placeholder="Sicherheitscode" name="securitycode" required>
+                    <label for="floatingCode">Sicherheitscode</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="floatingEmail" placeholder="E-Mail-Adresse" name="email" required>
                     <label for="floatingEmail">E-Mail-Adresse</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <textarea class="form-control" placeholder="Bewerbung" id="floatingText" style="min-height: 300px; max-height: 300px; resize: none;" required></textarea>
+                    <textarea class="form-control" placeholder="Bewerbung" id="floatingText" style="min-height: 300px; max-height: 300px; resize: none;" name="text" required></textarea>
                     <label for="floatingText">Bewerbung</label>
                 </div>
-                <button class="w-100 btn btn:green" disabled>Abschicken</button>
+                <button class="w-100 btn btn:green" type="submit">Abschicken</button>
             </form>
         </div>
     </main>
