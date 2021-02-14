@@ -1,11 +1,12 @@
 package de.minigame.gtc.listener;
 
 import de.minigame.gtc.GTC;
+import de.minigame.gtc.players.PlayerData;
 import de.minigame.gtc.players.PlayerScoreboard;
 import de.minigame.gtc.WorldData;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -13,52 +14,38 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.Map;
-
 public class PlayerListener implements Listener {
     @EventHandler
     public static void onJoin(PlayerJoinEvent e) {
-        org.bukkit.entity.Player p = e.getPlayer();
+        Player p = e.getPlayer();
 
-        for (Map.Entry<String, WorldData> data : GTC.worldLists.entrySet()) {
-            String key = data.getKey();
-            WorldData value = data.getValue();
-            if (value.players >= value.maxPlayers || value.roundStarted) continue;
+        GTC.playerList.put(p.getUniqueId(), new PlayerData());
+        p.teleport(WorldData.spawnLocation);
+        PlayerScoreboard.set(p);
+        p.sendTitle("§3GTC", "§aWillkommen!", 10, 70, 20);
 
-            GTC.playerList.put(p.getUniqueId(), 0);
-            p.teleport(value.spawnLocation);
-            PlayerScoreboard.set(p);
-            p.sendTitle("§3GTC", "§aWillkommen!", 10, 70, 20);
-
-            if (!value.preRoundStarted && GTC.plugin.getServer().getOnlinePlayers().size() >= value.playersToStart)
-                GTC.worldLists.get(key).startPreRound();
-            else if (!value.preRoundStarted)
-                value.world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §6" + value.world.getPlayers().size() + "§e/§6" + value.playersToStart + " §eSpieler bis zum Start!"));
-
-            return;
-        }
-
-        p.kickPlayer("Keine freie Runde gefunden! :(");
+        if (!WorldData.preRoundStarted && GTC.plugin.getServer().getOnlinePlayers().size() >= WorldData.playersToStart)
+            WorldData.startPreRound();
+        else if (!WorldData.preRoundStarted)
+            for (Player players : GTC.plugin.getServer().getOnlinePlayers())
+                players.sendMessage("§3GTC §7| §6" + GTC.plugin.getServer().getOnlinePlayers().size() + "§e/§6" + WorldData.playersToStart + " §eSpieler bis zum Start!");
     }
 
     @EventHandler
     public static void onQuit(PlayerQuitEvent e) {
-        org.bukkit.entity.Player p = e.getPlayer();
-        String worldName = p.getWorld().getName();
-        WorldData wData = GTC.worldLists.get(worldName);
+        Player p = e.getPlayer();
         GTC.playerList.remove(p.getUniqueId());
 
-        if (wData.preRoundStarted) {
-            if (wData.world.getPlayers().size() < wData.playersToStart) {
-                GTC.worldLists.get(worldName).stopPreRound();
-                wData.world.getPlayers().forEach(players -> players.sendMessage("§3GTC §7| §6" + wData.world.getPlayers().size() + "§e/§6" + wData.playersToStart + " §eSpieler bis zum Start!"));
-            }
-        }
+        if (!WorldData.preRoundStarted || GTC.plugin.getServer().getOnlinePlayers().size() >= WorldData.playersToStart) return;
+        WorldData.stopPreRound();
+
+        for (Player players : GTC.plugin.getServer().getOnlinePlayers())
+            players.sendMessage("§3GTC §7| §6" + GTC.plugin.getServer().getOnlinePlayers().size() + "§e/§6" + WorldData.playersToStart + " §eSpieler bis zum Start!");
     }
 
     @EventHandler
     public static void onHitPlayer(EntityDamageByEntityEvent e) {
-        if (!(e.getEntity() instanceof org.bukkit.entity.Player) || !(e.getDamager() instanceof org.bukkit.entity.Player)) return;
+        if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) return;
         e.setCancelled(true);
     }
 
@@ -67,20 +54,18 @@ public class PlayerListener implements Listener {
         e.getDrops().clear();
 
         Entity mob = e.getEntity();
-        if (!mob.getType().equals(EntityType.CHICKEN)) return;
+        if (!mob.getType().equals(EntityType.CHICKEN) || mob != WorldData.lastChicken) return;
 
-        org.bukkit.entity.Player killer = e.getEntity().getKiller();
+        Player killer = e.getEntity().getKiller();
         if (killer != null) {
-            World w = killer.getWorld();
-            if (mob != GTC.worldLists.get(w.getName()).lastChicken) return;
+            GTC.playerList.get(killer.getUniqueId()).kills += 1;
 
-            GTC.playerList.computeIfPresent(killer.getUniqueId(), (k, v) -> v += 1);
-            w.getPlayers().forEach(players -> {
-                players.sendMessage("§3GTC §7| §eDer Spieler §6" + killer.getName() + " §ehat ein Huhn getötet!");
+            GTC.plugin.getServer().getOnlinePlayers().forEach(players -> {
+                players.sendMessage("§3GTC §7| §eSpieler §6" + killer.getName() + " §ehat ein Huhn getötet!");
                 PlayerScoreboard.set(players);
             });
         }
 
-        GTC.worldLists.get(e.getEntity().getWorld().getName()).spawnChicken();
+        WorldData.spawnChicken();
     }
 }
