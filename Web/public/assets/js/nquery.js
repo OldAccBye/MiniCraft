@@ -69,12 +69,11 @@ const makeCollection = collection => {
 const $ = (...args) => {
     if (typeof args[0] === 'function') {
         // document ready listener
-        const readyFn = args[0];
-        document.addEventListener('DOMContentLoaded', readyFn);
+        document.addEventListener('DOMContentLoaded', args[0]);
     } else if (typeof args[0] === 'string') {
         // select an element!
-        const selector = args[0];
-        const collection = document.querySelectorAll(selector);
+        const collection = document.querySelectorAll(args[0]);
+        if (collection.length === 0) return null;
         makeCollection(collection);
         return collection;
     } else if (args[0] instanceof HTMLElement) {

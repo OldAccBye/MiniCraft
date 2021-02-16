@@ -1,7 +1,6 @@
 const mongoose = require('mongoose'), Schema = mongoose.Schema;
 mongoose.pluralize(null);
 
-// FFA schema
 const ffaSchema = new Schema({
     UUID: {
         type: String,

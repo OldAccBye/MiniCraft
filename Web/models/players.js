@@ -1,6 +1,5 @@
 const mongoose = require('mongoose'), Schema = mongoose.Schema;
 
-// Player schema
 const playerSchema = new Schema({
     username: {
         type: String,
@@ -10,7 +9,7 @@ const playerSchema = new Schema({
         type: String,
         required: true
     },
-    perm_group: {
+    group: {
         type: String,
         required: true
     },

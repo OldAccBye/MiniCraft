@@ -59,9 +59,7 @@ header {
     .sub-navbar {
         background-color: #fff;
     }
-}
 
-main {
     .jumbotron {
         background-image: url(/assets/img/banner.png);
         background-size: cover;
@@ -82,62 +80,6 @@ footer {
     background-color: #65d056;
     border-top: 5px solid #5dbd50;
     color: #fff;
-}
-
-.label {
-    border-bottom: 2px solid #e4e4e4;
-
-    &\:darkred {
-        border-bottom: 2px solid #be0000;
-    }
-
-    &\:red {
-        border-bottom: 2px solid #fe3f3f;
-    }
-
-    &\:blue {
-        border-bottom: 2px solid #3f3ffe;
-    }
-
-    &\:green {
-        border-bottom: 2px solid #00be00;
-    }
-
-    &\:black {
-        border-bottom: 2px solid #000;
-    }
-}
-
-.badge {
-    &\:grey {
-        padding: 2px 5px;
-        background: #6c757d;
-        border-radius: 6px;
-        color: #fff;
-        font-size: 15px;
-        border: 1px solid #626b72;
-        border-bottom-width: 3px;
-    }
-
-    &\:green {
-        padding: 2px 5px;
-        background: #65d056;
-        border-radius: 6px;
-        color: #fff;
-        font-size: 15px;
-        border: 1px solid #5dbd50;
-        border-bottom-width: 3px;
-    }
-
-    &\:red {
-        padding: 2px 5px;
-        background: #d05656;
-        border-radius: 6px;
-        color: #fff;
-        font-size: 15px;
-        border: 1px solid #bd5050;
-        border-bottom-width: 3px;
-    }
 }
 
 // ===== TEAM =====
