@@ -3,38 +3,12 @@ default:
   - minicraft.commands.lobby
   - minicraft.commands.friends
 premium:
-  - minicraft.commands.hub
-  - minicraft.commands.lobby
-  - minicraft.commands.friends
 builder:
-  - minicraft.commands.hub
-  - minicraft.commands.lobby
-  - minicraft.commands.friends
 supporter:
-  - minicraft.commands.hub
-  - minicraft.commands.lobby
-  - minicraft.commands.friends
   - minicraft.commands.tps
   - minicraft.commands.kick
 moderator:
-  - minicraft.commands.hub
-  - minicraft.commands.lobby
-  - minicraft.commands.friends
-  - minicraft.commands.tps
-  - minicraft.commands.kick
   - minicraft.commands.ban
 admin:
-  - minicraft.commands.hub
-  - minicraft.commands.lobby
-  - minicraft.commands.friends
-  - minicraft.commands.tps
-  - minicraft.commands.kick
-  - minicraft.commands.ban
 owner:
-  - minicraft.commands.hub
-  - minicraft.commands.lobby
-  - minicraft.commands.friends
-  - minicraft.commands.tps
   - minicraft.commands.setgroup
-  - minicraft.commands.kick
-  - minicraft.commands.ban

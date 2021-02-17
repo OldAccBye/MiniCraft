@@ -11,7 +11,7 @@ public class PlayerData {
     public Boolean banned = false;
     public Long banSinceTimestamp = 0L, banExpiresTimestamp = 0L;
     public Integer cookies = 0;
-    public List<String> friends = new ArrayList<>();
+    public List<String> friends = new ArrayList<>(), permissions = new ArrayList<>();
     public HashMap<String, Boolean> friendRequest = new HashMap<>();
 
     public Document getDoc() {

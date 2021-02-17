@@ -3,8 +3,7 @@ package de.minicraft;
 import de.minicraft.player.commands.*;
 import de.minicraft.listener.ChatListener;
 import de.minicraft.listener.PlayerListener;
-import de.minicraft.listener.PluginMessageReceiver;
-import de.minicraft.listener.Tablist;
+import de.minicraft.listener.TablistListener;
 import de.minicraft.player.PlayerApi;
 import de.minicraft.player.PlayerData;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -85,7 +84,7 @@ public final class BungeeSystem extends Plugin {
 
         // Listener
         plugin.getProxy().getPluginManager().registerListener(plugin, new PluginMessageReceiver());
-        plugin.getProxy().getPluginManager().registerListener(plugin, new Tablist());
+        plugin.getProxy().getPluginManager().registerListener(plugin, new TablistListener());
         plugin.getProxy().getPluginManager().registerListener(plugin, new PlayerListener());
         plugin.getProxy().getPluginManager().registerListener(plugin, new ChatListener());
 

@@ -8,7 +8,7 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.util.concurrent.TimeUnit;
 
-public class Tablist implements Listener {
+public class TablistListener implements Listener {
     @EventHandler
     public void onServerSwitch(ServerSwitchEvent e) {
         try {

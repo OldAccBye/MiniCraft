@@ -103,11 +103,7 @@ public class BanCommand extends Command implements TabExecutor {
             }
         }
 
-        p.disconnect(new TextComponent("§cDu wurdest von diesem Netzwerk ausgeschlossen." +
-                "\n\n§cSeit §7>>§f " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(tData.banSinceTimestamp) +
-                "\n§cAufhebung in §7>>§f " + Utils.convertTimestamp(currentDateTime, tData.banExpiresTimestamp) +
-                "\n§cBegründung §7>>§f " + tData.banReason +
-                "\n§cAusgeschlossen von §7>>§f " + tData.bannedFrom));
+        p.disconnect(new TextComponent("§cDu wurdest aus diesem Netzwerk ausgeschlossen."));
         p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler " + args[0] + " wurde erfolgreich ausgeschlossen!"));
     }
 }

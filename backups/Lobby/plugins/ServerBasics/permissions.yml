@@ -1,13 +1,11 @@
 default:
 premium:
 builder:
-  - minicraft.commands.build
 supporter:
   - minigames.commands.tp
 moderator:
   - minigames.commands.tp
 admin:
-  - minicraft.commands.build
   - minigames.commands.tp
 owner:
   - minicraft.commands.build

@@ -2,6 +2,7 @@ package de.minicraft.listener;
 
 import de.minicraft.BungeeSystem;
 import de.minicraft.Configs;
+import de.minicraft.player.PlayerApi;
 import de.minicraft.player.PlayerData;
 import io.github.waterfallmc.waterfall.event.ProxyDefineCommandsEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -12,6 +13,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class ChatListener implements Listener {
     @EventHandler
@@ -30,7 +32,7 @@ public class ChatListener implements Listener {
             return;
         }
 
-        if (!Configs.permissionsList.getStringList(pData.group).contains(Configs.commandList.getString(command.replace("/", "")))) {
+        if (!pData.permissions.contains(Configs.commandList.getString(command.replace("/", "")))) {
             e.setCancelled(true);
             p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst diesen Befehl nicht ausführen!"));
         }
@@ -41,16 +43,13 @@ public class ChatListener implements Listener {
         if (!(e.getReceiver() instanceof ProxiedPlayer)) return;
         ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
 
-        PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
-        if (pData == null) {
-            p.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
-            return;
-        }
+        List<String> pPermissions = PlayerApi.getAllPermissions(p);
+        if (pPermissions == null) return;
 
         HashMap<String, Command> commandHashMap = new HashMap<>();
 
         for (String command : Configs.commandList.getKeys()) {
-            if (Configs.permissionsList.getStringList(pData.group).contains(Configs.commandList.getString(command)))
+            if (pPermissions.contains(Configs.commandList.getString(command)))
                 BungeeSystem.plugin.getProxy().getPluginManager().getCommands()
                         .stream()
                         .filter(cmdEntry -> command.equalsIgnoreCase(cmdEntry.getValue().getName()))

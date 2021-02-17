@@ -37,7 +37,7 @@ public class PlayerListener implements Listener {
 
             if (pData.banExpiresTimestamp > currentDateTime) {
                 e.setCancelled(true);
-                p.disconnect(new TextComponent("§cDu wurdest von diesem Netzwerk ausgeschlossen." +
+                p.disconnect(new TextComponent("§cDu wurdest aus diesem Netzwerk ausgeschlossen." +
                         "\n\n§cSeit §7>>§f " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(pData.banSinceTimestamp) +
                         "\n§cAufhebung in §7>>§f " + Utils.convertTimestamp(currentDateTime, pData.banExpiresTimestamp) +
                         "\n§cBegründung §7>>§f " + pData.banReason +

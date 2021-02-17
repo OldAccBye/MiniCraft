@@ -1,4 +1,4 @@
-package de.minicraft.listener;
+package de.minicraft;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
