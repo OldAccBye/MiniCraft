@@ -1,6 +1,6 @@
-package de.minicraft.player.commands;
+package de.minicraft.minibasics.player.commands;
 
-import de.minicraft.ServerBasics;
+import de.minicraft.minibasics.MiniBasics;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,13 +17,13 @@ public class TpCommand implements CommandExecutor {
             return false;
         }
 
-        Player p1 = ServerBasics.plugin.getServer().getPlayerExact(args[0]);
+        Player p1 = MiniBasics.plugin.getServer().getPlayerExact(args[0]);
         if (p1 == null) {
             p.sendMessage("§c[FEHLER]: §fSpieler §6" + args[0] + "§f nicht gefunden!");
             return true;
         }
 
-        Player p2 = ServerBasics.plugin.getServer().getPlayerExact(args[1]);
+        Player p2 = MiniBasics.plugin.getServer().getPlayerExact(args[1]);
         if (p2 == null) {
             p.sendMessage("§c[FEHLER]: §fSpieler §6" + args[1] + "§f nicht gefunden!");
             return true;

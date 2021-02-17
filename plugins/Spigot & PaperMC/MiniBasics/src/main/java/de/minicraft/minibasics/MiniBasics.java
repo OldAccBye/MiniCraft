@@ -1,9 +1,9 @@
-package de.minicraft;
+package de.minicraft.minibasics;
 
-import de.minicraft.listener.ChatListener;
-import de.minicraft.listener.PlayerListener;
-import de.minicraft.player.PlayerData;
-import de.minicraft.player.commands.*;
+import de.minicraft.minibasics.listener.ChatListener;
+import de.minicraft.minibasics.listener.PlayerListener;
+import de.minicraft.minibasics.player.PlayerData;
+import de.minicraft.minibasics.player.commands.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
-public final class ServerBasics extends JavaPlugin {
-    public static ServerBasics plugin;
+public final class MiniBasics extends JavaPlugin {
+    public static MiniBasics plugin;
     public static final HashMap<UUID, PlayerData> playerList = new HashMap<>();
 
     @Override
@@ -21,16 +21,10 @@ public final class ServerBasics extends JavaPlugin {
         plugin = this;
         File file;
 
-        if (!getDataFolder().exists())
-            if (!getDataFolder().mkdir()) plugin.getLogger().severe("[FILE] A new directory cannot be created!");
-
-        // prefix
-        {
-            file = new File(getDataFolder().getPath(), "prefix.yml");
-            if (!file.exists())
-                super.getLogger().severe(">>>>> [CONFIG] prefix.yml existiert nicht! <<<<<");
-
-            Configs.prefix = YamlConfiguration.loadConfiguration(file);
+        if (!getDataFolder().exists() && !getDataFolder().mkdir()) {
+            plugin.getLogger().severe("Es konnte kein Ordner für dieses Plugin erstellt werden!");
+            plugin.getServer().shutdown();
+            return;
         }
 
         // commands
@@ -39,7 +33,7 @@ public final class ServerBasics extends JavaPlugin {
             if (!file.exists())
                 super.getLogger().severe(">>>>> [CONFIG] commands.yml existiert nicht! <<<<<");
 
-            Configs.commandList = YamlConfiguration.loadConfiguration(file);
+            Configs.commandsList = YamlConfiguration.loadConfiguration(file);
         }
 
         // permissions
@@ -62,11 +56,8 @@ public final class ServerBasics extends JavaPlugin {
         /* ===== LISTENER - END ===== */
 
         /* ===== CHANNELS - START ===== */
-        // Outgoing
-        plugin.getServer().getMessenger().registerOutgoingPluginChannel(this, "basics:command");
-
         // Incoming
-        plugin.getServer().getMessenger().registerIncomingPluginChannel( this, "bungeesystem:player", new PluginMessageReceiver());
+        plugin.getServer().getMessenger().registerIncomingPluginChannel(this, "bungeesystem:minibasics", new PluginMessageReceiver());
         /* ===== CHANNELS - END ===== */
     }
 

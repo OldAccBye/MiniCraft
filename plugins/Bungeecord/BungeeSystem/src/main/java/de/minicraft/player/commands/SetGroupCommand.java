@@ -68,7 +68,7 @@ public class SetGroupCommand extends Command implements TabExecutor {
         out.writeUTF("Update");
         out.writeUTF("Group");
         out.writeUTF(args[1]);
-        t.getServer().sendData("bungeesystem:player", out.toByteArray());
+        t.getServer().sendData("bungeesystem:minibasics", out.toByteArray());
 
         tData.group = args[1];
         tData.permissions.clear();

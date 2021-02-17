@@ -1,7 +1,7 @@
-name: ServerBasics
+name: MiniBasics
 version: 1.0
 api-version: 1.16
-main: de.minicraft.ServerBasics
+main: de.minicraft.minibasics.MiniBasics
 author: EntenKoeniq
 
 commands:

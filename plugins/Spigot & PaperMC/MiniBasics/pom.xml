@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.minicraft</groupId>
-    <artifactId>ServerBasics</artifactId>
+    <groupId>de.minicraft.minibasics</groupId>
+    <artifactId>MiniBasics</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -17,15 +17,15 @@
 
     <repositories>
         <repository>
-            <id>spigotmc-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
+            <groupId>com.destroystokyo.paper</groupId>
+            <artifactId>paper-api</artifactId>
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>

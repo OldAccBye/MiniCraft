@@ -1,9 +1,8 @@
-package de.minicraft.listener;
+package de.minicraft.minibasics.listener;
 
-import de.minicraft.Configs;
-import de.minicraft.player.PlayerApi;
-import de.minicraft.player.PlayerData;
-import de.minicraft.ServerBasics;
+import de.minicraft.minibasics.Configs;
+import de.minicraft.minibasics.MiniBasics;
+import de.minicraft.minibasics.player.PlayerData;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -22,15 +21,15 @@ public class ChatListener implements Listener {
         e.setCancelled(true);
         Player p = e.getPlayer();
 
-        PlayerData pData = PlayerApi.get(p.getUniqueId());
+        PlayerData pData = MiniBasics.playerList.get(p.getUniqueId());
         if (pData == null) {
-            p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
+            MiniBasics.plugin.getServer().getScheduler().runTask(MiniBasics.plugin, () -> p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
             return;
         }
 
         if (e.getMessage().contains("@")) {
             String tName = e.getMessage().substring(e.getMessage().indexOf("@") + 1).split(" ")[0];
-            Player t = ServerBasics.plugin.getServer().getPlayerExact(tName);
+            Player t = MiniBasics.plugin.getServer().getPlayerExact(tName);
 
             if (t == null)
                 p.sendMessage("§c[FEHLER]: §fSpieler nicht gefunden!");
@@ -42,10 +41,10 @@ public class ChatListener implements Listener {
                 String beforeAt = e.getMessage().substring(0, e.getMessage().indexOf("@")),
                         afterAt = e.getMessage().substring(e.getMessage().lastIndexOf(tName) + tName.length());
 
-                TextComponent mainComponent = new TextComponent(Configs.prefix.getString(pData.group) + p.getName() + ": " + beforeAt);
+                TextComponent mainComponent = new TextComponent(Configs.permissionsList.getString(pData.group + ".prefix") + p.getName() + ": " + beforeAt);
                 TextComponent subComponent = new TextComponent("§b@" + t.getName() + "§r");
                 subComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§7<KLICK>§r Profil anzeigen")));
-                subComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://minicraft.cf/p/" + t.getName()));
+                subComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://minicraft.network/p/" + t.getName()));
                 mainComponent.addExtra(subComponent);
                 mainComponent.addExtra(afterAt);
 
@@ -57,13 +56,13 @@ public class ChatListener implements Listener {
         }
 
         for (Player players : p.getWorld().getPlayers())
-            players.sendMessage(Configs.prefix.getString(pData.group) + p.getName() + ": " + e.getMessage());
+            players.sendMessage(Configs.permissionsList.getString(pData.group + ".prefix") + p.getName() + ": " + e.getMessage());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(PlayerCommandPreprocessEvent e) {
         Player p = e.getPlayer();
-        PlayerData pData = PlayerApi.get(e.getPlayer().getUniqueId());
+        PlayerData pData = MiniBasics.playerList.get(e.getPlayer().getUniqueId());
         if (pData == null) {
             e.setCancelled(true);
             p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
@@ -75,13 +74,13 @@ public class ChatListener implements Listener {
         if (e.getMessage().contains(" "))
              commandSplit = e.getMessage().split(" ", 2);
 
-        if (!Configs.commandList.getKeys(true).contains(commandSplit[0].replace("/", ""))) {
+        if (!Configs.commandsList.getKeys(true).contains(commandSplit[0].replace("/", ""))) {
             e.setCancelled(true);
             p.sendMessage("§c[FEHLER]: §fDieser Befehl existiert nicht!");
             return;
         }
 
-        if (!Configs.permissionsList.getStringList(pData.group).contains(Configs.commandList.getString(commandSplit[0].replace("/", "")))) {
+        if (!pData.permissions.contains(Configs.commandsList.getString(commandSplit[0].replace("/", "")))) {
             e.setCancelled(true);
             p.sendMessage("§c[FEHLER]: §fDu kannst diesen Befehl nicht ausführen!");
         }
@@ -91,11 +90,11 @@ public class ChatListener implements Listener {
     public void onCommandTabSend(PlayerCommandSendEvent e) {
         e.getCommands().clear();
 
-        PlayerData pData = PlayerApi.get(e.getPlayer().getUniqueId());
+        PlayerData pData = MiniBasics.playerList.get(e.getPlayer().getUniqueId());
         if (pData == null) return;
 
-        for (String command : Configs.commandList.getKeys(false))
-            if (Configs.permissionsList.getStringList(pData.group).contains(Configs.commandList.getString(command)))
+        for (String command : Configs.commandsList.getKeys(false))
+            if (pData.permissions.contains(Configs.commandsList.getString(command)))
                 e.getCommands().add(command);
     }
 }

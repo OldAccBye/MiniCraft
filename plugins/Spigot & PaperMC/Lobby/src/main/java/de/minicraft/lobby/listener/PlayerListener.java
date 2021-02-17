@@ -3,6 +3,7 @@ package de.minicraft.lobby.listener;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.minicraft.lobby.Lobby;
+import de.minicraft.lobby.player.PlayerData;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,14 +16,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerListener implements Listener {
-    private final HashMap<UUID, Long> lastEmoteTime = new HashMap<>();
-
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.getPlayer().sendTitle("§3Willkommen", "auf dem §aMiniCraft Netzwerk§r!", 10, 70, 20);
@@ -55,6 +51,19 @@ public class PlayerListener implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        PlayerData pData = Lobby.playerList.get(e.getPlayer().getUniqueId());
+        if (pData == null) return;
+
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Update");
+        out.writeInt(pData.cookies);
+        e.getPlayer().sendPluginMessage(Lobby.plugin, "bungeesystem:lobby", out.toByteArray());
+
+        Lobby.playerList.remove(e.getPlayer().getUniqueId());
     }
 
     @EventHandler
@@ -150,30 +159,31 @@ public class PlayerListener implements Listener {
 
         switch (e.getView().getTitle()) {
             case "§3§lNavigator" -> {
-                if (im.getDisplayName().equals("§c§lFFA")) {
-                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                    out.writeUTF("connect");
-                    out.writeUTF("FFA");
-                    p.sendPluginMessage(Lobby.plugin, "bungeesystem:server", out.toByteArray());
-                } else if (im.getDisplayName().equals("§c§lGTC")) {
-                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                    out.writeUTF("connect");
-                    out.writeUTF("GTC");
-                    p.sendPluginMessage(Lobby.plugin, "bungeesystem:server", out.toByteArray());
-                }
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("Connect");
+                out.writeUTF(im.getDisplayName().replace("§c§l", ""));
+                p.sendPluginMessage(Lobby.plugin, "bungeesystem:lobby", out.toByteArray());
             }
             case "§3§lEmote" -> {
-                Date date = new Date();
-                long currentDateTime = date.getTime();
+                PlayerData pData = Lobby.playerList.get(p.getUniqueId());
+                if (pData == null) {
+                    p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
+                    return;
+                }
 
-                if (!lastEmoteTime.containsKey(p.getUniqueId()))
-                    lastEmoteTime.put(p.getUniqueId(), currentDateTime);
-                else if (currentDateTime <= (lastEmoteTime.get(p.getUniqueId()) + 2000)) { // 2000 = 2 Sekunden
+                if (pData.group.equals("default")) {
+                    p.sendMessage("§c[FEHLER]: §fDu musst Premium, Donator oder ein Teammitglied sein!");
+                    return;
+                }
+
+                long currentDateTime = new Date().getTime();
+
+                if (currentDateTime <= (pData.lastEmoteTime + 2000)) { // 2000 = 2 Sekunden
                     p.sendMessage("§c[FEHLER]: §fDu hast vor kurzem bereits ein Emote verwendet!");
                     return;
                 }
 
-                lastEmoteTime.computeIfPresent(p.getUniqueId(), (k, v) -> v = currentDateTime);
+                pData.lastEmoteTime = currentDateTime;
 
                 switch (im.getDisplayName()) {
                     case "§4§lLiebe" -> p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);

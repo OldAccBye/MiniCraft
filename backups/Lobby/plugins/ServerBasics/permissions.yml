@@ -1,12 +1,24 @@
 default:
+  prefix: "§7§l[D]§r "
+  permissions:
 premium:
+  prefix: "§e§l[P]§r "
+  permissions:
 builder:
+  prefix: "§0§l[B]§r "
+  permissions:
 supporter:
-  - minigames.commands.tp
+  prefix: "§9§l[S]§r "
+  permissions:
+    - minigames.commands.tp
 moderator:
-  - minigames.commands.tp
+  prefix: "§a§l[M]§r "
+  permissions:
 admin:
-  - minigames.commands.tp
+  prefix: "§c§l[A]§r "
+  permissions:
+    - minicraft.commands.build
 owner:
-  - minicraft.commands.build
-  - minigames.commands.tp
+  prefix: "§4§l[O]§r "
+  permissions:
+    - minicraft.commands.build

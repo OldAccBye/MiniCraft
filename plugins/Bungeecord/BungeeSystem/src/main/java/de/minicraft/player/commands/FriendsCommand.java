@@ -119,7 +119,7 @@ public class FriendsCommand extends Command implements TabExecutor {
 
                 // Player component
                 playerComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§7<KLICK>§r Profil anzeigen")));
-                playerComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://minicraft.cf/p/" + p.getName()));
+                playerComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://minicraft.network/p/" + p.getName()));
                 mainComponent.addExtra(playerComponent);
 
                 mainComponent.addExtra(" §ahat dir eine Freundesanfrage gesendet. ");

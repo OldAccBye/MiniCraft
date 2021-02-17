@@ -1,7 +1,6 @@
-package de.minicraft.listener;
+package de.minicraft.minibasics.listener;
 
-import de.minicraft.player.PlayerApi;
-import de.minicraft.ServerBasics;
+import de.minicraft.minibasics.MiniBasics;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -16,8 +15,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         e.setQuitMessage("");
-
-        if (ServerBasics.playerList.containsKey(e.getPlayer().getUniqueId()))
-            PlayerApi.logout(e.getPlayer().getUniqueId());
+        MiniBasics.playerList.remove(e.getPlayer().getUniqueId());
     }
 }

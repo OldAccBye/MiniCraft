@@ -17,18 +17,15 @@ import java.util.Arrays;
 public class PluginMessageReceiver implements Listener {
     @EventHandler
     public void onPluginMessage(PluginMessageEvent e) {
-        if (!Arrays.asList("bungeesystem:server").contains(e.getTag())) return;
-
         if (!(e.getReceiver() instanceof ProxiedPlayer)) return;
         ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
 
         ByteArrayDataInput in = ByteStreams.newDataInput(e.getData());
-        String subChannel = in.readUTF();
 
         switch (e.getTag()) {
-            case "bungeesystem:server" -> { // LOBBY -> SERVER
-                switch (subChannel) { // SERVER (SWITCH)
-                    case "connect" -> {
+            case "bungeesystem:lobby" -> { // LOBBY -> SERVER
+                switch (in.readUTF()) { // SERVER (SWITCH)
+                    case "Connect" -> {
                         ServerInfo server = BungeeSystem.plugin.getProxy().getServerInfo(in.readUTF());
                         if (server == null) {
                             p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aServer existiert nicht!"));
@@ -46,6 +43,16 @@ public class PluginMessageReceiver implements Listener {
 
                         p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aVerbindung wird hergestellt..."));
                         p.connect(server);
+                    }
+                    case "Update" -> {
+                        // Coming soon
+                    }
+                }
+            }
+            case "bungeesystem:minibasics" -> {
+                switch (in.readUTF()) {
+                    case "Update" -> {
+                        // Coming soon
                     }
                 }
             }
