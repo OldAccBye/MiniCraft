@@ -1,0 +1,25 @@
+MaxPlayers: 16 # Wie viele Spieler auf dieser Welt sein dürfen
+PlayersToStart: 4 # Wie viele Spieler zum starten benötigt werden
+PreTime: 15 # Die benötigte Zeit in Sekunden bis das Spiel beginnt
+PlayTime: 35 # Die Zeit die man hat bis das Spiel vorbei ist in Sekunden
+Spawn: # Die Position an die diese Person teleportiert werden soll sobald diese Person den Server betritt
+  x: 0.486
+  y: 61.00000
+  z: 0.426
+  yaw: -0.0
+  pitch: 0.6
+Round: # Die Position an die diese Person teleportiert werden soll sobald das Spiel startet
+  x: 0.492
+  y: 62.00000
+  z: 53.539
+  yaw: -1.1
+  pitch: 0.4
+ChickenSpawn: # Von Position1 bis Position2 werden Hühner gespawnt
+  pos1:
+    x: -3.278
+    y: 57.00000
+    z: 3.754
+  pos2:
+    x: 4.378
+    y: 57.00000
+    z: 20.420

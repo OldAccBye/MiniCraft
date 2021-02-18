@@ -1,6 +1,6 @@
 prevent_proxy_connections: false
 listeners:
-- query_port: 25577
+- query_port: 25595
   motd: test
   tab_list: SERVER
   query_enabled: false
@@ -9,33 +9,24 @@ listeners:
     pvp.md-5.net: pvp
   ping_passthrough: false
   priorities:
-  - lobby
-  - lobby
+  - Lobby-01
+  - Lobby-02
   bind_local_address: true
-  host: 0.0.0.0:25565
+  host: minicraft.cf
   max_players: 100
-  tab_size: 60
+  tab_size: 30
   force_default_server: true
 remote_ping_cache: -1
 network_compression_threshold: 256
 permissions:
   default: null
-  DuWirstNiemalsDieseRechteBesitzen:
-  - bungeecord.command.server
-  - bungeecord.command.list
-  - bungeecord.command.alert
-  - bungeecord.command.end
-  - bungeecord.command.ip
-  - bungeecord.command.reload
 log_pings: true
-connection_throttle_limit: 3
+connection_throttle_limit: 2
 server_connect_timeout: 5000
 timeout: 30000
 player_limit: 100
 ip_forward: true
 groups:
-  md_5:
-  - admin
 remote_ping_timeout: 5000
 connection_throttle: 4000
 log_commands: false
@@ -46,17 +37,25 @@ disabled_commands:
 - bungee
 - perms
 servers:
-  lobby:
+  Lobby-01:
     motd: |-
       &8>&7> &fMiniCraft &7<&8< &aMinigames Netzwerk&r
       &c[&b1.16.x&c][&bEntwicklungsphase&c]
-    address: localhost:25566
+    address: 127.0.0.1:25566
+    restricted: false
+  Lobby-02:
+    motd: Lobby
+    address: 127.0.0.1:25567
     restricted: false
   FFA:
-    motd: '&1Just another Waterfall - Forced Host'
-    address: localhost:25567
+    motd: FFA
+    address: 127.0.0.1:25568
     restricted: false
-  GTC:
+  GTC-01:
     motd: GTC
-    address: localhost:25568
+    address: 127.0.0.1:25569
+    restricted: false
+  GTC-02:
+    motd: GTC
+    address: 127.0.0.1:25570
     restricted: false
