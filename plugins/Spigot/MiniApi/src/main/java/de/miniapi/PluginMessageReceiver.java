@@ -37,6 +37,7 @@ public class PluginMessageReceiver implements PluginMessageListener {
                         pData.group = in.readUTF();
                         pData.prefix = Configs.permissionsList.getString(pData.group + ".prefix");
                         pData.updatePermissions();
+                        p.updateCommands();
                     }
                     case "Cookies" -> pData.cookies = in.readInt();
                 }
