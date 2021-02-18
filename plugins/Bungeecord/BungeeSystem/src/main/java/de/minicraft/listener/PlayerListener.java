@@ -28,25 +28,11 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        ServerInfo serverInfo = e.getTarget();
-        String serverName = serverInfo.getName().toLowerCase();
-
-        ByteArrayDataOutput out;
-        out = ByteStreams.newDataOutput();
-
-        switch (serverName) {
-            case "lobby" -> {
-                out.writeUTF("Login"); // Option
-                out.writeUTF(pData.group);
-                e.getTarget().sendData("bungeesystem:minibasics", out.toByteArray());
-
-                out = ByteStreams.newDataOutput();
-                out.writeUTF("Login"); // Option
-                out.writeUTF(pData.group);
-                out.writeInt(pData.cookies);
-                e.getTarget().sendData("bungeesystem:lobby", out.toByteArray());
-            }
-        }
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Login"); // Option
+        out.writeUTF(pData.group);
+        out.writeInt(pData.cookies);
+        e.getTarget().sendData("bungeesystem:miniapi", out.toByteArray());
     }
 
     @EventHandler

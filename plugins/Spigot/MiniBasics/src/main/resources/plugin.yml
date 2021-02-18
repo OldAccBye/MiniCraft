@@ -1,0 +1,12 @@
+name: MiniBasics
+version: 1.0
+api-version: 1.16
+main: de.minicraft.minibasics.MiniBasics
+author: EntenKoeniq
+depend: [MiniApi]
+
+commands:
+  build:
+    usage: /build
+  tp:
+    usage: /tp <PLAYER> <PLAYER>

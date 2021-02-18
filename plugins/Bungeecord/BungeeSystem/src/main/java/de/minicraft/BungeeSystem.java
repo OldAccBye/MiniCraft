@@ -93,7 +93,7 @@ public final class BungeeSystem extends Plugin {
 
         // Channels
         plugin.getProxy().registerChannel("bungeesystem:lobby");
-        plugin.getProxy().registerChannel("bungeesystem:minibasics");
+        plugin.getProxy().registerChannel("bungeesystem:miniapi");
 
         // Mongo
         mongo.connect();

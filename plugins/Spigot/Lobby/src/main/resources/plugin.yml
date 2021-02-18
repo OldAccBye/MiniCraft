@@ -1,0 +1,6 @@
+name: Lobby
+version: 1.0
+api-version: 1.16
+main: de.minicraft.lobby.Lobby
+author: EntenKoeniq
+depend: [MiniApi]
