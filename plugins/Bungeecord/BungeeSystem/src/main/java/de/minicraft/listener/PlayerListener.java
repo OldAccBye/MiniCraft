@@ -28,10 +28,50 @@ public class PlayerListener implements Listener {
             return;
         }
 
+        ServerInfo serverInfo = e.getTarget();
+
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Login"); // Option
         out.writeUTF(pData.group);
         out.writeInt(pData.cookies);
+        if (serverInfo.getName().contains("FFA")) {
+            if (pData.ffaData == null) {
+                Document playerDoc = PlayerApi.getPlayerData(p, "ffa");
+                if (playerDoc.containsKey("status")) {
+                    if (playerDoc.getString("status").equals("error")) {
+                        e.setCancelled(true);
+                        p.disconnect(new TextComponent(playerDoc.getString("reason")));
+                        return;
+                    } else {
+                        pData.ffaData = new PlayerData.FFA(0, 0);
+                    }
+                } else {
+                    pData.ffaData = new PlayerData.FFA(playerDoc.getInteger("kills"), playerDoc.getInteger("deaths"));
+                }
+            }
+
+            // FFA DATA WRITE
+            out.writeInt(pData.ffaData.kills);
+            out.writeInt(pData.ffaData.deaths);
+        } else if (serverInfo.getName().contains("GTC")) {
+            if (pData.ffaData == null) {
+                Document playerDoc = PlayerApi.getPlayerData(p, "gtc");
+                if (playerDoc.containsKey("status")) {
+                    if (playerDoc.getString("status").equals("error")) {
+                        e.setCancelled(true);
+                        p.disconnect(new TextComponent(playerDoc.getString("reason")));
+                        return;
+                    } else {
+                        pData.gtcData = new PlayerData.GTC(0);
+                    }
+                } else {
+                    pData.gtcData = new PlayerData.GTC(playerDoc.getInteger("won"));
+                }
+            }
+
+            // GTC DATA WRITE
+            out.writeInt(pData.gtcData.won);
+        }
         e.getTarget().sendData("bungeesystem:miniapi", out.toByteArray());
     }
 
@@ -39,7 +79,7 @@ public class PlayerListener implements Listener {
     public void onPostLogin(PostLoginEvent e) {
         ProxiedPlayer p = e.getPlayer();
 
-        Document playerLoginDoc = PlayerApi.login(p.getUniqueId());
+        Document playerLoginDoc = PlayerApi.login(p);
 
         if (playerLoginDoc.getString("status").equals("error")) {
             p.disconnect(new TextComponent(playerLoginDoc.getString("reason")));

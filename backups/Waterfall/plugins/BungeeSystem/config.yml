@@ -4,4 +4,6 @@ mongodb:
   password: "minipass"
   database: "MiniCraft"
   collections:
-    - players
+    - player
+    - ffa
+    - gtc

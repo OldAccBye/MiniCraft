@@ -24,15 +24,23 @@ public class PluginMessageReceiver implements Listener {
         switch (e.getTag()) {
             case "bungeesystem:lobby" -> { // LOBBY -> SERVER
                 if (in.readUTF().equals("Connect")) { // SERVER (SWITCH)
-                    ServerInfo server = BungeeSystem.plugin.getProxy().getServerInfo(in.readUTF());
-                    if (server == null) {
-                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aServer existiert nicht!"));
+                    String serverName = in.readUTF();
+                    final ServerInfo[] serverInfo = { null };
+
+                    BungeeSystem.plugin.getProxy().getServersCopy().values().forEach((info) -> {
+                        if (info.getName().contains(serverName))
+                            if (info.canAccess(p))
+                                serverInfo[0] = info;
+                    });
+
+                    if (serverInfo[0] == null) {
+                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aServer konnte nicht gefunden werden!"));
                         return;
                     }
 
                     try {
                         Socket s = new Socket();
-                        s.connect(server.getSocketAddress(), 15);
+                        s.connect(serverInfo[0].getSocketAddress(), 15);
                         s.close();
                     } catch (IOException err) {
                         p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aKeine Verbindung zum Server..."));
@@ -40,7 +48,7 @@ public class PluginMessageReceiver implements Listener {
                     }
 
                     p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aVerbindung wird hergestellt..."));
-                    p.connect(server);
+                    p.connect(serverInfo[0]);
                 }
             }
             case "bungeesystem:miniapi" -> {
@@ -54,11 +62,16 @@ public class PluginMessageReceiver implements Listener {
 
                         switch (in.readUTF()) {
                             case "All" -> {
-                                String currentServerName = p.getServer().getInfo().getName().toLowerCase();
+                                String currentServerName = p.getServer().getInfo().getName();
 
                                 pData.group = in.readUTF();
                                 pData.cookies = in.readInt();
-                                // To do: Switch for server
+                                if (currentServerName.contains("FFA")) {
+                                    pData.ffaData.kills = in.readInt();
+                                    pData.ffaData.deaths = in.readInt();
+                                } else if (currentServerName.contains("GTC")) {
+                                    pData.gtcData.won = in.readInt();
+                                }
                             }
                         }
                     }

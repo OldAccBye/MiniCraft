@@ -12,7 +12,7 @@ listeners:
   - Lobby-01
   - Lobby-02
   bind_local_address: true
-  host: minicraft.cf
+  host: 0.0.0.0:25565
   max_players: 100
   tab_size: 30
   force_default_server: true
