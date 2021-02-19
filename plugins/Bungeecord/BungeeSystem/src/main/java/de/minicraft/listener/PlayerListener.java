@@ -54,7 +54,7 @@ public class PlayerListener implements Listener {
             out.writeInt(pData.ffaData.kills);
             out.writeInt(pData.ffaData.deaths);
         } else if (serverInfo.getName().contains("GTC")) {
-            if (pData.ffaData == null) {
+            if (pData.gtcData == null) {
                 Document playerDoc = PlayerApi.getPlayerData(p, "gtc");
                 if (playerDoc.containsKey("status")) {
                     if (playerDoc.getString("status").equals("error")) {
