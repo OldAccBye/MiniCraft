@@ -19,11 +19,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class PlayerListener implements Listener {
-    public final static HashMap<UUID, Long> lastEmoteTime = new HashMap<>();
+    public final static HashMap<UUID, Long> lastAction = new HashMap<>();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        lastEmoteTime.put(e.getPlayer().getUniqueId(), new Date().getTime());
+        lastAction.put(e.getPlayer().getUniqueId(), new Date().getTime());
         e.getPlayer().sendTitle("§3Willkommen", "auf dem §aMiniCraft Netzwerk§r!", 10, 70, 20);
 
         // Inventory
@@ -146,34 +146,42 @@ public class PlayerListener implements Listener {
         if (im == null) return;
 
         Player p = (Player) e.getWhoClicked();
+        PlayerData pData = Lobby.api.getPlayer(p.getUniqueId());
+        if (pData == null) {
+            p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
+            return;
+        }
+
+        long currentDateTime = new Date().getTime();
+
+        if (currentDateTime <= (lastAction.get(p.getUniqueId()) + 2000)) { // 2000 = 2 Sekunden
+            p.sendMessage("§c[FEHLER]: §fWarte einen Augenblick bevor du eine neue Aktion ausführst!");
+            return;
+        }
+
+        lastAction.computeIfPresent(p.getUniqueId(), (k, v) -> v = currentDateTime);
 
         switch (e.getView().getTitle()) {
             case "§3§lNavigator" -> {
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("Connect");
-                out.writeUTF(im.getDisplayName().replace("§c§l", ""));
-                p.sendPluginMessage(Lobby.plugin, "bungeesystem:lobby", out.toByteArray());
+                String iName = im.getDisplayName();
+                if (iName.contains("§c§l")) {
+                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                    out.writeUTF("Connect");
+                    out.writeUTF(iName.replace("§c§l", ""));
+
+                    switch (iName.replace("§c§l", "").toLowerCase(Locale.ROOT)) {
+                        case "gtc" -> out.writeInt(16);
+                        case "ffa" -> out.writeInt(50);
+                    }
+
+                    p.sendPluginMessage(Lobby.plugin, "bungeesystem:lobby", out.toByteArray());
+                }
             }
             case "§3§lEmote" -> {
-                PlayerData pData = Lobby.api.getPlayer(p.getUniqueId());
-                if (pData == null) {
-                    p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
-                    return;
-                }
-
                 if (pData.group.equals("default")) {
                     p.sendMessage("§c[FEHLER]: §fDu musst Premium, Donator oder ein Teammitglied sein!");
                     return;
                 }
-
-                long currentDateTime = new Date().getTime();
-
-                if (currentDateTime <= (lastEmoteTime.get(p.getUniqueId()) + 2000)) { // 2000 = 2 Sekunden
-                    p.sendMessage("§c[FEHLER]: §fDu hast vor kurzem bereits ein Emote verwendet!");
-                    return;
-                }
-
-                lastEmoteTime.computeIfPresent(p.getUniqueId(), (k, v) -> v = currentDateTime);
 
                 switch (im.getDisplayName()) {
                     case "§4§lLiebe" -> p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);

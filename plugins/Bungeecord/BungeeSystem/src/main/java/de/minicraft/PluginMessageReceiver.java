@@ -12,12 +12,18 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Map;
 
 public class PluginMessageReceiver implements Listener {
     @EventHandler
     public void onPluginMessage(PluginMessageEvent e) {
         if (!(e.getReceiver() instanceof ProxiedPlayer)) return;
         ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
+        PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
+        if (pData == null) {
+            p.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
+            return;
+        }
 
         ByteArrayDataInput in = ByteStreams.newDataInput(e.getData());
 
@@ -25,41 +31,38 @@ public class PluginMessageReceiver implements Listener {
             case "bungeesystem:lobby" -> { // LOBBY -> SERVER
                 if (in.readUTF().equals("Connect")) { // SERVER (SWITCH)
                     String serverName = in.readUTF();
-                    final ServerInfo[] serverInfo = { null };
+                    int maxPlayers = in.readInt(), serverFound = 0;
 
-                    BungeeSystem.plugin.getProxy().getServersCopy().values().forEach((info) -> {
-                        if (info.getName().contains(serverName))
-                            if (info.canAccess(p))
-                                serverInfo[0] = info;
-                    });
+                    for (Map.Entry<String, ServerInfo> entry : BungeeSystem.plugin.getProxy().getServersCopy().entrySet()) {
+                        if (!entry.getKey().contains(serverName)) continue;
+                        ServerInfo value = entry.getValue();
+                        if (value.getPlayers().size() >= maxPlayers) {
+                            serverFound += 1;
+                            continue;
+                        }
 
-                    if (serverInfo[0] == null) {
-                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aServer konnte nicht gefunden werden!"));
+                        try {
+                            Socket s = new Socket();
+                            s.connect(value.getSocketAddress(), 15);
+                            s.close();
+                        } catch (IOException ignored) {
+                            continue;
+                        }
+
+                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aVerbindung wird hergestellt..."));
+                        p.connect(value);
                         return;
                     }
 
-                    try {
-                        Socket s = new Socket();
-                        s.connect(serverInfo[0].getSocketAddress(), 15);
-                        s.close();
-                    } catch (IOException err) {
-                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aKeine Verbindung zum Server..."));
-                        return;
-                    }
-
-                    p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aVerbindung wird hergestellt..."));
-                    p.connect(serverInfo[0]);
+                    if (serverFound != 0)
+                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aAlle Server sind voll!"));
+                    else
+                        p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aKein Server gefunden!"));
                 }
             }
             case "bungeesystem:miniapi" -> {
                 switch (in.readUTF()) {
                     case "Update" -> {
-                        PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
-                        if (pData == null) {
-                            p.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
-                            return;
-                        }
-
                         switch (in.readUTF()) {
                             case "All" -> {
                                 String currentServerName = p.getServer().getInfo().getName();
