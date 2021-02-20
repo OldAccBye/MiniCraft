@@ -16,6 +16,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.md-5:bungeecord-chat:1.16-R0.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.27" level="project" />
-    <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.12.7" level="project" />
+    <orderEntry type="library" name="Maven: de.miniapi:MiniApi:1.0-SNAPSHOT" level="project" />
   </component>
 </module>

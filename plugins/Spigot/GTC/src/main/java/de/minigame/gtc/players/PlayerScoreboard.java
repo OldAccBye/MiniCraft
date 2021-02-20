@@ -23,10 +23,9 @@ public class PlayerScoreboard {
             obj = board.registerNewObjective("GTC-ScoreBoard", "dummy", "§8>§7> §3GTC §7<§8<");
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
             obj.getScore("§e=-=-=-=-=-=-=-=").setScore(3);
-            obj.getScore("§a§lGewonnen: §r§6" + GTC.playerList.get(p.getUniqueId()).wons).setScore(2);
+            obj.getScore("§a§lGewonnen: §r§6" + GTC.api.getPlayer(p.getUniqueId()).gtcData.won + "§rx").setScore(2);
             obj.getScore("§f§lSpieler: §r§6" + GTC.plugin.getServer().getOnlinePlayers().size()).setScore(1);
             obj.getScore("§r§e=-=-=-=-=-=-=-=").setScore(0);
-
             p.setScoreboard(board);
             return;
         }

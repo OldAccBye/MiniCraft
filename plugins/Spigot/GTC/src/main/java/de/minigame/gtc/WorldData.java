@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class WorldData {
     public static boolean roundStarted = false, preRoundStarted = false;
-    public static int lastTaskId, preRoundSeconds, roundSeconds, playTime, preTime, maxPlayers, playersToStart;
+    public static int lastTaskId, preRoundSeconds, roundSeconds, playTime, preTime, playersToStart;
     public static Location spawnLocation, roundLocation;
     public static List<Location> chickenLocation = new ArrayList<>();
     public static Entity lastChicken;
@@ -100,8 +100,13 @@ public class WorldData {
         GTC.plugin.getServer().getScheduler().cancelTask(lastTaskId);
 
         Player topPlayer = GTC.plugin.getServer().getPlayer(topPlayerUUID);
-        String topPlayerName = (topPlayer != null) ? topPlayer.getName() : "null";
-        GTC.playerList.get(topPlayerUUID).wons += 1;
+        String topPlayerName = "null";
+        if (topPlayer != null) {
+            topPlayerName = topPlayer.getName();
+            GTC.api.getPlayer(topPlayerUUID).gtcData.won += 1;
+            if (!GTC.api.savePlayer(topPlayer))
+                GTC.plugin.getLogger().severe("Spieler " + topPlayer.getUniqueId() + " konnte nicht gespeichert werden!");
+        }
 
         for (Map.Entry<UUID, PlayerData> players : GTC.playerList.entrySet()) {
             PlayerData value = players.getValue();

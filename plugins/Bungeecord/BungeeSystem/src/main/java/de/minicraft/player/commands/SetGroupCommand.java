@@ -65,16 +65,16 @@ public class SetGroupCommand extends Command implements TabExecutor {
         }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Update");
-        out.writeUTF("Group");
+        out.writeUTF("update");
+        out.writeUTF("group");
         out.writeUTF(args[1]);
         t.getServer().sendData("bungeesystem:miniapi", out.toByteArray());
 
-        tData.group = args[1];
+        tData.data.put("group", args[1]);
         tData.permissions.clear();
         for (String permissionKey : Configs.permissionsList.getKeys()) {
             tData.permissions.addAll(Configs.permissionsList.getStringList(permissionKey));
-            if (permissionKey.equals(tData.group)) break;
+            if (permissionKey.equals(tData.data.getString("group"))) break;
         }
         p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + t.getName() + " §aerhielt die Gruppe §6" + args[1]));
         t.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aDu erhielst die Gruppe §6" + args[1]));

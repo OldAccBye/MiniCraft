@@ -17,12 +17,12 @@ public class HubCommand extends Command {
         if (!(cmdSender instanceof ProxiedPlayer)) return;
         ProxiedPlayer p = (ProxiedPlayer) cmdSender;
 
-        if (p.getServer().getInfo().getName().equals("lobby")) {
+        if (p.getServer().getInfo().getName().equals("Lobby")) {
             p.sendMessage(new TextComponent("§c[FEHLER]: §fDu befindest dich bereits in der Lobby!"));
             return;
         }
 
-        ServerInfo lobby = BungeeSystem.plugin.getProxy().getServerInfo("lobby");
+        ServerInfo lobby = BungeeSystem.plugin.getProxy().getServerInfo("Lobby-01");
         p.connect(lobby);
     }
 }

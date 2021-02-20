@@ -34,13 +34,13 @@ public class FriendsCommand extends Command implements TabExecutor {
                 case "add" -> {
                     List<String> players = new ArrayList<>();
                     for (ProxiedPlayer t : BungeeSystem.plugin.getProxy().getPlayers())
-                        if (!p.getName().contains(t.getName()) && !pData.friends.contains(t.getName()))
+                        if (!p.getName().contains(t.getName()) && !pData.data.getList("friends", String.class).contains(t.getName()))
                             players.add(t.getName());
 
                     return players;
                 }
                 case "remove", "chat" -> {
-                    return pData.friends;
+                    return pData.data.getList("friends", String.class);
                 }
                 case "accept" -> {
                     return new ArrayList<>(pData.friendRequest.keySet());
@@ -83,11 +83,11 @@ public class FriendsCommand extends Command implements TabExecutor {
                         p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst dir nicht selber eine Freundesanfrage senden!"));
                         return;
                     }
-                    else if (pData.friends.contains(args[1])) {
+                    else if (pData.data.getList("friends", String.class).contains(args[1])) {
                         p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich bereits in deiner Freundesliste!"));
                         return;
                     }
-                    else if (pData.friends.size() >= 25) {
+                    else if (pData.data.getList("friends", String.class).size() >= 25) {
                         p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst nicht mehr als 25 Freunde haben!"));
                         return;
                     }
@@ -134,13 +134,13 @@ public class FriendsCommand extends Command implements TabExecutor {
             }
             case "remove" -> {
                 { // CHECK
-                    if (!pData.friends.contains(args[1])) {
+                    if (!pData.data.getList("friends", String.class).contains(args[1])) {
                         p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich nicht in deiner Freundesliste!"));
                         return;
                     }
                 } // CHECK
 
-                pData.friends.remove(args[1]);
+                pData.data.getList("friends", String.class).remove(args[1]);
                 p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + args[1] + " §awurde aus der Freundesliste entfernt!"));
             }
             case "chat" -> {
@@ -149,7 +149,7 @@ public class FriendsCommand extends Command implements TabExecutor {
                         p.sendMessage(new TextComponent("§c[FEHLER]: §fEine Nachricht fehlt!"));
                         return;
                     }
-                    else if (!pData.friends.contains(args[1])) {
+                    else if (!pData.data.getList("friends", String.class).contains(args[1])) {
                         p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich nicht in deiner Freundesliste!"));
                         return;
                     }
@@ -170,7 +170,7 @@ public class FriendsCommand extends Command implements TabExecutor {
             }
             case "accept" -> {
                 { // CHECK
-                    if (pData.friends.size() >= 25) {
+                    if (pData.data.getList("friends", String.class).size() >= 25) {
                         p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst nicht mehr als 25 Freunde haben!"));
                         return;
                     }
@@ -194,8 +194,8 @@ public class FriendsCommand extends Command implements TabExecutor {
                     return;
                 }
 
-                tData.friends.add(p.getName());
-                pData.friends.add(args[1]);
+                tData.data.getList("friends", String.class).add(p.getName());
+                pData.data.getList("friends", String.class).add(args[1]);
                 pData.friendRequest.remove(args[1]);
                 p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + args[1] + " §awurde in die Freundesliste hinzugefügt!"));
                 t.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + p.getName()+ " §ahat deine Freundesanfrage angenommen!"));

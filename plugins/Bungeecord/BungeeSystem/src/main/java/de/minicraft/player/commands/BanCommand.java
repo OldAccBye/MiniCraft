@@ -1,7 +1,6 @@
 package de.minicraft.player.commands;
 
 import de.minicraft.BungeeSystem;
-import de.minicraft.Utils;
 import de.minicraft.player.PlayerData;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -9,7 +8,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -77,25 +75,25 @@ public class BanCommand extends Command implements TabExecutor {
 
         switch (timeFormat) {
             case "m" -> {
-                tData.banned = true;
-                tData.banSinceTimestamp = currentDateTime;
-                tData.banExpiresTimestamp = currentDateTime + (banTime * 60000);
-                tData.banReason = reason;
-                tData.bannedFrom = p.getName();
+                tData.data.put("banned", true);
+                tData.data.put("banSinceTimestamp", currentDateTime);
+                tData.data.put("banExpiresTimestamp", currentDateTime + (banTime * 60000));
+                tData.data.put("banReason", reason);
+                tData.data.put("bannedFrom", p.getName());
             }
             case "h" -> {
-                tData.banned = true;
-                tData.banSinceTimestamp = currentDateTime;
-                tData.banExpiresTimestamp = currentDateTime + (banTime * 3600000);
-                tData.banReason = reason;
-                tData.bannedFrom = p.getName();
+                tData.data.put("banned", true);
+                tData.data.put("banSinceTimestamp", currentDateTime);
+                tData.data.put("banExpiresTimestamp", currentDateTime + (banTime * 3600000));
+                tData.data.put("banReason", reason);
+                tData.data.put("bannedFrom", p.getName());
             }
             case "d" -> {
-                tData.banned = true;
-                tData.banSinceTimestamp = currentDateTime;
-                tData.banExpiresTimestamp = currentDateTime + (banTime * 86400000);
-                tData.banReason = reason;
-                tData.bannedFrom = p.getName();
+                tData.data.put("banned", true);
+                tData.data.put("banSinceTimestamp", currentDateTime);
+                tData.data.put("banExpiresTimestamp", currentDateTime + (banTime * 86400000));
+                tData.data.put("banReason", reason);
+                tData.data.put("bannedFrom", p.getName());
             }
             default -> {
                 p.sendMessage(new TextComponent("§c[FEHLER]: §fDie Zeit muss mit einem 'm', 'h' oder 'd' enden!"));

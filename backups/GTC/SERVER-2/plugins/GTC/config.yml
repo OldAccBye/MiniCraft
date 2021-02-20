@@ -1,4 +1,3 @@
-MaxPlayers: 16 # Wie viele Spieler auf dieser Welt sein dürfen
 PlayersToStart: 4 # Wie viele Spieler zum starten benötigt werden
 PreTime: 15 # Die benötigte Zeit in Sekunden bis das Spiel beginnt
 PlayTime: 35 # Die Zeit die man hat bis das Spiel vorbei ist in Sekunden
@@ -9,11 +8,11 @@ Spawn: # Die Position an die diese Person teleportiert werden soll sobald diese 
   yaw: -0.0
   pitch: 0.6
 Round: # Die Position an die diese Person teleportiert werden soll sobald das Spiel startet
-  x: 0.492
-  y: 62.00000
-  z: 53.539
-  yaw: -1.1
-  pitch: 0.4
+  x: 0.484
+  y: 57.00000
+  z: 4.498
+  yaw: 1.0
+  pitch: -0.2
 ChickenSpawn: # Von Position1 bis Position2 werden Hühner gespawnt
   pos1:
     x: -3.278

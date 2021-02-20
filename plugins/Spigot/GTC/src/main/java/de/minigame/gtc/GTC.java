@@ -1,9 +1,11 @@
 package de.minigame.gtc;
 
+import de.miniapi.MiniApi;
 import de.minigame.gtc.listener.PlayerListener;
 import de.minigame.gtc.players.PlayerData;
 import de.minigame.gtc.players.commands.GTCommand;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,8 +14,9 @@ import java.io.File;
 import java.util.*;
 
 public class GTC extends JavaPlugin {
-    public static final HashMap<UUID, PlayerData> playerList = new HashMap<>();
     public static GTC plugin;
+    public static MiniApi api = (MiniApi) Bukkit.getPluginManager().getPlugin("MiniApi");
+    public static final HashMap<UUID, PlayerData> playerList = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -25,7 +28,6 @@ public class GTC extends JavaPlugin {
         {
             YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
-            WorldData.maxPlayers = cfg.getInt("MaxPlayers");
             WorldData.playersToStart = cfg.getInt("PlayersToStart");
             WorldData.preTime = cfg.getInt("PreTime");
             WorldData.playTime = cfg.getInt("PlayTime");

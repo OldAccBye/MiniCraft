@@ -14,6 +14,7 @@ supporter:
 moderator:
   prefix: "§a§l[M]§r "
   permissions:
+    - minicraft.commands.gtc
 admin:
   prefix: "§c§l[A]§r "
   permissions:

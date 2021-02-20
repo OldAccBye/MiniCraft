@@ -166,7 +166,7 @@ public class PlayerListener implements Listener {
                 String iName = im.getDisplayName();
                 if (iName.contains("§c§l")) {
                     ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                    out.writeUTF("Connect");
+                    out.writeUTF("connect");
                     out.writeUTF(iName.replace("§c§l", ""));
 
                     switch (iName.replace("§c§l", "").toLowerCase(Locale.ROOT)) {

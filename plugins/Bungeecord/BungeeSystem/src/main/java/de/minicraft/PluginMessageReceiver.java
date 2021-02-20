@@ -20,16 +20,18 @@ public class PluginMessageReceiver implements Listener {
         if (!(e.getReceiver() instanceof ProxiedPlayer)) return;
         ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
         PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
-        if (pData == null) {
+        if (pData == null) { // To Do: Direkt nach dem Login den Server zu wechseln sorgt für einen Kick
             p.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
             return;
         }
 
         ByteArrayDataInput in = ByteStreams.newDataInput(e.getData());
 
+        BungeeSystem.plugin.getLogger().severe("DATA GET FROM: " + e.getTag());
+
         switch (e.getTag()) {
             case "bungeesystem:lobby" -> { // LOBBY -> SERVER
-                if (in.readUTF().equals("Connect")) { // SERVER (SWITCH)
+                if (in.readUTF().equals("connect")) { // SERVER (SWITCH)
                     String serverName = in.readUTF();
                     int maxPlayers = in.readInt(), serverFound = 0;
 
@@ -61,23 +63,17 @@ public class PluginMessageReceiver implements Listener {
                 }
             }
             case "bungeesystem:miniapi" -> {
-                switch (in.readUTF()) {
-                    case "Update" -> {
-                        switch (in.readUTF()) {
-                            case "All" -> {
-                                String currentServerName = p.getServer().getInfo().getName();
-
-                                pData.group = in.readUTF();
-                                pData.cookies = in.readInt();
-                                if (currentServerName.contains("FFA")) {
-                                    pData.ffaData.kills = in.readInt();
-                                    pData.ffaData.deaths = in.readInt();
-                                } else if (currentServerName.contains("GTC")) {
-                                    pData.gtcData.won = in.readInt();
-                                }
-                            }
+                if (in.readUTF().equals("save")) {
+                    BungeeSystem.plugin.getLogger().warning("[SAVE] " + p.getName());
+                    switch (in.readUTF()) {
+                        case "ffa" -> {
+                            pData.ffaData.put("kills", in.readInt());
+                            pData.ffaData.put("deaths", in.readInt());
                         }
+                        case "gtc" -> pData.gtcData.put("won", in.readInt());
                     }
+                    pData.data.put("group", in.readUTF());
+                    pData.data.put("cookies", in.readInt());
                 }
             }
         }

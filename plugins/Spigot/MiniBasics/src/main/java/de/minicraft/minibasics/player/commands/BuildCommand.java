@@ -13,11 +13,11 @@ public class BuildCommand implements CommandExecutor {
         Player p = (Player) sender;
 
         if (p.getGameMode() == GameMode.ADVENTURE) {
-            p.setGameMode(GameMode.ADVENTURE);
-            p.sendMessage("BuildCommand deaktiviert!");
-        } else {
             p.setGameMode(GameMode.CREATIVE);
             p.sendMessage("BuildCommand aktiviert!");
+        } else {
+            p.setGameMode(GameMode.ADVENTURE);
+            p.sendMessage("BuildCommand deaktiviert!");
         }
 
         return true;

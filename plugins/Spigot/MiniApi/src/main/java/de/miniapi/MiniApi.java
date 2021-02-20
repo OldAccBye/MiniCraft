@@ -1,9 +1,12 @@
 package de.miniapi;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import de.miniapi.listener.PlayerListener;
 import de.miniapi.player.PlayerData;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -45,7 +48,8 @@ public class MiniApi extends JavaPlugin {
             }
 
             Configuration cfg = YamlConfiguration.loadConfiguration(file);
-            Configs.serverName = cfg.getString("Server");
+            String serverName = cfg.getString("Server");
+            Configs.serverName = serverName != null ? serverName.toLowerCase() : "default";
         }
 
         /* ===== LISTENER - START ===== */
@@ -63,5 +67,30 @@ public class MiniApi extends JavaPlugin {
 
     public PlayerData getPlayer(UUID pUUID) {
         return playerList.get(pUUID);
+    }
+
+    public boolean savePlayer(Player p) {
+        PlayerData pData = playerList.get(p.getUniqueId());
+        if (pData == null) return false;
+
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("save");
+        out.writeUTF(Configs.serverName);
+        switch (Configs.serverName) {
+            case "ffa" -> {
+                if (pData.ffaData == null) return false;
+                out.writeInt(pData.ffaData.kills);
+                out.writeInt(pData.ffaData.deaths);
+            }
+            case "gtc" -> {
+                if (pData.gtcData == null) return false;
+                out.writeInt(pData.gtcData.won);
+            }
+        }
+        out.writeUTF(pData.group);
+        out.writeInt(pData.cookies);
+        p.sendPluginMessage(MiniApi.plugin, "bungeesystem:miniapi", out.toByteArray());
+
+        return true;
     }
 }

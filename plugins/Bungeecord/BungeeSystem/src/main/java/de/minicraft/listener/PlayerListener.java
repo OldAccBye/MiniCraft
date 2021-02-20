@@ -16,6 +16,7 @@ import org.bson.Document;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerListener implements Listener {
     @EventHandler
@@ -31,46 +32,40 @@ public class PlayerListener implements Listener {
         ServerInfo serverInfo = e.getTarget();
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Login"); // Option
-        out.writeUTF(pData.group);
-        out.writeInt(pData.cookies);
+        out.writeUTF("login"); // Option
+        out.writeUTF(pData.data.getString("group"));
+        out.writeInt(pData.data.getInteger("cookies"));
         if (serverInfo.getName().contains("FFA")) {
             if (pData.ffaData == null) {
-                Document playerDoc = PlayerApi.getPlayerData(p, "ffa");
-                if (playerDoc.containsKey("status")) {
-                    if (playerDoc.getString("status").equals("error")) {
-                        e.setCancelled(true);
-                        p.disconnect(new TextComponent(playerDoc.getString("reason")));
-                        return;
-                    } else {
-                        pData.ffaData = new PlayerData.FFA(0, 0);
-                    }
-                } else {
-                    pData.ffaData = new PlayerData.FFA(playerDoc.getInteger("kills"), playerDoc.getInteger("deaths"));
+                Document playerDoc = PlayerApi.getData(p, "ffa");
+
+                if (playerDoc == null) {
+                    e.setCancelled(true);
+                    p.disconnect(new TextComponent("[01][ffaData] Irgendetwas ist schief gelaufen!"));
+                    return;
                 }
+
+                pData.ffaData = playerDoc;
             }
 
             // FFA DATA WRITE
-            out.writeInt(pData.ffaData.kills);
-            out.writeInt(pData.ffaData.deaths);
+            out.writeInt(pData.ffaData.getInteger("kills"));
+            out.writeInt(pData.ffaData.getInteger("deaths"));
         } else if (serverInfo.getName().contains("GTC")) {
             if (pData.gtcData == null) {
-                Document playerDoc = PlayerApi.getPlayerData(p, "gtc");
-                if (playerDoc.containsKey("status")) {
-                    if (playerDoc.getString("status").equals("error")) {
-                        e.setCancelled(true);
-                        p.disconnect(new TextComponent(playerDoc.getString("reason")));
-                        return;
-                    } else {
-                        pData.gtcData = new PlayerData.GTC(0);
-                    }
-                } else {
-                    pData.gtcData = new PlayerData.GTC(playerDoc.getInteger("won"));
+                Document playerDoc = PlayerApi.getData(p, "gtc");
+
+                if (playerDoc == null) {
+                    e.setCancelled(true);
+                    p.disconnect(new TextComponent("[01][gtcData] Irgendetwas ist schief gelaufen!"));
+                    return;
                 }
+
+                pData.gtcData = playerDoc;
             }
 
             // GTC DATA WRITE
-            out.writeInt(pData.gtcData.won);
+            out.writeInt(pData.gtcData.getInteger("won"));
         }
         e.getTarget().sendData("bungeesystem:miniapi", out.toByteArray());
     }
@@ -79,31 +74,37 @@ public class PlayerListener implements Listener {
     public void onPostLogin(PostLoginEvent e) {
         ProxiedPlayer p = e.getPlayer();
 
-        Document playerLoginDoc = PlayerApi.login(p);
+        if (BungeeSystem.playerList.containsKey(p.getUniqueId())) {
+            p.disconnect(new TextComponent("Du kannst dich erst 2 Sekunden nachdem du den Server verlassen hast wieder anmelden!"));
+            return;
+        }
 
-        if (playerLoginDoc.getString("status").equals("error")) {
-            p.disconnect(new TextComponent(playerLoginDoc.getString("reason")));
+        if (!PlayerApi.login(p)) {
+            p.disconnect(new TextComponent("[01][data] Irgendetwas ist schief gelaufen!"));
             return;
         }
 
         PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
-        if (pData.banned) {
+        if (pData.data.getBoolean("banned")) {
             Long currentDateTime = new Date().getTime();
 
-            if (pData.banExpiresTimestamp > currentDateTime) {
+            if (pData.data.getLong("banExpiresTimestamp") > currentDateTime) {
                 p.disconnect(new TextComponent("§cDu wurdest aus diesem Netzwerk ausgeschlossen." +
-                        "\n\n§cSeit §7>>§f " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(pData.banSinceTimestamp) +
-                        "\n§cAufhebung in §7>>§f " + Utils.convertTimestamp(currentDateTime, pData.banExpiresTimestamp) +
-                        "\n§cBegründung §7>>§f " + pData.banReason +
-                        "\n§cAusgeschlossen von §7>>§f " + pData.bannedFrom));
+                        "\n\n§cSeit §7>>§f " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(pData.data.getLong("banSinceTimestamp")) +
+                        "\n§cAufhebung in §7>>§f " + Utils.convertTimestamp(currentDateTime, pData.data.getLong("banExpiresTimestamp")) +
+                        "\n§cBegründung §7>>§f " + pData.data.getString("banReason") +
+                        "\n§cAusgeschlossen von §7>>§f " + pData.data.getString("bannedFrom")));
             }
         }
     }
 
     @EventHandler
     public void onPlayerDisconnect(PlayerDisconnectEvent e) {
-        if (!BungeeSystem.playerList.containsKey(e.getPlayer().getUniqueId())) return;
-        PlayerApi.saveAll(e.getPlayer().getUniqueId());
-        BungeeSystem.playerList.remove(e.getPlayer().getUniqueId());
+        // Soll nach 2 Sekunden ausgeführt
+        BungeeSystem.plugin.getProxy().getScheduler().schedule(BungeeSystem.plugin, () -> {
+            if (!BungeeSystem.playerList.containsKey(e.getPlayer().getUniqueId())) return;
+            PlayerApi.saveAll(e.getPlayer().getUniqueId());
+            BungeeSystem.playerList.remove(e.getPlayer().getUniqueId());
+        }, 2, TimeUnit.SECONDS);
     }
 }
