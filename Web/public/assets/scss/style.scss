@@ -15,6 +15,106 @@ body {
     background-color: #fafafa;
 }
 
+.btn {
+    &\:green {
+        border-color: #4a9e3f;
+        background-color: #5dbd50;
+        color: #fff !important;
+
+        &:hover,
+        &:focus {
+            background-color: #53ab47;
+        }
+    }
+
+    &\:discord {
+        border-color: #647fd6;
+        background-color: #6e8ae6;
+        color: #fff !important;
+
+        &:hover,
+        &:focus {
+            background-color: #647fd8;
+        }
+    }
+
+    &\:blue {
+        border-color: #3e7eb7;
+        background-color: #3b8dd6;
+        color: #fff !important;
+
+        &:hover,
+        &:focus {
+            background-color: #3b84c4;
+        }
+    }
+}
+
+.label {
+    border-bottom: 2px solid #e4e4e4;
+
+    &\:darkred {
+        border-bottom: 2px solid #be0000;
+    }
+
+    &\:red {
+        border-bottom: 2px solid #fe3f3f;
+    }
+
+    &\:blue {
+        border-bottom: 2px solid #3f3ffe;
+    }
+
+    &\:green {
+        border-bottom: 2px solid #00be00;
+    }
+
+    &\:black {
+        border-bottom: 2px solid #000;
+    }
+}
+
+.badge {
+    &\:grey {
+        padding: 2px 5px;
+        background: #6c757d;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 15px;
+        border: 1px solid #626b72;
+        border-bottom-width: 3px;
+    }
+
+    &\:green {
+        padding: 2px 5px;
+        background: #65d056;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 15px;
+        border: 1px solid #5dbd50;
+        border-bottom-width: 3px;
+    }
+
+    &\:red {
+        padding: 2px 5px;
+        background: #d05656;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 15px;
+        border: 1px solid #bd5050;
+        border-bottom-width: 3px;
+    }
+
+    &\:blue {
+        padding: 2px 5px;
+        background: #3b8dd6;
+        border-radius: 6px;
+        color: #fff;
+        border: 1px solid #3e7eb7;
+        border-bottom-width: 3px;
+    }
+}
+
 header {
     nav {
         background-color: #65d056;
@@ -69,9 +169,9 @@ header {
 }
 
 @media only screen and (max-width: 991.98px) {
-    main {
+    header {
         .jumbotron {
-            padding: 50px 0px;
+            padding: 75px 0px;
         }
     }
 }

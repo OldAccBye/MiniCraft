@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'), Schema = mongoose.Schema;
 
-const playerSchema = new Schema({
+const schema = new Schema({
     username: {
         type: String,
         required: true
@@ -41,6 +41,6 @@ const playerSchema = new Schema({
         type: String,
         required: true
     }
-}), players = mongoose.model('players', playerSchema);
+}), data = mongoose.model('players', schema);
 
-module.exports = players;
+module.exports = data;

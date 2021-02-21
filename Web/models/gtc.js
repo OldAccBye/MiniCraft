@@ -6,14 +6,10 @@ const schema = new Schema({
         type: String,
         required: true
     },
-    kills: {
-        type: Number,
-        required: true
-    },
-    deaths: {
+    won: {
         type: Number,
         required: true
     }
-}), data = mongoose.model('ffa', schema);
+}), data = mongoose.model('gtc', schema);
 
 module.exports = data;

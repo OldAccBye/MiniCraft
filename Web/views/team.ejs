@@ -11,29 +11,67 @@
 
             <h3 class="label:darkred">Owner</h3>
             <div class="shadow-sm bg-white rounded list-row mb-3">
+                <% for (var user of o) { %>
                 <div class="list-item">
-                    <div><span class="avatar"><img src="assets/img/user/EntenKoeniq.png" alt="."></span></div>
+                    <div><span class="avatar"><img src="https://crafatar.com/avatars/<%= user.UUID %>" alt="."></span></div>
                     <div class="flex px-3">
-                        <span class="badge bg-primary">EntenKoeniq</span>
-                        <div><small>Hi :)</small></div>
+                        <a href="/p/<%= user.username %>" class="text-decoration-none text-light badge bg-primary"><%= user.username %></a>
+                        <div><small class="text-muted">Keine Beschreibung...</small></div>
                     </div>
                 </div>
+                <% } %>
             </div>
 
             <h3 class="label:red">Admin</h3>
             <div class="shadow-sm bg-white rounded list-row mb-3">
+                <% for (var user of a) { %>
+                <div class="list-item">
+                    <div><span class="avatar"><img src="https://crafatar.com/avatars/<%= user.UUID %>" alt="."></span></div>
+                    <div class="flex px-3">
+                        <a href="/p/<%= user.username %>" class="text-decoration-none text-light badge bg-primary"><%= user.username %></a>
+                        <div><small class="text-muted">Keine Beschreibung...</small></div>
+                    </div>
+                </div>
+                <% } %>
             </div>
 
             <h3 class="label:green">Moderator</h3>
             <div class="shadow-sm bg-white rounded list-row mb-3">
+                <% for (var user of m) { %>
+                <div class="list-item">
+                    <div><span class="avatar"><img src="https://crafatar.com/avatars/<%= user.UUID %>" alt="."></span></div>
+                    <div class="flex px-3">
+                        <a href="/p/<%= user.username %>" class="text-decoration-none text-light badge bg-primary"><%= user.username %></a>
+                        <div><small class="text-muted">Keine Beschreibung...</small></div>
+                    </div>
+                </div>
+                <% } %>
             </div>
 
             <h3 class="label:blue">Supporter</h3>
             <div class="shadow-sm bg-white rounded list-row mb-3">
+                <% for (var user of s) { %>
+                <div class="list-item">
+                    <div><span class="avatar"><img src="https://crafatar.com/avatars/<%= user.UUID %>" alt="."></span></div>
+                    <div class="flex px-3">
+                        <a href="/p/<%= user.username %>" class="text-decoration-none text-light badge bg-primary"><%= user.username %></a>
+                        <div><small class="text-muted">Keine Beschreibung...</small></div>
+                    </div>
+                </div>
+                <% } %>
             </div>
 
             <h3 class="label:black">Builder</h3>
             <div class="shadow-sm bg-white rounded list-row mb-3">
+                <% for (var user of b) { %>
+                <div class="list-item">
+                    <div><span class="avatar"><img src="https://crafatar.com/avatars/<%= user.UUID %>" alt="."></span></div>
+                    <div class="flex px-3">
+                        <a href="/p/<%= user.username %>" class="text-decoration-none text-light badge bg-primary"><%= user.username %></a>
+                        <div><small class="text-muted">Keine Beschreibung...</small></div>
+                    </div>
+                </div>
+                <% } %>
             </div>
         </div>
     </main>

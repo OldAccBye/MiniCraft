@@ -1,31 +1,49 @@
 <%- include('header'); %>
 
     <main>
-        <div class="container">
-            <div class="text-center my-3">
+        <div class="container my-3">
+            <div class="text-center mb-3">
                 <h3>Die besten Spieler!</h3>
                 <p>
                     Hier sind die besten Spieler aus unserem Netzwerk in den verschiedenen Minigames aufgelistet!
                 </p>
             </div>
 
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card mb-3 shadow-sm text-center">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
+                <div class="col">
+                    <div class="card shadow-sm text-center h-100">
                         <div class="card-header">
                             <h4 class="my-0 fw-normal">Free-For-All</h4>
                         </div>
                         <div class="card-body">
-                            <span><img src="https://crafatar.com/avatars/<%= typeof ffa != 'undefined' ? ffa.uuid : 0 %>" alt="."></span>
-                            <h1 class="card-title pricing-card-title"><%= typeof ffa !== 'undefined' ? ffa.username : 'null' %></h1>
+                            <span><img src="https://crafatar.com/avatars/<%= ffa.uuid %>" alt="."></span>
+                            <h1 class="card-title pricing-card-title"><%= ffa.username %></h1>
                             <h4 class="text-muted">Statistiken</h4>
-                            <ul class="list-unstyled mt-3 mb-2">
-                                <li class="mb-2"><span class="badge:green text:shadow-sm fw-bold"><%= typeof ffa !== 'undefined' ? ffa.kills : 0 %> Kills</span></li>
-                                <li><span class="badge:green text:shadow-sm fw-bold"><%= typeof ffa !== 'undefined' ? ffa.deaths : 0 %> Tode</span></li>
+                            <ul class="list-unstyled mt-3 mb-0">
+                                <li class="mb-2"><span class="badge:green text:shadow-sm fw-bold"><%= ffa.kills %> Kills</span></li>
+                                <li><span class="badge:green text:shadow-sm fw-bold"><%= ffa.deaths %> Tode</span></li>
                             </ul>
                         </div>
                         <div class="card-footer">
-                            <a href="/p/<%= typeof ffa !== 'undefined' ? ffa.username : 'null' %>"><button type="button" class="w-100 btn btn:green">Profil</button></a>
+                            <a href="/p/<%= ffa.username %>"><button type="button" class="w-100 btn btn:green">Profil</button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mt-3 mt-sm-0">
+                    <div class="card shadow-sm text-center h-100">
+                        <div class="card-header">
+                            <h4 class="my-0 fw-normal">Get-The-Chicken</h4>
+                        </div>
+                        <div class="card-body">
+                            <span><img src="https://crafatar.com/avatars/<%= gtc.uuid %>" alt="."></span>
+                            <h1 class="card-title pricing-card-title"><%= gtc.username %></h1>
+                            <h4 class="text-muted">Statistiken</h4>
+                            <ul class="list-unstyled mt-3 mb-0">
+                                <li><span class="badge:green text:shadow-sm fw-bold"><%= gtc.won %>x Gewonnen</span></li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <a href="/p/<%= gtc.username %>"><button type="button" class="w-100 btn btn:green">Profil</button></a>
                         </div>
                     </div>
                 </div>
