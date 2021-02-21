@@ -8,11 +8,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerListener implements Listener {
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) { e.setJoinMessage(""); }
+    public void onPlayerJoin(PlayerJoinEvent e) { e.setJoinMessage(null); }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
-        e.setQuitMessage("");
+        e.setQuitMessage(null);
         MiniApi.playerList.remove(e.getPlayer().getUniqueId());
     }
 }
