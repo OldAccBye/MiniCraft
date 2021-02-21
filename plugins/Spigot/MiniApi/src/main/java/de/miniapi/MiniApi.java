@@ -48,7 +48,7 @@ public class MiniApi extends JavaPlugin {
             }
 
             Configuration cfg = YamlConfiguration.loadConfiguration(file);
-            String serverName = cfg.getString("Server");
+            String serverName = cfg.getString("server");
             Configs.serverName = serverName != null ? serverName.toLowerCase() : "default";
         }
 

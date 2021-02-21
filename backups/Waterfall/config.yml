@@ -8,8 +8,7 @@ listeners:
   forced_hosts:
   ping_passthrough: false
   priorities:
-  - Lobby-01
-  - Lobby-02
+  - lobby
   bind_local_address: true
   host: 0.0.0.0:25565
   max_players: 100
@@ -36,25 +35,21 @@ disabled_commands:
 - bungee
 - perms
 servers:
-  Lobby-01:
+  lobby:
     motd: |-
       &8>&7> &fMiniCraft &7<&8< &aMinigames Netzwerk&r
       &c[&b1.16.x&c][&bEntwicklungsphase&c]
     address: 127.0.0.1:25566
     restricted: false
-  Lobby-02:
-    motd: Lobby
-    address: 127.0.0.1:25567
-    restricted: false
-  FFA:
+  ffa:
     motd: FFA
     address: 127.0.0.1:25568
     restricted: false
-  GTC-01:
+  gtc-01:
     motd: GTC
     address: 127.0.0.1:25569
     restricted: false
-  GTC-02:
+  gtc-02:
     motd: GTC
     address: 127.0.0.1:25570
     restricted: false

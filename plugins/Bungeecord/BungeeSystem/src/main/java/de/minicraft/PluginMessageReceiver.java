@@ -19,35 +19,36 @@ public class PluginMessageReceiver implements Listener {
     public void onPluginMessage(PluginMessageEvent e) {
         if (!(e.getReceiver() instanceof ProxiedPlayer)) return;
         ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
+        if (p == null) return; // Vorsichtshalber diese Abfrage
+
         PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
         if (pData == null) { // To Do: Direkt nach dem Login den Server zu wechseln sorgt für einen Kick
-            p.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
+            p.disconnect(new TextComponent("[b-opm-01] Es konnten keine Spielerdaten gefunden werden. Melde dies im Support, sollte dieser Fehler erneut auftauchen."));
             return;
         }
 
         ByteArrayDataInput in = ByteStreams.newDataInput(e.getData());
 
-        BungeeSystem.plugin.getLogger().severe("DATA GET FROM: " + e.getTag());
-
         switch (e.getTag()) {
             case "bungeesystem:lobby" -> { // LOBBY -> SERVER
                 if (in.readUTF().equals("connect")) { // SERVER (SWITCH)
                     String serverName = in.readUTF();
-                    int maxPlayers = in.readInt(), serverFound = 0;
+                    int serverFound = 0;
 
                     for (Map.Entry<String, ServerInfo> entry : BungeeSystem.plugin.getProxy().getServersCopy().entrySet()) {
                         if (!entry.getKey().contains(serverName)) continue;
                         ServerInfo value = entry.getValue();
-                        if (value.getPlayers().size() >= maxPlayers) {
-                            serverFound += 1;
-                            continue;
-                        }
 
                         try {
                             Socket s = new Socket();
                             s.connect(value.getSocketAddress(), 15);
                             s.close();
                         } catch (IOException ignored) {
+                            continue;
+                        }
+
+                        if (value.getPlayers().size() >= Configs.config.getInt("servers." + serverName + ".maxPlayers")) {
+                            serverFound += 1;
                             continue;
                         }
 

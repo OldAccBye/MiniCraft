@@ -28,7 +28,7 @@ public class ChatListener implements Listener {
         PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
         if (pData == null) {
             e.setCancelled(true);
-            p.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
+            p.disconnect(new TextComponent("[b-oc-01] Es konnten keine Spielerdaten gefunden werden. Melde dies im Support, sollte dieser Fehler erneut auftauchen."));
             return;
         }
 

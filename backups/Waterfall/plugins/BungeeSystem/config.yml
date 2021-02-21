@@ -7,3 +7,8 @@ mongodb:
     - player
     - ffa
     - gtc
+servers:
+  gtc:
+    maxPlayers: 16
+  ffa:
+    maxPlayers: 50

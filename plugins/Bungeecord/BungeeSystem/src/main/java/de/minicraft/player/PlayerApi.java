@@ -9,6 +9,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,7 +50,8 @@ public class PlayerApi {
                                 .append("banSinceTimestamp", 0)
                                 .append("banExpiresTimestamp", 0)
                                 .append("banReason", "")
-                                .append("bannedFrom", "");
+                                .append("bannedFrom", "")
+                                .append("registrationTimestamp", new Date().getTime());
                         BungeeSystem.mongo.collections.get("player").insertOne(playerDoc);
                         return playerDoc;
                     }
@@ -107,7 +109,7 @@ public class PlayerApi {
     public static List<String> getAllPermissions(ProxiedPlayer p) {
         PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
         if (pData == null) {
-            p.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
+            p.disconnect(new TextComponent("[b-gap-01] Es konnten keine Spielerdaten gefunden werden. Melde dies im Support, sollte dieser Fehler erneut auftauchen."));
             return null;
         }
 

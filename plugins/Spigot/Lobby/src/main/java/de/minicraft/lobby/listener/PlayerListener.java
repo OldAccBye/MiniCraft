@@ -167,13 +167,7 @@ public class PlayerListener implements Listener {
                 if (iName.contains("§c§l")) {
                     ByteArrayDataOutput out = ByteStreams.newDataOutput();
                     out.writeUTF("connect");
-                    out.writeUTF(iName.replace("§c§l", ""));
-
-                    switch (iName.replace("§c§l", "").toLowerCase(Locale.ROOT)) {
-                        case "gtc" -> out.writeInt(16);
-                        case "ffa" -> out.writeInt(50);
-                    }
-
+                    out.writeUTF(iName.replace("§c§l", "").toLowerCase());
                     p.sendPluginMessage(Lobby.plugin, "bungeesystem:lobby", out.toByteArray());
                 }
             }

@@ -1,10 +1,6 @@
 package de.minicraft.player.commands;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import de.minicraft.BungeeSystem;
-import de.minicraft.Configs;
-import de.minicraft.player.PlayerData;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -51,16 +47,13 @@ public class TpServerCommand extends Command implements TabExecutor {
             return;
         }
 
-        String p1ServerName = p1.getServer().getInfo().getName();
-        String p2ServerName = p2.getServer().getInfo().getName();
-
-        if (p1ServerName.equals(p2ServerName)) {
-            p.sendMessage(new TextComponent("§c[FEHLER]: §fDiese Spieler befinden sich bereits auf dem selben Server!"));
+        if (p2.getServer() == null) {
+            p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich gerade auf keinen Server!"));
             return;
         }
 
-        if (p1ServerName.equals("GTC")) {
-            p.sendMessage(new TextComponent("§c[FEHLER]: §fDer Spieler §6" + args[0] + "§f befindet sich auf einem GTC Server!"));
+        if (p1.getServer().getInfo().getName().equals(p2.getServer().getInfo().getName())) {
+            p.sendMessage(new TextComponent("§c[FEHLER]: §fDiese Spieler befinden sich bereits auf dem selben Server!"));
             return;
         }
 
