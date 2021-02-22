@@ -1,1 +1,1 @@
-screen -S MiniWeb node app.js
+screen -S MiniWeb npm start
