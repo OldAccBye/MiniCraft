@@ -6,6 +6,7 @@ import de.minicraft.player.PlayerData;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -17,9 +18,9 @@ import java.util.Map;
 public class PluginMessageReceiver implements Listener {
     @EventHandler
     public void onPluginMessage(PluginMessageEvent e) {
-        if (!(e.getReceiver() instanceof ProxiedPlayer)) return;
+        if (e.getReceiver() == null || !(e.getReceiver() instanceof ProxiedPlayer) || !(e.getSender() instanceof Server)) return;
         ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
-        if (p == null) return; // Vorsichtshalber diese Abfrage
+        String serverName = ((Server) e.getSender()).getInfo().getName();
 
         PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
         if (pData == null) { // To Do: Direkt nach dem Login den Server zu wechseln sorgt für einen Kick
@@ -32,7 +33,7 @@ public class PluginMessageReceiver implements Listener {
         switch (e.getTag()) {
             case "bungeesystem:lobby" -> { // LOBBY -> SERVER
                 if (in.readUTF().equals("connect")) { // SERVER (SWITCH)
-                    String serverName = in.readUTF();
+                    serverName = in.readUTF();
                     int serverFound = 0;
 
                     for (Map.Entry<String, ServerInfo> entry : BungeeSystem.plugin.getProxy().getServersCopy().entrySet()) {
@@ -66,12 +67,14 @@ public class PluginMessageReceiver implements Listener {
             case "bungeesystem:miniapi" -> {
                 if (in.readUTF().equals("save")) {
                     BungeeSystem.plugin.getLogger().warning("[SAVE] " + p.getName());
-                    switch (in.readUTF()) {
-                        case "ffa" -> {
-                            pData.ffaData.put("kills", in.readInt());
-                            pData.ffaData.put("deaths", in.readInt());
-                        }
-                        case "gtc" -> pData.gtcData.put("won", in.readInt());
+                    if (serverName.contains("ffa"))
+                    {
+                        pData.ffaData.put("kills", in.readInt());
+                        pData.ffaData.put("deaths", in.readInt());
+                    }
+                    else if (serverName.contains("gtc"))
+                    {
+                        pData.gtcData.put("won", in.readInt());
                     }
                     pData.data.put("group", in.readUTF());
                     pData.data.put("cookies", in.readInt());

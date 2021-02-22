@@ -3,10 +3,9 @@ package de.minicraft.minibasics.listener;
 import de.miniapi.player.PlayerData;
 import de.minicraft.minibasics.Configs;
 import de.minicraft.minibasics.MiniBasics;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,7 +22,7 @@ public class ChatListener implements Listener {
 
         PlayerData pData = MiniBasics.api.getPlayer(p.getUniqueId());
         if (pData == null) {
-            MiniBasics.plugin.getServer().getScheduler().runTask(MiniBasics.plugin, () -> p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
+            MiniBasics.plugin.getServer().getScheduler().runTask(MiniBasics.plugin, () -> p.kick(Component.text("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.")));
             return;
         }
 
@@ -33,7 +32,7 @@ public class ChatListener implements Listener {
 
             if (t == null)
                 p.sendMessage("§c[FEHLER]: §fSpieler nicht gefunden!");
-            else if (tName.equals(p.getName())) {
+            else if (1 == 1) { // tName.equals(p.getName())
                 p.sendMessage("§c[FEHLER]: §fDu kannst dich nicht selber markieren!");
             } else {
                 t.sendMessage("§3§l[§2SERVER§3§l] §aDu wurdest von " + p.getName() + " erwähnt.");
@@ -41,15 +40,16 @@ public class ChatListener implements Listener {
                 String beforeAt = e.getMessage().substring(0, e.getMessage().indexOf("@")),
                         afterAt = e.getMessage().substring(e.getMessage().lastIndexOf(tName) + tName.length());
 
-                TextComponent mainComponent = new TextComponent(pData.prefix + p.getName() + ": " + beforeAt);
-                TextComponent subComponent = new TextComponent("§b@" + t.getName() + "§r");
-                subComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§7<KLICK>§r Profil anzeigen")));
-                subComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://minicraft.network/p/" + t.getName()));
-                mainComponent.addExtra(subComponent);
-                mainComponent.addExtra(afterAt);
+                TextComponent textComponent = Component.text(pData.prefix + p.getName() + ": " + beforeAt)
+                        .append(
+                                Component.text("§b@" + t.getName() + "§r")
+                                .hoverEvent(Component.text("§7<KLICK>§r Profil anzeigen"))
+                                .clickEvent(ClickEvent.openUrl("https://minicraft.network/p/" + t.getName()))
+                        )
+                        .append(Component.text(afterAt));
 
                 for (Player players : p.getWorld().getPlayers())
-                    players.spigot().sendMessage(mainComponent);
+                    players.sendMessage(textComponent);
 
                 return;
             }
@@ -65,7 +65,7 @@ public class ChatListener implements Listener {
         PlayerData pData = MiniBasics.api.getPlayer(p.getUniqueId());
         if (pData == null) {
             e.setCancelled(true);
-            p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
+            p.kick(Component.text("[mb-oc-01] Es konnten keine Spielerdaten gefunden werden. Melde dies im Support, sollte dieser Fehler erneut auftauchen."));
             return;
         }
 

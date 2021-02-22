@@ -75,7 +75,6 @@ public class MiniApi extends JavaPlugin {
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("save");
-        out.writeUTF(Configs.serverName);
         switch (Configs.serverName) {
             case "ffa" -> {
                 if (pData.ffaData == null) return false;

@@ -32,7 +32,11 @@ public class ChatListener implements Listener {
             return;
         }
 
-        if (!pData.permissions.contains(Configs.commandList.getString(command.replace("/", "")))) {
+        String commandWithoutSlash = command.replace("/", "");
+
+        if (!Configs.commandList.getKeys().contains(commandWithoutSlash)) return;
+
+        if (!pData.permissions.contains(Configs.commandList.getString(commandWithoutSlash))) {
             e.setCancelled(true);
             p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst diesen Befehl nicht ausführen!"));
         }

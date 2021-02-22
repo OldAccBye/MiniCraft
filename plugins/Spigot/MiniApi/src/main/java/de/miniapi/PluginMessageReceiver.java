@@ -3,6 +3,7 @@ package de.miniapi;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import de.miniapi.player.PlayerData;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
@@ -28,7 +29,7 @@ public class PluginMessageReceiver implements PluginMessageListener {
             case "update" -> {
                 PlayerData pData = MiniApi.playerList.get(p.getUniqueId());
                 if (pData == null) {
-                    p.kickPlayer("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden.");
+                    p.kick(Component.text("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
                     return;
                 }
 
