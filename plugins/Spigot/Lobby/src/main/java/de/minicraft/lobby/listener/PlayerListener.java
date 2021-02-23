@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.miniapi.player.PlayerData;
 import de.minicraft.lobby.Lobby;
+import de.minicraft.lobby.player.PlayerScoreboard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
@@ -27,6 +28,7 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         lastAction.put(e.getPlayer().getUniqueId(), new Date().getTime());
         e.getPlayer().sendTitle("§3Willkommen", "auf dem §aMiniCraft Netzwerk§r!", 10, 70, 20);
+        PlayerScoreboard.update(e.getPlayer());
 
         // Inventory
         {
@@ -41,7 +43,7 @@ public class PlayerListener implements Listener {
                 if (im != null) {
                     im.displayName(Component.text("§3§lNavigator"));
                     i.setItemMeta(im);
-                    e.getPlayer().getInventory().setItem(4, i);
+                    e.getPlayer().getInventory().setItem(0, i);
                 }
             }
 
@@ -52,7 +54,18 @@ public class PlayerListener implements Listener {
                 if (im != null) {
                     im.displayName(Component.text("§3§lEmote"));
                     i.setItemMeta(im);
-                    e.getPlayer().getInventory().setItem(0, i);
+                    e.getPlayer().getInventory().setItem(4, i);
+                }
+            }
+
+            // Premium
+            {
+                i = new ItemStack(Material.GOLD_INGOT);
+                im = i.getItemMeta();
+                if (im != null) {
+                    im.displayName(Component.text("§6§lPremium"));
+                    i.setItemMeta(im);
+                    e.getPlayer().getInventory().setItem(3, i);
                 }
             }
         }
@@ -137,6 +150,22 @@ public class PlayerListener implements Listener {
 
                 e.getPlayer().openInventory(i);
             }
+            case "§6§lPremium" -> {
+                i = Bukkit.createInventory(null, 9, Component.text("§6§lPremium"));
+
+                // KAUFEN
+                is = new ItemStack(Material.DIAMOND);
+                im = is.getItemMeta();
+                if (im == null) return;
+                im.displayName(Component.text("1 Monat §6§lPremium §rfür §n950 Cookies"));
+                im.lore(Arrays.asList(Component.text("§aAlle Vorteile als Premium findest du auf:"), Component.text("§nhttps://minicraft.network/premium")));
+                im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                is.setItemMeta(im);
+
+                i.setItem(4, is); // Set item
+
+                e.getPlayer().openInventory(i);
+            }
         }
     }
 
@@ -150,50 +179,66 @@ public class PlayerListener implements Listener {
         Player p = (Player) e.getWhoClicked();
         if (p.getGameMode() != GameMode.ADVENTURE) return;
 
+        PlayerData pData = Lobby.api.getPlayer(p.getUniqueId());
+        if (pData == null) {
+            p.kick(Component.text("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
+            return;
+        }
+
         e.setCancelled(true);
 
         ItemMeta im = e.getCurrentItem().getItemMeta();
-        if (im == null) return;
-
-        Component displayNameComponent = im.displayName();
-        if (displayNameComponent == null) return;
-        String displayName = LegacyComponentSerializer.legacyAmpersand().serialize(displayNameComponent);
+        if (im == null || e.getClickedInventory() == p.getInventory()) return;
 
         long currentDateTime = new Date().getTime();
 
         if (currentDateTime <= (lastAction.get(p.getUniqueId()) + 2000)) { // 2000 = 2 Sekunden
             p.sendMessage("§c[FEHLER]: §fWarte einen Augenblick bevor du eine neue Aktion ausführst!");
+            p.closeInventory();
             return;
         }
 
         lastAction.computeIfPresent(p.getUniqueId(), (k, v) -> v = currentDateTime);
 
-        String viewTitle = LegacyComponentSerializer.legacyAmpersand().serialize(e.getView().title());
-        Lobby.plugin.getLogger().severe(viewTitle + " | " + displayName);
+        Component displayNameComponent = im.displayName();
+        if (displayNameComponent == null) return;
+        String displayName = LegacyComponentSerializer.legacyAmpersand().serialize(displayNameComponent),
+                viewTitle = LegacyComponentSerializer.legacyAmpersand().serialize(e.getView().title());
 
         switch (viewTitle) {
             case "§3§lNavigator" -> {
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("connect");
-                out.writeUTF(displayName.toLowerCase());
-                p.sendPluginMessage(Lobby.plugin, "bungeesystem:lobby", out.toByteArray());
+                if (displayName.contains("§c§l")) {
+                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                    out.writeUTF("connect");
+                    out.writeUTF(displayName.replace("§c§l", "").toLowerCase());
+                    p.sendPluginMessage(Lobby.plugin, "bungeesystem:lobby", out.toByteArray());
+                }
             }
             case "§3§lEmote" -> {
-                PlayerData pData = Lobby.api.getPlayer(p.getUniqueId());
-                if (pData == null) {
-                    p.kick(Component.text("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
-                    return;
-                }
-
-                if (pData.group.equals("default")) {
+                if (pData.group.equals("default"))
                     p.sendMessage("§c[FEHLER]: §fDu musst Premium, Donator oder ein Teammitglied sein!");
-                    return;
+                else {
+                    switch (displayName) {
+                        case "§4§lLiebe" -> p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
+                        case "§c§lWut" -> p.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
+                        case "§a§lFreude" -> p.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
+                    }
                 }
-
-                switch (displayName) {
-                    case "§4§lLiebe" -> p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
-                    case "§c§lWut" -> p.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
-                    case "§a§lFreude" -> p.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
+            }
+            case "§6§lPremium" -> {
+                if (displayName.equals("1 Monat §6§lPremium §rfür §n950 Cookies")) {
+                    if (pData.group.equals("premium"))
+                        p.sendMessage("§c[FEHLER]: §fDu besitzt bereits Mitglied der Gruppe Premium!");
+                    else if (!pData.group.equals("default"))
+                        p.sendMessage("§c[FEHLER]: §fDu bist bereits Mitglied einer Gruppe mit all den selben Funktionen!");
+                    else if (pData.cookies < 950)
+                        p.sendMessage("§c[FEHLER]: §fDu besitzt nicht genügend Cookies!");
+                    else {
+                        pData.cookies -= 950;
+                        pData.group = "premium";
+                        p.updateCommands();
+                        p.sendMessage("§3§l[§2SERVER§3§l] §aDu bist nun Mitglied der Gruppe §6Premium§a!");
+                    }
                 }
             }
         }
