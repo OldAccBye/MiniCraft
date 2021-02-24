@@ -8,6 +8,7 @@ app.use(express.json());
 
 // Router
 app.use('/', require('./routes/get'));
+app.use('/post', require('./routes/post'));
 
 app.use(async (req, res, next) => {
     if (res.status(404)) return res.render('error', { userCount: await players.countDocuments(), title: '404', msg: 'Diese Seite existiert nicht!' });

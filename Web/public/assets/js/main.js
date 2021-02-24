@@ -1,21 +1,35 @@
 $(() => {
-    if ($('#donate') !== null) {
-        $('#donate').on('submit', async (e) => {
+    if ($('#buyPremium') !== null) {
+        $('#buyPremium').on('submit', async (e) => {
             e.preventDefault();
         
             const formData = new FormData(e.target);
         
-            await fetch('/posts/donate', {
+            await fetch('/post/buyPremium', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: formData.get('username'),
+                    uuid: formData.get('uuid'),
                     securitycode: formData.get('securitycode'),
-                    email: formData.get('email'),
-                    pin: formData.get('pin'),
-                    sendMail: formData.has('sendMail') ? 1 : 0
+                    endOfPremium: formData.get('endOfPremium')
+                })
+            }).then(response => response.json()).then(data => $('#message').html(data.message));
+        });
+    } else if ($('#getUUID') !== null) {
+        $('#getUUID').on('submit', async (e) => {
+            e.preventDefault();
+        
+            const formData = new FormData(e.target);
+        
+            await fetch('/post/getUUID', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: formData.get('username')
                 })
             }).then(response => response.json()).then(data => $('#message').html(data.message));
         });

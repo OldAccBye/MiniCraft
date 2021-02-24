@@ -13,6 +13,10 @@ const schema = new Schema({
         type: String,
         required: true
     },
+    endOfPremium: {
+        type: Number,
+        required: true
+    },
     cookies: {
         type: Number,
         required: true

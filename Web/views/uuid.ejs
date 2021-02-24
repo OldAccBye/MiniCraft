@@ -1,0 +1,30 @@
+<%- include('header'); %>
+
+    <main class="my-3">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h5 class="alert-heading">Hinweis!</h5>
+                        <p class="mb-0">
+                            Trag einen aktuellen Benutzernamen von Minecraft ein um die UUID von diesem Spieler herauszufinden.
+                        </p>
+                    </div>
+                    <form id="getUUID" action="" method="post">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingUsername" name="username" placeholder="Benutzername" required minlength="3" maxlength="16">
+                            <label for="floatingUsername">Benutzername</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="w-100 btn btn:green" form="getUUID">UUID holen</button>
+                </div>
+            </div>
+            <div id="message"></div>
+        </div>
+    </main>
+    <script src="/assets/js/nquery.prod.js"></script>
+    <script src="/assets/js/main.js"></script>
+
+<%- include('footer'); %>

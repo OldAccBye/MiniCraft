@@ -1,0 +1,50 @@
+<%- include('header'); %>
+
+    <main class="my-3">
+        <div class="container">
+            <div class="shadow-sm p-3 bg-white rounded mb-3">
+                <p>
+                    Eine Mitgliedschaft der Gruppe Premium kann sich mit unserer eigenen Währung auf unserem Netzwerk (Cookies) welche man sich durch das Spielen von Minigames auf unserem Netzwerk oder durch Events verdienen kann sich direkt auf unserem Netzwerk in der Lobby oder auf dieser Seite (Weiter unten) sich kaufen und alle Funktionen die normale Spieler nicht besitzen auskosten.
+                </p>
+                <p class="mb-0">
+                    Die Mitgliedschaft nach dem Kauf durch unsere Währung auf unserem Netzwerk hält für 1 Monat (Beispiel: Man kauft sich Premium am 23.02 und dieser geht bis zum 23.03) und ist nicht stapelbar! danach kann sich eine neue Mitgliedschaft mit unserer eigenen Währung auf dem Netzwerk gekauft werden.
+                </p>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div id="message"></div>
+                    <div class="alert alert-warning">
+                        <h5 class="alert-heading">Hinweis!</h5>
+                        <p class="mb-0">
+                            Solltest Du Fragen zur UUID oder dem Sicherheitscode haben, kannst Du Dich entweder <a href="/help">HIER</a> informieren oder Dich bei uns auf dem Discord Server unter Support melden. 
+                        </p>
+                    </div>
+                    <form id="buyPremium" action="" method="post">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="floatingSelect" name="endOfPremium" aria-label="Floating label select example">
+                                <option value="1">1 Monat (950 Cookies)</option>
+                                <option value="2">2 Monate (1750 Cookies)</option>
+                                <option value="3">3 Monate (2500 Cookies)</option>
+                            </select>
+                            <label for="floatingSelect">Wähle die Dauer deiner Mitgliedschaft</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingUsername" name="uuid" placeholder="1234-1234-1234-1234" required minlength="36" maxlength="36">
+                            <label for="floatingUsername">UUID</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="floatingSecuritycode" name="securitycode" placeholder="abc123" required minlength="3" maxlength="16">
+                            <label for="floatingSecuritycode">Sicherheitscode</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="w-100 btn btn:green" form="buyPremium">Premium kaufen!</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="/assets/js/nquery.prod.js"></script>
+    <script src="/assets/js/main.js"></script>
+
+<%- include('footer'); %>

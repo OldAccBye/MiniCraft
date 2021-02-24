@@ -115,6 +115,16 @@ body {
     }
 }
 
+.status-border {
+    &\:offline {
+        border: 3px solid #d05656;
+    }
+
+    &\:online {
+        border: 3px solid #65d056;
+    }
+}
+
 header {
     nav {
         background-color: #65d056;
