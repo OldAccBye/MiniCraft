@@ -41,7 +41,7 @@
                     </div>
                     <div class="overflow-auto card shadow-sm">
                         <div class="card-header text-center">Namensverlauf</div>
-                        <div class="card-body">
+                        <div class="card-body custom-scrollbar">
                             <div class="overflow-auto" style="max-height: 200px;">
                                 <% profil.lastNameList.slice().reverse().forEach((item) => {
                                     if (item.changedToAt) { %>
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <h3 class="label mt-2">Minigames</h3>
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
                 <div class="col">
                     <div class="card bg-dark text-white">
                         <img src="/assets/img/mgffa.png" class="card-img" alt="...">
@@ -92,7 +92,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col mt-3 mt-sm-0">
+                <div class="col mt-3 mt-md-0">
                     <div class="card bg-dark text-white">
                         <img src="/assets/img/mggtc.png" class="card-img" alt="...">
                         <div class="card-img-overlay p-0">
