@@ -6,11 +6,11 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/team', async (req, res) => {
-    const b = await players.find({ group: "builder" }),
-    s = await players.find({ group: "supporter" }),
-    m = await players.find({ group: "moderator" }),
-    a = await players.find({ group: "admin" }),
-    o = await players.find({ group: "owner" });
+    const b = await players.find({ group: "builder" }, 'UUID username'),
+    s = await players.find({ group: "supporter" }, 'UUID username'),
+    m = await players.find({ group: "moderator" }, 'UUID username'),
+    a = await players.find({ group: "admin" }, 'UUID username'),
+    o = await players.find({ group: "owner" }, 'UUID username');
 
     res.render('team', { userCount: await players.countDocuments(), b: b, s: s, m: m, a: a, o: o });
 });
@@ -21,14 +21,14 @@ router.get('/top', async (req, res) => {
 
     // FFA
     let game = await playersFFA.find().sort({ kills: -1, deaths: 1 }).limit(1),
-    player = await players.findOne({ UUID: game[0].UUID });
+    player = await players.findOne({ UUID: game[0].UUID }, 'username');
 
     if (game !== null && player !== null)
         FFAData = { uuid: game[0].UUID, username: player.username, kills: game[0].kills, deaths: game[0].deaths };
 
     // GTC
     game = await playersGTC.find().sort({ won: -1 }).limit(1);
-    player = await players.findOne({ UUID: game[0].UUID });
+    player = await players.findOne({ UUID: game[0].UUID }, 'username');
 
     if (game !== null && player !== null)
         GTCData = { uuid: game[0].UUID, username: player.username, won: game[0].won };
@@ -53,19 +53,19 @@ router.get('/help', async (req, res) => {
 });
 
 router.get('/p/:uuid', async (req, res) => {
-    const player = await players.findOne({ UUID: req.params.uuid });
+    const player = await players.findOne({ UUID: req.params.uuid }, 'username banned group');
     if (player === null)
         return res.render('profil', { userCount: await players.countDocuments(), error: 'notFound' });
 
     let FFAData = { kills: 0, deaths: 0 }, GTCData = { won: 0 }, lastNameList = [{ name: "Fehler" }], onlineStatus = "offline";
 
-    let game = await playersFFA.findOne({ UUID: player.UUID });
+    let game = await playersFFA.findOne({ UUID: req.params.uuid }, 'kills deaths');
     if (game !== null)
-        FFAData = { kills: game.kills, deaths: game.deaths };
+        FFAData = game;
     
-    game = await playersGTC.findOne({ UUID: player.UUID });
+    game = await playersGTC.findOne({ UUID: req.params.uuid }, 'won');
     if (game !== null)
-        GTCData = { won: game.won };
+        GTCData = game;
     
     const response = await fetch(`https://api.mojang.com/user/profiles/${req.params.uuid}/names`);
     if (response.status === 200) {
@@ -77,7 +77,7 @@ router.get('/p/:uuid', async (req, res) => {
     if (await playersOnline.exists({ UUID: req.params.uuid }))
         onlineStatus = "online";
 
-    const profilData = { uuid: player.UUID,
+    const profilData = { uuid: req.params.uuid,
         username: player.username,
         banned: player.banned,
         group: player.group,

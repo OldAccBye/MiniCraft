@@ -12,7 +12,7 @@ app.use('/post', require('./routes/post'));
 
 app.use(async (req, res, next) => {
     if (res.status(404)) return res.render('error', { userCount: await players.countDocuments(), title: '404', msg: 'Diese Seite existiert nicht!' });
-    res.render('error', { userCount: await players.countDocuments(), title: '?', msg: 'Ein unbekannter Fehler ist aufgetreten!' });
+    return res.render('error', { userCount: await players.countDocuments(), title: 'Hoppla!', msg: 'Ein unbekannter Fehler ist aufgetreten!' });
 });
 
 // Connect to mongodb and start the server

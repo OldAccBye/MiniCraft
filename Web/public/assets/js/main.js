@@ -17,7 +17,9 @@ $(() => {
                 })
             }).then(response => response.json()).then(data => $('#message').html(data.message));
         });
-    } else if ($('#getUUID') !== null) {
+    }
+    
+    if ($('#getUUID') !== null) {
         $('#getUUID').on('submit', async (e) => {
             e.preventDefault();
         
