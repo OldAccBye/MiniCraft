@@ -229,26 +229,3 @@ footer {
     align-items: center;
     padding: .75rem .625rem;
 }
-
-// ===== SCROLLBAR =====
-.custom-scrollbar {
-    /* width */
-    ::-webkit-scrollbar {
-    width: .75rem;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 2px grey; 
-    }
-    
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-    background: #5dbd50; 
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-    background: #53ab47; 
-    }
-}
