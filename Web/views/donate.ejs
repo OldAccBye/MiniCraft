@@ -33,29 +33,17 @@
                             </li>
                           </ul>
                     </div>
-                    <p>
+                    <p class="mb-0">
                         Als Mitglied der Gruppe "Donator" erhält man auf unserem Netzwerk Zugriff auf alle Funktionen der Gruppe "Premium" und zusätzlich erhält man Zugriff auf unserem Discord Server im Kanal "werbung" seine eigene Werbung zu posten!
                     </p>
-                    <div class="alert alert-danger text-center mb-0" role="alert">
-                        <h4 class="alert-heading">Achtung!</h4>
-                        <p class="mb-0">
-                            Damit wir dich nach deiner Spende der Gruppe "Donator" zuweisen können musst du mit dem angegeben Benutzernamen bereits einmal auf unserem Netzwerk gespielt haben und dich mit dem angegeben Namen#Code in unserem Discord Server befinden!
-                        </p>
-                        <hr>
-                        <p class="mb-0">
-                            Die Gruppe "Donator" erhält jede Person auf unserem Netzwerk sowie Discord Server, welche eine Spende erfolgreich getätigt hat und behält diese so lange bis sich die Projektleitung wechselt oder dieses Netzwerk geschlossen wird! (Wir behalten uns außerdem das Recht vor dich jederzeit und ohne Ankündigung aus dieser Gruppe wieder zu entfernen!)
-                        </p>
-                        <hr>
-                        <p class="mb-0">
-                            Jede Spende wird täglich zwischen 16 und 18 Uhr von der Projektleitung überprüft und dabei wird jede Person die erfolgreich eine Spende getätigt hat der Gruppe "Donator" zugewiesen.
-                        </p>
-                    </div>
                 </div>
                 <div class="card-footer">
-                    <a target="_blank" href="..." class="w-100 btn btn:blue">Jetzt Spenden!</a>
+                    <a id="donationBtn" onclick="openDonationDialog()" class="w-100 btn btn:blue">Jetzt Spenden!</a>
                 </div>
             </div>
         </div>
     </main>
+    <script src="/assets/js/nquery.prod.js"></script>
+    <script src="/assets/js/main.js"></script>
 
 <%- include('footer'); %>

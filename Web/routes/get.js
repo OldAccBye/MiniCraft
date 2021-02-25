@@ -1,4 +1,4 @@
-const modules = require('../modules');
+const modules = require('../modules'), functions = require('../functions');
 
 modules.router.get('/', async (req, res) => {
     res.render('index', { userCount: await modules.players.countDocuments() });
@@ -52,29 +52,33 @@ modules.router.get('/help', async (req, res) => {
 });
 
 modules.router.get('/p/:uuid', async (req, res) => {
-    const player = await modules.players.findOne({ UUID: req.params.uuid }, 'username banned group');
-    if (player === null)
+    const player = await modules.players.findOne({ UUID: req.params.uuid }, 'UUID username banned group');
+    if (!player)
         return res.render('profil', { userCount: await modules.players.countDocuments(), error: 'notFound' });
+    
+    let FFAData = { kills: 0, deaths: 0 },
+    GTCData = { won: 0 },
+    lastNameList = [{ name: "Fehler" }],
+    onlineStatus = await modules.playersOnline.exists({ UUID: req.params.uuid }) ? "online" : "offline";
 
-    let FFAData = { kills: 0, deaths: 0 }, GTCData = { won: 0 }, lastNameList = [{ name: "Fehler" }], onlineStatus = "offline";
+    const nameHistory = await functions.getNameHistory(player.UUID);
+    if (!!nameHistory) {
+        lastNameList = nameHistory;
+        const lastName = lastNameList[lastNameList.length - 1].name;
+    
+        if (lastName !== player.username && onlineStatus === "offline") {
+            player.username = lastName;
+            player.save();
+        }
+    }
 
     let game = await modules.playersFFA.findOne({ UUID: req.params.uuid }, 'kills deaths');
-    if (game !== null)
+    if (!!game)
         FFAData = game;
     
     game = await modules.playersGTC.findOne({ UUID: req.params.uuid }, 'won');
-    if (game !== null)
+    if (!!game)
         GTCData = game;
-    
-    const response = await modules.fetch(`https://api.mojang.com/user/profiles/${req.params.uuid}/names`);
-    if (response.status === 200) {
-        const data = await response.json();
-        if (!data.error)
-            lastNameList = data;
-    }
-    
-    if (await modules.playersOnline.exists({ UUID: req.params.uuid }))
-        onlineStatus = "online";
 
     const profilData = { uuid: req.params.uuid,
         username: player.username,

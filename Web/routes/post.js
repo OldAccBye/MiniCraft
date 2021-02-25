@@ -1,22 +1,18 @@
-const modules = require('../modules');
+const modules = require('../modules'), functions = require('../functions');
 
 modules.router.post('/getUUID', async (req, res) => {
     if (!req.body.username)
         return res.json({ message: '<div class="alert alert-danger text-center mt-3 mb-0"><p class="mb-0">Bitte gib einen Benutzernamen ein!</p></div>' });
     
-    let uuidMessage = '<div class="alert alert-danger text-center mt-3 mb-0"><p class="mb-0">Spieler nicht gefunden!</p></div>';
+    let uuidMessage;
 
-    const response = await modules.fetch(`https://api.mojang.com/users/profiles/minecraft/${req.body.username}`);
-    if (response.status === 200) {
-        const data = await response.json();
-        if (data.id) {
-            const uuidFormat = await data.id.substr(0,8)+"-"+data.id.substr(8,4)+"-"+data.id.substr(12,4)+"-"+data.id.substr(16,4)+"-"+data.id.substr(20);
-            if (await modules.players.exists({ UUID: uuidFormat }))
-                uuidMessage = `<div class="alert alert-success text-center mt-3 mb-0"><h3>${uuidFormat}</h3><a class="mb-0" href="/p/${uuidFormat}">Profil anzeigen</a></div>`;
-            else
-                uuidMessage = `<div class="alert alert-success text-center mt-3 mb-0"><h3 class="mb-0">${uuidFormat}</h3></div>`;
-        }
-    }
+    const getUUID = await functions.getUUIDFromUsername(req.body.username);
+    if (!getUUID)
+        uuidMessage = '<div class="alert alert-danger text-center mt-3 mb-0"><p class="mb-0">Spieler nicht gefunden!</p></div>';
+    else if (await modules.players.exists({ UUID: getUUID }))
+        uuidMessage = `<div class="alert alert-success text-center mt-3 mb-0"><h3>${getUUID}</h3><a class="mb-0" href="/p/${getUUID}">Profil anzeigen</a></div>`;
+    else
+        uuidMessage = `<div class="alert alert-success text-center mt-3 mb-0"><h3 class="mb-0">${getUUID}</h3></div>`;
     
     res.json({ message: uuidMessage });
 });
