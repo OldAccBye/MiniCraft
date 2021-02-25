@@ -6,13 +6,21 @@ modules.router.post('/getUUID', async (req, res) => {
     
     let uuidMessage;
 
-    const getUUID = await functions.getUUIDFromUsername(req.body.username);
-    if (!getUUID)
+    const getProfile = await functions.getSmallProfileByUsername(req.body.username);
+
+    if (!getProfile)
         uuidMessage = '<div class="alert alert-danger text-center mt-3 mb-0"><p class="mb-0">Spieler nicht gefunden!</p></div>';
-    else if (await modules.players.exists({ UUID: getUUID }))
-        uuidMessage = `<div class="alert alert-success text-center mt-3 mb-0"><h3>${getUUID}</h3><a class="mb-0" href="/p/${getUUID}">Profil anzeigen</a></div>`;
+    else if (await modules.players.exists({ UUID: getProfile.uuid })) {
+        const player = await modules.players.findOne({ UUID: getProfile.uuid }, 'username');
+        if (player.username !== req.body.username) {
+            player.username = req.body.username;
+            player.save();
+        }
+
+        uuidMessage = `<div class="alert alert-success text-center mt-3 mb-0"><h3>${getProfile.uuid}</h3><a class="mb-0" href="/p/${getProfile.uuid}">Profil anzeigen</a></div>`;
+    }
     else
-        uuidMessage = `<div class="alert alert-success text-center mt-3 mb-0"><h3 class="mb-0">${getUUID}</h3></div>`;
+        uuidMessage = `<div class="alert alert-success text-center mt-3 mb-0"><h3 class="mb-0">${getProfile.uuid}</h3></div>`;
     
     res.json({ message: uuidMessage });
 });

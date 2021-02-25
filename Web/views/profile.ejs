@@ -1,8 +1,8 @@
 <%- include('header'); %>
 
-    <main>
+    <main class="my-3">
         <% if (typeof error !== 'undefined' || typeof profil === 'undefined') { %>
-        <div class="container my-3">
+        <div class="container">
             <div class="alert alert-danger text-center" role="alert">
                 <h4 class="alert-heading">Hoppla!</h4>
                 <p class="mb-0">
@@ -11,7 +11,7 @@
             </div>
         </div>
         <% } else { %>
-        <div class="container my-3">
+        <div class="container">
             <div class="row">
                 <div class="col-lg-4">
                     <div class="shadow-sm p-3 bg-white rounded text-center status-border:<%= profil.onlineStatus %>">

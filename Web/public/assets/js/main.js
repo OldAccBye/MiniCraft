@@ -50,5 +50,5 @@ function openDonationDialog() {
     test[0]['name'] = "CoolePizzaxD";
     console.log(test[0]);
 
-    window.open("https://spenden.pp-h.eu/68454276-da3c-47c7-b95a-7fa443706a44", "MiniCraft - Donate", "scrollbars=yes, width=900, height=500, top=" + positionTop + ", left=" + positionLeft);
+    window.open("...", "MiniCraft - Donate", "scrollbars=yes, width=900, height=500, top=" + positionTop + ", left=" + positionLeft);
 }

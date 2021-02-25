@@ -1,7 +1,7 @@
 const modules = require('../modules'), functions = require('../functions');
 
 modules.router.get('/', async (req, res) => {
-    res.render('index', { userCount: await modules.players.countDocuments() });
+    res.render('index');
 });
 
 modules.router.get('/team', async (req, res) => {
@@ -11,7 +11,7 @@ modules.router.get('/team', async (req, res) => {
     a = await modules.players.find({ group: "admin" }, 'UUID username'),
     o = await modules.players.find({ group: "owner" }, 'UUID username');
 
-    res.render('team', { userCount: await modules.players.countDocuments(), b: b, s: s, m: m, a: a, o: o });
+    res.render('team', { b: b, s: s, m: m, a: a, o: o });
 });
 
 modules.router.get('/top', async (req, res) => {
@@ -32,36 +32,36 @@ modules.router.get('/top', async (req, res) => {
     if (game !== null && player !== null)
         GTCData = { uuid: game[0].UUID, username: player.username, won: game[0].won };
 
-    res.render('topPlayers', { userCount: await modules.players.countDocuments(), ffa: FFAData, gtc: GTCData});
+    res.render('topPlayers', { ffa: FFAData, gtc: GTCData});
 });
 
 modules.router.get('/donate', async (req, res) => {
-    res.render('donate', { userCount: await modules.players.countDocuments() })
+    res.render('donate');
 });
 
 modules.router.get('/premium', async (req, res) => {
-    res.render('premium', { userCount: await modules.players.countDocuments() })
+    res.render('premium');
 });
 
 modules.router.get('/uuid', async (req, res) => {
-    res.render('uuid', { userCount: await modules.players.countDocuments() })
+    res.render('uuid');
 });
 
 modules.router.get('/help', async (req, res) => {
-    res.render('help', { userCount: await modules.players.countDocuments() })
+    res.render('help');
 });
 
 modules.router.get('/p/:uuid', async (req, res) => {
-    const player = await modules.players.findOne({ UUID: req.params.uuid }, 'UUID username banned group');
+    const player = await modules.players.findOne({ UUID: req.params.uuid }, 'username banned group');
     if (!player)
-        return res.render('profil', { userCount: await modules.players.countDocuments(), error: 'notFound' });
+        return res.render('profile', { error: 'notFound' });
     
     let FFAData = { kills: 0, deaths: 0 },
     GTCData = { won: 0 },
     lastNameList = [{ name: "Fehler" }],
     onlineStatus = await modules.playersOnline.exists({ UUID: req.params.uuid }) ? "online" : "offline";
 
-    const nameHistory = await functions.getNameHistory(player.UUID);
+    const nameHistory = await functions.getNameHistory(req.params.uuid);
     if (!!nameHistory) {
         lastNameList = nameHistory;
         const lastName = lastNameList[lastNameList.length - 1].name;
@@ -89,7 +89,7 @@ modules.router.get('/p/:uuid', async (req, res) => {
         lastNameList: lastNameList,
         onlineStatus: onlineStatus };
 
-    res.render('profil', { userCount: await modules.players.countDocuments(), profil: profilData });
+    res.render('profile', { profil: profilData });
 });
 
 module.exports = modules.router;
