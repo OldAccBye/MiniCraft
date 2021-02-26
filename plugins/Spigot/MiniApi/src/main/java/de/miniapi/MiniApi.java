@@ -15,6 +15,7 @@ import java.util.UUID;
 
 public class MiniApi extends JavaPlugin {
     public static MiniApi plugin;
+    public static MongoManager mongo = new MongoManager();
     public static final HashMap<UUID, PlayerData> playerList = new HashMap<>();
 
     @Override
@@ -34,6 +35,7 @@ public class MiniApi extends JavaPlugin {
             if (!file.exists()) {
                 plugin.getLogger().severe("Es konnte keine permissions.yml geladen werden!");
                 plugin.getServer().shutdown();
+                return;
             }
 
             Configs.permissionsList = YamlConfiguration.loadConfiguration(file);
@@ -45,11 +47,12 @@ public class MiniApi extends JavaPlugin {
             if (!file.exists()) {
                 plugin.getLogger().severe("Es konnte keine config.yml geladen werden!");
                 plugin.getServer().shutdown();
+                return;
             }
 
             Configuration cfg = YamlConfiguration.loadConfiguration(file);
-            String serverName = cfg.getString("server");
-            Configs.serverName = serverName != null ? serverName.toLowerCase() : "default";
+            Configs.config = cfg;
+            Configs.serverName = cfg.getString("server");
         }
 
         /* ===== LISTENER - START ===== */
@@ -63,6 +66,9 @@ public class MiniApi extends JavaPlugin {
         // Outgoing
         plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "bungeesystem:miniapi");
         /* ===== CHANNELS - END ===== */
+
+        // Mongo
+        mongo.connect();
     }
 
     public PlayerData getPlayer(UUID pUUID) {
@@ -74,20 +80,8 @@ public class MiniApi extends JavaPlugin {
         if (pData == null) return false;
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("save");
-        switch (Configs.serverName) {
-            case "ffa" -> {
-                if (pData.ffaData == null) return false;
-                out.writeInt(pData.ffaData.kills);
-                out.writeInt(pData.ffaData.deaths);
-            }
-            case "gtc" -> {
-                if (pData.gtcData == null) return false;
-                out.writeInt(pData.gtcData.won);
-            }
-        }
-        out.writeUTF(pData.group);
-        out.writeInt(pData.cookies);
+        out.writeUTF("update");
+        out.writeUTF(pData.data.getString("group"));
         p.sendPluginMessage(MiniApi.plugin, "bungeesystem:miniapi", out.toByteArray());
 
         return true;

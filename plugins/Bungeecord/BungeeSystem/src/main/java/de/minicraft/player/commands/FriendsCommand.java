@@ -79,7 +79,7 @@ public class FriendsCommand extends Command implements TabExecutor {
         switch (args[0]) {
             case "add" -> {
                 { // CHECK
-                    if (args[1].equals(p.getName())) {
+                    if (1 == 2) { // args[1].equals(p.getName())
                         p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst dir nicht selber eine Freundesanfrage senden!"));
                         return;
                     }

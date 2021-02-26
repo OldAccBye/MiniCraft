@@ -20,7 +20,6 @@ public class PluginMessageReceiver implements Listener {
     public void onPluginMessage(PluginMessageEvent e) {
         if (e.getReceiver() == null || !(e.getReceiver() instanceof ProxiedPlayer) || !(e.getSender() instanceof Server)) return;
         ProxiedPlayer p = (ProxiedPlayer) e.getReceiver();
-        String serverName = ((Server) e.getSender()).getInfo().getName();
 
         PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
         if (pData == null) { // To Do: Direkt nach dem Login den Server zu wechseln sorgt für einen Kick
@@ -33,7 +32,7 @@ public class PluginMessageReceiver implements Listener {
         switch (e.getTag()) {
             case "bungeesystem:lobby" -> { // LOBBY -> SERVER
                 if (in.readUTF().equals("connect")) { // SERVER (SWITCH)
-                    serverName = in.readUTF();
+                    String serverName = in.readUTF();
                     int serverFound = 0;
 
                     for (Map.Entry<String, ServerInfo> entry : BungeeSystem.plugin.getProxy().getServersCopy().entrySet()) {
@@ -65,19 +64,9 @@ public class PluginMessageReceiver implements Listener {
                 }
             }
             case "bungeesystem:miniapi" -> {
-                if (in.readUTF().equals("save")) {
-                    BungeeSystem.plugin.getLogger().warning("[SAVE] " + p.getName());
-                    if (serverName.contains("ffa"))
-                    {
-                        pData.ffaData.put("kills", in.readInt());
-                        pData.ffaData.put("deaths", in.readInt());
-                    }
-                    else if (serverName.contains("gtc"))
-                    {
-                        pData.gtcData.put("won", in.readInt());
-                    }
+                if (in.readUTF().equals("update")) {
+                    BungeeSystem.plugin.getLogger().warning("[UPDATE][PLAYER] " + p.getName());
                     pData.data.put("group", in.readUTF());
-                    pData.data.put("cookies", in.readInt());
                 }
             }
         }

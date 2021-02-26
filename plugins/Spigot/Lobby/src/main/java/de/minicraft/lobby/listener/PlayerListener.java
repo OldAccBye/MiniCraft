@@ -57,17 +57,6 @@ public class PlayerListener implements Listener {
                     e.getPlayer().getInventory().setItem(4, i);
                 }
             }
-
-            // Premium
-            {
-                i = new ItemStack(Material.GOLD_INGOT);
-                im = i.getItemMeta();
-                if (im != null) {
-                    im.displayName(Component.text("§6§lPremium"));
-                    i.setItemMeta(im);
-                    e.getPlayer().getInventory().setItem(3, i);
-                }
-            }
         }
     }
 
@@ -150,22 +139,6 @@ public class PlayerListener implements Listener {
 
                 e.getPlayer().openInventory(i);
             }
-            case "§6§lPremium" -> {
-                i = Bukkit.createInventory(null, 9, Component.text("§6§lPremium"));
-
-                // KAUFEN
-                is = new ItemStack(Material.DIAMOND);
-                im = is.getItemMeta();
-                if (im == null) return;
-                im.displayName(Component.text("1 Monat §6§lPremium §rfür §n950 Cookies"));
-                im.lore(Arrays.asList(Component.text("§aAlle Vorteile als Premium findest du auf:"), Component.text("§nhttps://minicraft.network/premium")));
-                im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                is.setItemMeta(im);
-
-                i.setItem(4, is); // Set item
-
-                e.getPlayer().openInventory(i);
-            }
         }
     }
 
@@ -215,29 +188,13 @@ public class PlayerListener implements Listener {
                 }
             }
             case "§3§lEmote" -> {
-                if (pData.group.equals("default"))
+                if (pData.data.getString("group").equals("default"))
                     p.sendMessage("§c[FEHLER]: §fDu musst Premium, Donator oder ein Teammitglied sein!");
                 else {
                     switch (displayName) {
                         case "§4§lLiebe" -> p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
                         case "§c§lWut" -> p.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
                         case "§a§lFreude" -> p.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);
-                    }
-                }
-            }
-            case "§6§lPremium" -> {
-                if (displayName.equals("1 Monat §6§lPremium §rfür §n950 Cookies")) {
-                    if (pData.group.equals("premium"))
-                        p.sendMessage("§c[FEHLER]: §fDu besitzt bereits Mitglied der Gruppe Premium!");
-                    else if (!pData.group.equals("default"))
-                        p.sendMessage("§c[FEHLER]: §fDu bist bereits Mitglied einer Gruppe mit all den selben Funktionen!");
-                    else if (pData.cookies < 950)
-                        p.sendMessage("§c[FEHLER]: §fDu besitzt nicht genügend Cookies!");
-                    else {
-                        pData.cookies -= 950;
-                        pData.group = "premium";
-                        p.updateCommands();
-                        p.sendMessage("§3§l[§2SERVER§3§l] §aDu bist nun Mitglied der Gruppe §6Premium§a!");
                     }
                 }
             }

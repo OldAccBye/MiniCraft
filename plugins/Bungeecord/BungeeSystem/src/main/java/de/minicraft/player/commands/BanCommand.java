@@ -1,12 +1,12 @@
 package de.minicraft.player.commands;
 
 import de.minicraft.BungeeSystem;
-import de.minicraft.player.PlayerData;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,8 +63,8 @@ public class BanCommand extends Command implements TabExecutor {
             p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler konnte nicht gefunden werden!"));
             return;
         }
-        PlayerData tData = BungeeSystem.playerList.get(t.getUniqueId());
-        if (tData == null) {
+
+        if (!BungeeSystem.playerList.containsKey(t.getUniqueId())) {
             t.disconnect(new TextComponent("Es konnten keine Daten abgerufen werden. Bitte versuche dich neu anzumelden."));
             p.sendMessage(new TextComponent("§c[FEHLER]: §fSpieler " + args[0] + " besaß keine Spielerdaten und wurde nur gekickt!"));
             return;
@@ -73,33 +73,36 @@ public class BanCommand extends Command implements TabExecutor {
         String reason = message.toString().replace(args[0] + " ", "").replace(banTime + timeFormat, "");
         long currentDateTime = new Date().getTime();
 
+        Document banDocument = new Document();
+
+        banDocument.put("UUID", t.getUniqueId().toString());
+
         switch (timeFormat) {
             case "m" -> {
-                tData.data.put("banned", true);
-                tData.data.put("banSinceTimestamp", currentDateTime);
-                tData.data.put("banExpiresTimestamp", currentDateTime + (banTime * 60000));
-                tData.data.put("banReason", reason);
-                tData.data.put("bannedFrom", p.getName());
+                banDocument.put("banSinceTimestamp", currentDateTime);
+                banDocument.put("banExpiresTimestamp", currentDateTime + (banTime * 60000));
+                banDocument.put("banReason", reason);
+                banDocument.put("bannedFrom", p.getName());
             }
             case "h" -> {
-                tData.data.put("banned", true);
-                tData.data.put("banSinceTimestamp", currentDateTime);
-                tData.data.put("banExpiresTimestamp", currentDateTime + (banTime * 3600000));
-                tData.data.put("banReason", reason);
-                tData.data.put("bannedFrom", p.getName());
+                banDocument.put("banSinceTimestamp", currentDateTime);
+                banDocument.put("banExpiresTimestamp", currentDateTime + (banTime * 3600000));
+                banDocument.put("banReason", reason);
+                banDocument.put("bannedFrom", p.getName());
             }
             case "d" -> {
-                tData.data.put("banned", true);
-                tData.data.put("banSinceTimestamp", currentDateTime);
-                tData.data.put("banExpiresTimestamp", currentDateTime + (banTime * 86400000));
-                tData.data.put("banReason", reason);
-                tData.data.put("bannedFrom", p.getName());
+                banDocument.put("banSinceTimestamp", currentDateTime);
+                banDocument.put("banExpiresTimestamp", currentDateTime + (banTime * 86400000));
+                banDocument.put("banReason", reason);
+                banDocument.put("bannedFrom", p.getName());
             }
             default -> {
                 p.sendMessage(new TextComponent("§c[FEHLER]: §fDie Zeit muss mit einem 'm', 'h' oder 'd' enden!"));
                 return;
             }
         }
+
+        BungeeSystem.mongo.banned.insertOne(banDocument);
 
         p.disconnect(new TextComponent("§cDu wurdest aus diesem Netzwerk ausgeschlossen."));
         p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler " + args[0] + " wurde erfolgreich ausgeschlossen!"));

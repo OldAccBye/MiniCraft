@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class PlayerData {
-    public Document data = null, ffaData = null, gtcData = null;
+    public Document data = null;
     public List<String> permissions = new ArrayList<>();
     public HashMap<String, Boolean> friendRequest = new HashMap<>();
 }

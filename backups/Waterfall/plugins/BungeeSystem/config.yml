@@ -3,10 +3,6 @@ mongodb:
   username: "miniuser"
   password: "minipass"
   database: "MiniCraft"
-  collections:
-    - player
-    - ffa
-    - gtc
 servers:
   gtc:
     maxPlayers: 16

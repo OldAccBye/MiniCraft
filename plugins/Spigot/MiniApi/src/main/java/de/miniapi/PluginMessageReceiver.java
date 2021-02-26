@@ -15,17 +15,6 @@ public class PluginMessageReceiver implements PluginMessageListener {
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
 
         switch (in.readUTF()) {
-            case "login" -> {
-                PlayerData pData = new PlayerData(p.getName(), in.readUTF(), in.readInt());
-                pData.prefix = Configs.permissionsList.getString(pData.group + ".prefix");
-                switch (Configs.serverName) {
-                    case "ffa" -> pData.ffaData = new PlayerData.FFA(in.readInt(), in.readInt());
-                    case "gtc" -> pData.gtcData = new PlayerData.GTC(in.readInt());
-                }
-                pData.updatePermissions();
-                MiniApi.playerList.put(p.getUniqueId(), pData);
-                p.updateCommands();
-            }
             case "update" -> {
                 PlayerData pData = MiniApi.playerList.get(p.getUniqueId());
                 if (pData == null) {
@@ -35,12 +24,13 @@ public class PluginMessageReceiver implements PluginMessageListener {
 
                 switch (in.readUTF().toLowerCase()) {
                     case "group" -> {
-                        pData.group = in.readUTF();
-                        pData.prefix = Configs.permissionsList.getString(pData.group + ".prefix");
+                        String group = in.readUTF();
+                        pData.data.replace("group", group);
+                        pData.prefix = Configs.permissionsList.getString(group + ".prefix");
                         pData.updatePermissions();
                         p.updateCommands();
                     }
-                    case "cookies" -> pData.cookies = in.readInt();
+                    case "cookies" -> pData.data.replace("cookies", in.readInt());
                 }
             }
         }

@@ -32,7 +32,7 @@ public class ChatListener implements Listener {
 
             if (t == null)
                 p.sendMessage("§c[FEHLER]: §fSpieler nicht gefunden!");
-            else if (1 == 1) { // tName.equals(p.getName())
+            else if (1 == 2) { // tName.equals(p.getName())
                 p.sendMessage("§c[FEHLER]: §fDu kannst dich nicht selber markieren!");
             } else {
                 t.sendMessage("§3§l[§2SERVER§3§l] §aDu wurdest von " + p.getName() + " erwähnt.");
@@ -44,7 +44,7 @@ public class ChatListener implements Listener {
                         .append(
                                 Component.text("§b@" + t.getName() + "§r")
                                 .hoverEvent(Component.text("§7<KLICK>§r Profil anzeigen"))
-                                .clickEvent(ClickEvent.openUrl("https://minicraft.network/p/" + t.getName()))
+                                .clickEvent(ClickEvent.openUrl("https://minicraft.network/p/" + t.getUniqueId()))
                         )
                         .append(Component.text(afterAt));
 

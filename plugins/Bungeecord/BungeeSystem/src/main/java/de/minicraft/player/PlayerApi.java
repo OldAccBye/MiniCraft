@@ -13,13 +13,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static com.mongodb.client.model.Projections.fields;
+import static com.mongodb.client.model.Projections.include;
+
 public class PlayerApi {
     public static boolean login(ProxiedPlayer p) {
-        Document playerDoc = getData(p, "player");
+        Document playerDoc = getData(p);
         if (playerDoc == null) return false;
         PlayerData pData = new PlayerData();
 
-        playerDoc.put("username", p.getName());
         for (String permissionKey : Configs.permissionsList.getKeys()) {
             pData.permissions.addAll(Configs.permissionsList.getStringList(permissionKey));
             if (permissionKey.equals(playerDoc.getString("group"))) break;
@@ -31,51 +33,22 @@ public class PlayerApi {
         return true;
     }
 
-    public static Document getData(ProxiedPlayer p, String collection) {
-        Document playerDoc = new Document();
+    public static Document getData(ProxiedPlayer p) {
+        Document playerDoc;
 
         try {
-            switch (collection) {
-                case "player" -> {
-                    playerDoc = BungeeSystem.mongo.collections.get("player").find(Filters.eq("UUID", p.getUniqueId().toString())).first();
+            playerDoc = BungeeSystem.mongo.player.find(Filters.eq("UUID", p.getUniqueId().toString())).projection(fields(include("group"), include("friends"))).first();
 
-                    if (playerDoc == null) {
-                        playerDoc = new Document("username", p.getName())
-                                .append("UUID", p.getUniqueId().toString())
-                                .append("cookies", 0)
-                                .append("group", "default")
-                                .append("friends", new ArrayList<>())
-                                .append("securitycode", "null")
-                                .append("banned", false)
-                                .append("banSinceTimestamp", 0)
-                                .append("banExpiresTimestamp", 0)
-                                .append("banReason", "")
-                                .append("bannedFrom", "")
-                                .append("registrationTimestamp", new Date().getTime());
-                        BungeeSystem.mongo.collections.get("player").insertOne(playerDoc);
-                        return playerDoc;
-                    }
-                }
-                case "ffa" -> {
-                    playerDoc = BungeeSystem.mongo.collections.get("ffa").find(Filters.eq("UUID", p.getUniqueId().toString())).first();
-
-                    if (playerDoc == null) {
-                        playerDoc = new Document("UUID", p.getUniqueId().toString())
-                                .append("kills", 0)
-                                .append("deaths", 0);
-                        BungeeSystem.mongo.collections.get("ffa").insertOne(playerDoc);
-                        return playerDoc;
-                    }
-                }
-                case "gtc" -> {
-                    playerDoc = BungeeSystem.mongo.collections.get("gtc").find(Filters.eq("UUID", p.getUniqueId().toString())).first();
-
-                    if (playerDoc == null) {
-                        playerDoc = new Document("UUID", p.getUniqueId().toString()).append("won", 0);
-                        BungeeSystem.mongo.collections.get("gtc").insertOne(playerDoc);
-                        return playerDoc;
-                    }
-                }
+            if (playerDoc == null) {
+                playerDoc = new Document("UUID", p.getUniqueId().toString())
+                        .append("username", p.getName())
+                        .append("cookies", 0)
+                        .append("group", "default")
+                        .append("friends", new ArrayList<>())
+                        .append("securitycode", "null")
+                        .append("registrationTimestamp", new Date().getTime());
+                BungeeSystem.mongo.player.insertOne(playerDoc);
+                return new Document("group", "default").append("friends", new ArrayList<>());
             }
         } catch (MongoException e) {
             e.printStackTrace();
@@ -94,13 +67,7 @@ public class PlayerApi {
                 return;
             }
 
-            BungeeSystem.mongo.collections.get("player").findOneAndUpdate(new Document("UUID", pUUID.toString()), new Document("$set", pData.data));
-
-            if (pData.ffaData != null)
-                BungeeSystem.mongo.collections.get("ffa").findOneAndUpdate(new Document("UUID", pUUID.toString()), new Document("$set", pData.ffaData));
-
-            if (pData.gtcData != null)
-                BungeeSystem.mongo.collections.get("gtc").findOneAndUpdate(new Document("UUID", pUUID.toString()), new Document("$set", pData.gtcData));
+            BungeeSystem.mongo.player.findOneAndUpdate(new Document("UUID", pUUID.toString()), new Document("$set", pData.data));
         } catch (MongoException e) {
             e.printStackTrace();
         }
