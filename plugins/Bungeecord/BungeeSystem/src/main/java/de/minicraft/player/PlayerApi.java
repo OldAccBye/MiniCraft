@@ -29,8 +29,7 @@ public class PlayerApi {
 
         pData.data = playerDoc;
         BungeeSystem.playerList.put(p.getUniqueId(), pData);
-
-        return true;
+        return BungeeSystem.playerList.containsKey(p.getUniqueId());
     }
 
     public static Document getData(ProxiedPlayer p) {

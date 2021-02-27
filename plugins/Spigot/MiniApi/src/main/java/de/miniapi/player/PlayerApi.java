@@ -9,6 +9,9 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+import static com.mongodb.client.model.Projections.exclude;
+import static com.mongodb.client.model.Projections.fields;
+
 public class PlayerApi {
     public static boolean login(Player p) {
         Document playerDoc = getData(p, "playerData");
@@ -31,7 +34,7 @@ public class PlayerApi {
 
         try {
             switch (collection) {
-                case "playerData" -> playerDoc = MiniApi.mongo.playerData.find(Filters.eq("UUID", p.getUniqueId().toString())).first();
+                case "playerData" -> playerDoc = MiniApi.mongo.playerData.find(Filters.eq("UUID", p.getUniqueId().toString())).projection(fields(exclude("_id"), exclude("UUID"), exclude("friends"))).first();
                 case "gameData" -> {
                     if (MiniApi.mongo.gameData == null) return null;
                     playerDoc = MiniApi.mongo.gameData.find(Filters.eq("UUID", p.getUniqueId().toString())).first();

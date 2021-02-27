@@ -22,7 +22,7 @@ public class PlayerListener implements Listener {
         ProxiedPlayer p = e.getPlayer();
 
         if (BungeeSystem.playerList.containsKey(p.getUniqueId())) {
-            p.disconnect(new TextComponent("Bitte habe ein wenig Geduld bis du dich erneut anmelden kannst."));
+            p.disconnect(new TextComponent("Bitte habe ein wenig Geduld bis du dich erneut anmeldest."));
             return;
         }
 
@@ -39,10 +39,12 @@ public class PlayerListener implements Listener {
                         "\n§cAusgeschlossen von §7>>§f " + banCheck.getString("bannedFrom")));
                 return;
             }
+
+            BungeeSystem.mongo.banned.deleteOne(Filters.eq("UUID", p.getUniqueId().toString()));
         }
 
         if (!PlayerApi.login(p)) {
-            p.disconnect(new TextComponent("[b-opl-01] Es konnten keine Spielerdaten gefunden werden. Melde dies im Support, sollte dieser Fehler erneut auftauchen."));
+            p.disconnect(new TextComponent("[b-opl-01] Bei der Anmeldung ist etwas schief gelaufen. Melde dies im Support, sollte dieser Fehler erneut auftauchen."));
             return;
         }
 
@@ -56,10 +58,10 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerDisconnect(PlayerDisconnectEvent e) {
         if (!BungeeSystem.playerList.containsKey(e.getPlayer().getUniqueId())) return;
-        PlayerApi.saveAll(e.getPlayer().getUniqueId());
 
-        // Spielerdaten werden nach 2 Sekunden entfernt
+        // Spielerdaten werden nach 2 Sekunden gespeichert und entfernt
         BungeeSystem.plugin.getProxy().getScheduler().schedule(BungeeSystem.plugin, () -> {
+            PlayerApi.saveAll(e.getPlayer().getUniqueId());
             BungeeSystem.playerList.remove(e.getPlayer().getUniqueId());
         }, 2, TimeUnit.SECONDS);
     }

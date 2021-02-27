@@ -1,10 +1,8 @@
 package de.minicraft.player.commands;
 
 import de.minicraft.BungeeSystem;
-import de.minicraft.Configs;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -22,12 +20,12 @@ public class KickCommand extends Command implements TabExecutor {
     public List<String> onTabComplete(CommandSender sender, String[] args) {
         if (!(sender instanceof ProxiedPlayer) || args.length != 1) return Collections.emptyList();
 
-        ProxiedPlayer p = (ProxiedPlayer) sender;
-
         List<String> playerList = new ArrayList<>();
 
-        for (ProxiedPlayer players : p.getServer().getInfo().getPlayers())
-            playerList.add(players.getName());
+        BungeeSystem.plugin.getProxy().getPlayers().stream()
+                .limit(10)
+                .filter((target) -> target.getName().startsWith(args[0]))
+                .forEach((target) -> playerList.add(target.getName()));
 
         return playerList;
     }

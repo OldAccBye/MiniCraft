@@ -29,8 +29,10 @@ public class SetGroupCommand extends Command implements TabExecutor {
         List<String> results = new ArrayList<>();
 
         if (args.length == 1)
-            for (ProxiedPlayer t : p.getServer().getInfo().getPlayers())
-                results.add(t.getName());
+            p.getServer().getInfo().getPlayers().stream()
+                    .limit(10)
+                    .filter((target) -> target.getName().startsWith(args[0]))
+                    .forEach((target) -> results.add(target.getName()));
 
         List<String> groups = new ArrayList<>(Configs.permissionsList.getKeys());
 
@@ -72,10 +74,8 @@ public class SetGroupCommand extends Command implements TabExecutor {
 
         tData.data.put("group", args[1]);
         tData.permissions.clear();
-        for (String permissionKey : Configs.permissionsList.getKeys()) {
-            tData.permissions.addAll(Configs.permissionsList.getStringList(permissionKey));
-            if (permissionKey.equals(tData.data.getString("group"))) break;
-        }
+        tData.updatePermissions();
+
         p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + t.getName() + " §aerhielt die Gruppe §6" + args[1]));
         t.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aDu erhielst die Gruppe §6" + args[1]));
     }

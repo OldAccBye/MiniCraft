@@ -16,12 +16,15 @@ public class PlayerScoreboard {
 
         obj = board.registerNewObjective("Lobby-Scoreboard", "dummy", Component.text("§a§lMiniCraft"));
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        obj.getScore("§l§m↽↽↽↽↽↽↽↽↽⇁⇁⇁⇁⇁⇁⇁⇁⇁").setScore(5);
-        obj.getScore("§aGruppe").setScore(4);
-        obj.getScore("§7↪ §rdefault").setScore(3);
-        obj.getScore("").setScore(2);
-        obj.getScore("§aCookies").setScore(1);
-        obj.getScore("§7↪ §r0").setScore(0);
+        obj.getScore("").setScore(8);
+        obj.getScore("§aGruppe").setScore(7);
+        obj.getScore("§7↪ §rdefault").setScore(6);
+        obj.getScore("§r").setScore(5);
+        obj.getScore("§aCookies").setScore(4);
+        obj.getScore("§7↪ §r0").setScore(3);
+        obj.getScore("§r§r").setScore(2);
+        obj.getScore("§aWebseite").setScore(1);
+        obj.getScore("§7↪ §rminicraft.network").setScore(0);
         p.setScoreboard(board);
     }
 
@@ -52,13 +55,13 @@ public class PlayerScoreboard {
                     obj.getScoreboard().resetScores("§7↪ §r" + lastGroup);
                     obj.getScoreboard().resetScores("§7↪ §r" + lastCookies);
 
-                    obj.getScore("§7↪ §r" + pData.data.getString("group")).setScore(3);
-                    obj.getScore("§7↪ §r" + pData.data.getInteger("cookies")).setScore(0);
+                    obj.getScore("§7↪ §r" + pData.data.getString("group")).setScore(6);
+                    obj.getScore("§7↪ §r" + pData.data.getInteger("cookies")).setScore(3);
 
                     lastGroup = pData.data.getString("group");
                     lastCookies = pData.data.getInteger("cookies");
                 }
             }
-        }.runTaskTimer(Lobby.plugin, 20L, 20L);
+        }.runTaskTimer(Lobby.plugin, 0L, 20L);
     }
 }

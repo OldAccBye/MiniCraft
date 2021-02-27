@@ -35,14 +35,11 @@ public class TpServerCommand extends Command implements TabExecutor {
             return;
         }
 
-        ProxiedPlayer p1 = BungeeSystem.plugin.getProxy().getPlayer(args[0]);
+        ProxiedPlayer p1 = BungeeSystem.plugin.getProxy().getPlayer(args[0]), p2 = BungeeSystem.plugin.getProxy().getPlayer(args[1]);
         if (p1 == null) {
             p.sendMessage(new TextComponent("§c[FEHLER]: §fSpieler §6" + args[0] + "§f nicht gefunden!"));
             return;
-        }
-
-        ProxiedPlayer p2 = BungeeSystem.plugin.getProxy().getPlayer(args[1]);
-        if (p2 == null) {
+        } else if (p2 == null) {
             p.sendMessage(new TextComponent("§c[FEHLER]: §fSpieler §6" + args[1] + "§f nicht gefunden!"));
             return;
         }
