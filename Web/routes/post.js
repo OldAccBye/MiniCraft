@@ -10,8 +10,8 @@ modules.router.post('/getUUID', async (req, res) => {
 
     if (!getProfile)
         uuidMessage = '<div class="alert alert-danger text-center mt-3 mb-0"><p class="mb-0">Spieler nicht gefunden!</p></div>';
-    else if (await modules.players.exists({ UUID: getProfile.uuid })) {
-        const player = await modules.players.findOne({ UUID: getProfile.uuid }, 'username');
+    else if (await modules.player.exists({ UUID: getProfile.uuid })) {
+        const player = await modules.player.findOne({ UUID: getProfile.uuid }, 'username');
         if (player.username !== req.body.username) {
             player.username = req.body.username;
             player.save();
@@ -54,7 +54,7 @@ modules.router.post('/buyPremium', async (req, res) => {
             return res.json({ message: '<div class="alert alert-danger"><h5 class="alert-heading">Hoppla!</h5><p class="mb-0">Ein unbekannter Fehler ist aufgetreten!</p></div>' });   
     }
 
-    const player = await modules.players.findOne({ UUID: req.body.uuid });
+    const player = await modules.player.findOne({ UUID: req.body.uuid });
     if (player === null)
         return res.json({ message: '<div class="alert alert-danger"><h5 class="alert-heading">Hoppla!</h5><p class="mb-0">Du bist nicht auf unserem Netzwerk registriert!</p></div>' });
     else if (player.group !== 'default')
@@ -62,12 +62,12 @@ modules.router.post('/buyPremium', async (req, res) => {
     else if (player.cookies < price)
         return res.json({ message: '<div class="alert alert-danger"><h5 class="alert-heading">Hoppla!</h5><p class="mb-0">Du besitzt nicht genügend Cookies!</p></div>' });
     
-    if (await modules.playersOnline.exists({ UUID: req.body.uuid }))
+    if (await modules.playerOnline.exists({ UUID: req.body.uuid }))
         return res.json({ message: '<div class="alert alert-danger"><h5 class="alert-heading">Hoppla!</h5><p class="mb-0">Du darfst dich dafür aktuell nicht auf dem Netzwerk befinden!</p></div>' });
     
     player.cookies -= price;
     player.group = "premium";
-    player.endOfPremium = d.getTime();
+    player.premiumTimestamp = d.getTime();
     await player.save();
     res.json({ message: '<div class="alert alert-success"><h5 class="alert-heading">Klasse!</h5><p class="mb-0">Du gehörst nun zur Gruppe Premium!</p></div>' });
 });

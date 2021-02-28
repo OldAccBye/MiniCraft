@@ -10,28 +10,28 @@ modules.app.use(modules.express.json());
 modules.app.use('/', require('./routes/get'));
 modules.app.use('/post', require('./routes/post'));
 modules.app.use(async (req, res, next) => {
-    if (res.status(404)) return res.render('error', { userCount: await modules.players.countDocuments(), title: '404', msg: 'Diese Seite existiert nicht!' });
-    return res.render('error', { userCount: await modules.players.countDocuments(), title: 'Hoppla!', msg: 'Ein unbekannter Fehler ist aufgetreten!' });
+    if (res.status(404)) return res.render('error', { userCount: await modules.player.countDocuments(), title: '404', msg: 'Diese Seite existiert nicht!' });
+    return res.render('error', { userCount: await modules.player.countDocuments(), title: 'Hoppla!', msg: 'Ein unbekannter Fehler ist aufgetreten!' });
 });
 
 // Connect to mongodb and start the server
 modules.mongoose.connect('mongodb+srv://miniuser:minipass@minicraft.kxkh9.mongodb.net/MiniCraft?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
 .then((result) => modules.app.listen(80, async () => {
-    modules.app.locals.userCount = await modules.players.countDocuments();
+    modules.app.locals.userCount = await modules.player.countDocuments();
     console.log(`Server gestartet!`);
 
     // Funktion wird unabhängig von Besuchern jede Minute in der Sekunde 59 ausgeführt
     modules.schedule.scheduleJob('59 * * * * *', async () => {
         // Entfernt allen Spieler die Gruppe Premium welche offline sind und deren Zeit abgelaufen ist
-        const players = await modules.players.find({ group: 'premium', endOfPremium: {$lte: new Date().getTime() } });
+        const players = await modules.player.find({ group: 'premium', premiumTimestamp: {$lte: new Date().getTime() } });
         for (player of players) {
-            if (await modules.playersOnline.exists({ UUID: player.UUID })) continue;
-            await modules.players.updateOne({ UUID: player.UUID }, { group: 'default', endOfPremium: 0 })
+            if (await modules.playerOnline.exists({ UUID: player.UUID })) continue;
+            await modules.player.updateOne({ UUID: player.UUID }, { group: 'default', premiumTimestamp: 0 })
             .then((user) => console.log(`[PR][\x1b[32mSUCCESS\x1b[0m] Spieler \x1b[33m${player.UUID}\x1b[0m verlor die Gruppe Premium!`))
             .catch((err) => console.log(`[PR][\x1b[31mFAILED\x1b[0m] Spieler \x1b[33m${player.UUID}\x1b[0m verlor nicht die Gruppe Premium!`));
         }
 
-        modules.app.locals.userCount = await modules.players.countDocuments();
+        modules.app.locals.userCount = await modules.player.countDocuments();
     });
 }))
 .catch((err) => console.log(err));

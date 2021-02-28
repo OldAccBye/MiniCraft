@@ -1,7 +1,7 @@
 <%- include('header'); %>
 
     <main class="my-3">
-        <% if (typeof error !== 'undefined' || typeof profil === 'undefined') { %>
+        <% if (typeof error !== 'undefined' || typeof profile === 'undefined') { %>
         <div class="container">
             <div class="alert alert-danger text-center" role="alert">
                 <h4 class="alert-heading">Hoppla!</h4>
@@ -14,11 +14,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4">
-                    <div class="shadow-sm p-3 bg-white rounded text-center status-border:<%= profil.onlineStatus %>">
-                        <img style="max-width: 100%;" src="https://crafatar.com/renders/body/<%= typeof profil !== 'undefined' ? profil.uuid : 0 %>">
+                    <div class="shadow-sm p-3 bg-white rounded text-center status-border:<%= profile.onlineStatus %>">
+                        <img style="max-width: 100%;" src="https://crafatar.com/renders/body/<%= profile.uuid %>">
                     </div>
                     <div class="my-3 text-center">
-                        <%- typeof profil.banned !== 'undefined' ? profil.banned === false ? '<span class="badge:green">NICHT GESPERRT</span>' : '<span class="badge:red">GESPERRT</span>' : 'null' %>
+                        <%- typeof profile.banned !== 'undefined' ? profile.banned === false ? '<span class="badge:green">NICHT GESPERRT</span>' : '<span class="badge:red">GESPERRT</span>' : 'null' %>
                     </div>
                 </div>
                 <div class="col-lg-8">
@@ -27,15 +27,24 @@
                         <div class="card-body">
                             <div class="d-inline d-sm-flex">
                                 <div class="fw-bold">UUID</div>
-                                <div class="ms-auto"><%= profil.uuid %></div>
+                                <div class="ms-auto"><%= profile.uuid %></div>
                             </div>
                             <div class="d-inline d-sm-flex mt-sm-1">
                                 <div class="fw-bold">Benutzername</div>
-                                <div class="ms-auto"><%= profil.username %></div>
+                                <div class="ms-auto"><%= profile.username %></div>
                             </div>
                             <div class="d-inline d-sm-flex mt-sm-1">
                                 <div class="fw-bold">Gruppe</div>
-                                <div class="ms-auto"><%= profil.group %></div>
+                                <div class="ms-auto text-uppercase"><%= profile.group %></div>
+                            </div>
+                            <div class="d-inline d-sm-flex mt-sm-1">
+                                <div class="fw-bold">Registriert seit</div>
+                                <div class="ms-auto">
+                                    <%
+                                        let date = new Date(profile.registrationTimestamp);
+                                    %>
+                                    <%= date.getDate() %>.<%= date.getMonth() + 1 %>.<%= date.getFullYear() %> - <%= date.getHours() %>:<%= date.getMinutes() %>:<%= date.getSeconds() %>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -43,7 +52,7 @@
                         <div class="card-header text-center">Namensverlauf</div>
                         <div class="card-body">
                             <div class="overflow-auto" style="max-height: 200px;">
-                                <% profil.lastNameList.slice().reverse().forEach((item) => {
+                                <% profile.lastNameList.slice().reverse().forEach((item) => {
                                     if (item.changedToAt) { %>
                                 <figure>
                                     <blockquote class="blockquote mb-0">
@@ -53,7 +62,7 @@
                                     </blockquote>
                                     <small class="text-muted">
                                         <%
-                                            const date = new Date(item.changedToAt);
+                                            date = new Date(item.changedToAt);
                                         %>
                                         <%= date.getDate() %>.<%= date.getMonth() + 1 %>.<%= date.getFullYear() %> - <%= date.getHours() %>:<%= date.getMinutes() %>:<%= date.getSeconds() %>
                                     </small>
@@ -84,11 +93,11 @@
                     <div class="mt-2 shadow-sm p-3 bg-white rounded text-center">
                         <div class="d-flex">
                             <div class="fw-bold">Kills</div>
-                            <div class="ms-auto"><span class="badge:green text:shadow-sm fw-bold"><%= profil.ffa.kills %></span></div>
+                            <div class="ms-auto"><span class="badge:green text:shadow-sm fw-bold"><%= profile.ffa.kills %></span></div>
                         </div>
                         <div class="d-flex mt-2">
                             <div class="fw-bold">Tode</div>
-                            <div class="ms-auto"><span class="badge:green text:shadow-sm fw-bold"><%= profil.ffa.deaths %></span></div>
+                            <div class="ms-auto"><span class="badge:green text:shadow-sm fw-bold"><%= profile.ffa.deaths %></span></div>
                         </div>
                     </div>
                 </div>
@@ -102,7 +111,7 @@
                     <div class="mt-2 shadow-sm p-3 bg-white rounded text-center">
                         <div class="d-flex">
                             <div class="fw-bold">Gewonnen</div>
-                            <div class="ms-auto"><span class="badge:green text:shadow-sm fw-bold"><%= profil.gtc.won %>x</span></div>
+                            <div class="ms-auto"><span class="badge:green text:shadow-sm fw-bold"><%= profile.gtc.won %>x</span></div>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose'), Schema = mongoose.Schema;
+mongoose.pluralize(null);
 
 const schema = new Schema({
     username: {
@@ -13,7 +14,7 @@ const schema = new Schema({
         type: String,
         required: true
     },
-    endOfPremium: {
+    premiumTimestamp: {
         type: Number,
         required: true
     },
@@ -25,26 +26,10 @@ const schema = new Schema({
         type: String,
         required: true
     },
-    banned: {
-        type: Boolean,
-        required: true
-    },
-    banSinceTimestamp: {
+    registrationTimestamp: {
         type: Number,
-        required: true
-    },
-    banExpiresTimestamp: {
-        type: Number,
-        required: true
-    },
-    banReason: {
-        type: String,
-        required: true
-    },
-    bannedFrom: {
-        type: String,
         required: true
     }
-}), data = mongoose.model('players', schema);
+}), data = mongoose.model('player', schema);
 
 module.exports = data;
