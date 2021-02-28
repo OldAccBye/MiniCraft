@@ -54,9 +54,13 @@ modules.router.post('/buyPremium', async (req, res) => {
             return res.json({ message: '<div class="alert alert-danger"><h5 class="alert-heading">Hoppla!</h5><p class="mb-0">Ein unbekannter Fehler ist aufgetreten!</p></div>' });   
     }
 
-    const player = await modules.player.findOne({ UUID: req.body.uuid });
+    const player = await modules.player.findOne({ UUID: req.body.uuid }, 'group cookies premiumTimestamp securitycode');
     if (player === null)
         return res.json({ message: '<div class="alert alert-danger"><h5 class="alert-heading">Hoppla!</h5><p class="mb-0">Du bist nicht auf unserem Netzwerk registriert!</p></div>' });
+    else if (player.securitycode === 'null')
+        return res.json({ message: '<div class="alert alert-danger"><h5 class="alert-heading">Hoppla!</h5><p class="mb-0">Ein Sicherheitscode existiert nicht noch nicht für diesen Account!</p></div>' });
+    else if (player.securitycode !== req.body.securitycode)
+        return res.json({ message: '<div class="alert alert-danger"><h5 class="alert-heading">Hoppla!</h5><p class="mb-0">Der angegebene Sicherheitscode stimmt nicht überein!</p></div>' });
     else if (player.group !== 'default')
         return res.json({ message: '<div class="alert alert-danger"><h5 class="alert-heading">Hoppla!</h5><p class="mb-0">Du gehörst bereits zu einer Gruppe mit den selben Funktionen wie die Gruppe "Premium"!</p></div>' });
     else if (player.cookies < price)
