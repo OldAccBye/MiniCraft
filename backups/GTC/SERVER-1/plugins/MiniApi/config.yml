@@ -1,1 +1,6 @@
-server: gtc
+server: "gtc"
+mongodb:
+  host: "minicraft.kxkh9.mongodb.net"
+  username: "miniuser"
+  password: "minipass"
+  database: "MiniCraft"

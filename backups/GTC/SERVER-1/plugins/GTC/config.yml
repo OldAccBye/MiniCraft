@@ -1,24 +1,24 @@
 PlayersToStart: 4 # Wie viele Spieler zum starten benötigt werden
 PreTime: 15 # Die benötigte Zeit in Sekunden bis das Spiel beginnt
-PlayTime: 35 # Die Zeit die man hat bis das Spiel vorbei ist in Sekunden
+PlayTime: 60 # Die Zeit die man hat bis das Spiel vorbei ist in Sekunden
 Spawn: # Die Position an die diese Person teleportiert werden soll sobald diese Person den Server betritt
-  x: 228.453
+  x: 242.425
   y: 72.00000
-  z: 278.556
-  yaw: -134.7
-  pitch: 6.1
+  z: 264.547
+  yaw: -136.6
+  pitch: 0.1
 Round: # Die Position an die diese Person teleportiert werden soll sobald das Spiel startet
-  x: 234.477
-  y: 72.00000
-  z: 259.513
-  yaw: -90.5
-  pitch: -0.0
+  x: 203.426
+  y: 73.00000
+  z: 253.452
+  yaw: 90.0
+  pitch: -1.0
 ChickenSpawn: # Von Position1 bis Position2 werden Hühner gespawnt
   pos1:
-    x: 233.570
-    y: 72.00000
-    z: 245.629
+    x: 205.739
+    y: 73.00000
+    z: 262.511
   pos2:
-    x: 262.420
-    y: 72.00000
-    z: 273.380
+    x: 176.018
+    y: 73.00000
+    z: 243.056

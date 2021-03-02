@@ -1,1 +1,1 @@
-screen -mdS GTCServer-1 java -Xms512M -Xmx756M -jar ./paper-1.16.5-472.jar -nogui
+screen -mdS GTCServer-1 java -Xms512M -Xmx756M -jar ./paper-1.16.5-507.jar -nogui
