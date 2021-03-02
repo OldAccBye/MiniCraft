@@ -13,8 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static com.mongodb.client.model.Projections.fields;
-import static com.mongodb.client.model.Projections.include;
+import static com.mongodb.client.model.Projections.*;
 
 public class PlayerApi {
     public static boolean login(ProxiedPlayer p) {
@@ -36,13 +35,14 @@ public class PlayerApi {
         Document playerDoc;
 
         try {
-            playerDoc = BungeeSystem.mongo.player.find(Filters.eq("UUID", p.getUniqueId().toString())).projection(fields(include("group"), include("friends"))).first();
+            playerDoc = BungeeSystem.mongo.player.find(Filters.eq("UUID", p.getUniqueId().toString())).projection(fields(exclude("_id"),include("group"), include("friends"))).first();
 
             if (playerDoc == null) {
                 playerDoc = new Document("UUID", p.getUniqueId().toString())
                         .append("username", p.getName())
                         .append("cookies", 0)
                         .append("group", "default")
+                        .append("premiumTimestamp", 0L)
                         .append("friends", new ArrayList<>())
                         .append("securitycode", "null")
                         .append("registrationTimestamp", new Date().getTime());

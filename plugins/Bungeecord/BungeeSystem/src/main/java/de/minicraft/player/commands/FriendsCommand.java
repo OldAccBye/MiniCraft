@@ -190,27 +190,38 @@ public class FriendsCommand extends Command implements TabExecutor {
             }
             case "accept" -> {
                 { // CHECK
+                    boolean friendRequest = pData.friendRequest.contains(args[1]);
+
                     if (t == null) {
-                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich nicht mehr auf dem Netzwerk!"));
-                        pData.friendRequest.remove(args[1]);
+                        if (!friendRequest)
+                            p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler hat dir keine Freundesanfrage gesendet und ist nicht auf dem Netzwerk!"));
+                        else {
+                            p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler befindet sich nicht mehr auf dem Netzwerk!"));
+                            pData.friendRequest.remove(args[1]);
+                        }
                         return;
                     }
 
                     tData = BungeeSystem.playerList.get(t.getUniqueId());
 
-                    if (pData.data.getList("friends", String.class).size() >= 25) {
-                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDu kannst nicht mehr als 25 Freunde haben!"));
+                    if (!friendRequest) {
+                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler hat dir keine Freundesanfrage gesendet!"));
                         return;
                     }
-                    else if (!pData.friendRequest.contains(args[1])) {
-                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDieser Spieler hat dir keine Anfrage gesendet!"));
+
+                    pData.friendRequest.remove(args[1]);
+
+                    if (pData.data.getList("friends", String.class).contains(t.getUniqueId().toString())) {
+                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDiese Person befindet sich bereits in deiner Freundesliste!"));
+                        return;
+                    } else if (pData.data.getList("friends", String.class).size() >= 25) {
+                        p.sendMessage(new TextComponent("§c[FEHLER]: §fDeine Grenze an 25 Freunde wurde erreicht!"));
                         return;
                     }
                 } // CHECK
 
                 tData.data.getList("friends", String.class).add(p.getUniqueId().toString());
                 pData.data.getList("friends", String.class).add(t.getUniqueId().toString());
-                pData.friendRequest.remove(args[1]);
                 p.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + args[1] + " §awurde in die Freundesliste hinzugefügt!"));
                 t.sendMessage(new TextComponent("§3§l[§2SERVER§3§l] §aSpieler §6" + p.getName()+ " §ahat deine Freundesanfrage angenommen!"));
             }

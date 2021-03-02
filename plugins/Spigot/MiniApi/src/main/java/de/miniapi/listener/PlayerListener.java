@@ -16,11 +16,14 @@ public class PlayerListener implements Listener {
         Player p = e.getPlayer();
 
         if (!PlayerApi.login(p))
-            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text("[ma-opl-01] Die Anmeldung auf diesen Server ist schief gelaufen. Melde dies im Support, sollte dieser Fehler erneut auftauchen."));
+            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text("[ma-opl-01] Die Anmeldung auf diesem Server ist schief gelaufen. Melde dies im Support, sollte dieser Fehler erneut auftauchen."));
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) { e.joinMessage(null); }
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        e.joinMessage(null);
+        PlayerApi.checkPremium(e.getPlayer());
+    }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {

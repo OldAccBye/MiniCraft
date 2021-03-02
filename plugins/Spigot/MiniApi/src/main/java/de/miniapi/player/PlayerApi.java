@@ -1,12 +1,17 @@
 package de.miniapi.player;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.mongodb.MongoException;
 import com.mongodb.client.model.Filters;
 import de.miniapi.Configs;
 import de.miniapi.MiniApi;
+import net.kyori.adventure.text.Component;
 import org.bson.Document;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Date;
 import java.util.UUID;
 
 import static com.mongodb.client.model.Projections.exclude;
@@ -37,7 +42,7 @@ public class PlayerApi {
                 case "playerData" -> playerDoc = MiniApi.mongo.playerData.find(Filters.eq("UUID", p.getUniqueId().toString())).projection(fields(exclude("_id"), exclude("UUID"), exclude("friends"))).first();
                 case "gameData" -> {
                     if (MiniApi.mongo.gameData == null) return null;
-                    playerDoc = MiniApi.mongo.gameData.find(Filters.eq("UUID", p.getUniqueId().toString())).first();
+                    playerDoc = MiniApi.mongo.gameData.find(Filters.eq("UUID", p.getUniqueId().toString())).projection(fields(exclude("_id"), exclude("UUID"))).first();
 
                     if (playerDoc == null) {
                         switch (Configs.serverName) {
@@ -49,6 +54,7 @@ public class PlayerApi {
                         }
 
                         MiniApi.mongo.gameData.insertOne(playerDoc);
+                        playerDoc.remove("UUID");
                         return playerDoc;
                     }
                 }
@@ -77,5 +83,46 @@ public class PlayerApi {
         } catch (MongoException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void checkPremium(Player p) {
+        new BukkitRunnable() {
+            long premiumTimestamp = -1;
+
+            @Override
+            public void run() {
+                if (p == null) {
+                    cancel();
+                    return;
+                }
+
+                if (premiumTimestamp == -1) {
+                    PlayerData pData = MiniApi.playerList.get(p.getUniqueId());
+                    if (pData.data.getLong("premiumTimestamp") == 0) {
+                        cancel();
+                        return;
+                    }
+
+                    premiumTimestamp = pData.data.getLong("premiumTimestamp");
+                }
+
+                long currentTimestamp = new Date().getTime();
+                if (premiumTimestamp >= currentTimestamp) return;
+
+                PlayerData pData = MiniApi.playerList.get(p.getUniqueId());
+                pData.data.replace("group", "default");
+                pData.data.replace("premiumTimestamp", 0L);
+                pData.prefix = Configs.permissionsList.getString("default.prefix");
+
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("update");
+                out.writeUTF("default");
+                p.sendPluginMessage(MiniApi.plugin, "bungeesystem:miniapi", out.toByteArray());
+
+                p.sendMessage(Component.text("§3§l[§2SERVER§3§l] §aDeine Premium-Mitgliedschaft ist abgelaufen!"));
+                MiniApi.plugin.getLogger().warning("[PR] Premium-Mitgliedschaft von " + p.getName() + " ist abgelaufen!");
+                cancel();
+            }
+        }.runTaskTimer(MiniApi.plugin, 20L, 20L);
     }
 }
