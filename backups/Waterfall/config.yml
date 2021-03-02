@@ -1,4 +1,4 @@
-prevent_proxy_connections: false
+server_connect_timeout: 5000
 listeners:
 - query_port: 25595
   motd: test
@@ -6,6 +6,7 @@ listeners:
   query_enabled: false
   proxy_protocol: false
   forced_hosts:
+    pvp.md-5.net: pvp
   ping_passthrough: false
   priorities:
   - lobby
@@ -20,11 +21,13 @@ permissions:
   default: null
 log_pings: true
 connection_throttle_limit: 2
-server_connect_timeout: 5000
+prevent_proxy_connections: false
 timeout: 30000
 player_limit: 100
 ip_forward: true
 groups:
+  md_5:
+  - admin
 remote_ping_timeout: 5000
 connection_throttle: 4000
 log_commands: false
