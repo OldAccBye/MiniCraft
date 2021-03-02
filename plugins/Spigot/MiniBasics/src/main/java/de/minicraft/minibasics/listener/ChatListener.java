@@ -3,20 +3,21 @@ package de.minicraft.minibasics.listener;
 import de.miniapi.player.PlayerData;
 import de.minicraft.minibasics.Configs;
 import de.minicraft.minibasics.MiniBasics;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 
 public class ChatListener implements Listener {
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent e) {
+    public void onChat(AsyncChatEvent e) {
         e.setCancelled(true);
         Player p = e.getPlayer();
 
@@ -26,19 +27,21 @@ public class ChatListener implements Listener {
             return;
         }
 
-        if (e.getMessage().contains("@")) {
-            String tName = e.getMessage().substring(e.getMessage().indexOf("@") + 1).split(" ")[0];
+        String message = LegacyComponentSerializer.legacyAmpersand().serialize(e.message());
+
+        if (message.contains("@")) {
+            String tName = message.substring(message.indexOf("@") + 1).split(" ")[0];
             Player t = MiniBasics.plugin.getServer().getPlayerExact(tName);
 
             if (t == null)
                 p.sendMessage("§c[FEHLER]: §fSpieler nicht gefunden!");
-            else if (1 == 2) { // tName.equals(p.getName())
+            else if (tName.equals(p.getName())) {
                 p.sendMessage("§c[FEHLER]: §fDu kannst dich nicht selber markieren!");
             } else {
                 t.sendMessage("§3§l[§2SERVER§3§l] §aDu wurdest von " + p.getName() + " erwähnt.");
 
-                String beforeAt = e.getMessage().substring(0, e.getMessage().indexOf("@")),
-                        afterAt = e.getMessage().substring(e.getMessage().lastIndexOf(tName) + tName.length());
+                String beforeAt = message.substring(0, message.indexOf("@")),
+                        afterAt = message.substring(message.lastIndexOf(tName) + tName.length());
 
                 TextComponent textComponent = Component.text(pData.prefix + p.getName() + ": " + beforeAt)
                         .append(
@@ -56,7 +59,7 @@ public class ChatListener implements Listener {
         }
 
         for (Player players : p.getWorld().getPlayers())
-            players.sendMessage(pData.prefix + p.getName() + ": " + e.getMessage());
+            players.sendMessage(pData.prefix + p.getName() + ": " + message);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

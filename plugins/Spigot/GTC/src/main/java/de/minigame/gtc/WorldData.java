@@ -103,7 +103,7 @@ public class WorldData {
         String topPlayerName = "null";
         if (topPlayer != null) {
             topPlayerName = topPlayer.getName();
-            GTC.api.getPlayer(topPlayerUUID).gtcData.won += 1;
+            GTC.api.getPlayer(topPlayerUUID).gameData.replace("won", +1);
             if (!GTC.api.savePlayer(topPlayer))
                 GTC.plugin.getLogger().severe("Spieler " + topPlayer.getUniqueId() + " konnte nicht gespeichert werden!");
         }

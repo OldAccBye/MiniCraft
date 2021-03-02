@@ -1,5 +1,6 @@
 package de.minigame.gtc.players;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,7 +24,7 @@ public class PlayerInventory {
         i.setAmount(1);
         ItemMeta im = i.getItemMeta();
         if (im != null) {
-            im.setDisplayName(DM);
+            im.displayName(Component.text(DM));
             im.setUnbreakable(true);
             i.setItemMeta(im);
         }

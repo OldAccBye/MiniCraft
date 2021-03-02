@@ -14,7 +14,7 @@ public class PlayerScoreboard {
         Scoreboard board = Lobby.plugin.getServer().getScoreboardManager().getNewScoreboard();
         Objective obj;
 
-        obj = board.registerNewObjective("Lobby-Scoreboard", "dummy", Component.text("§a§lMiniCraft"));
+        obj = board.registerNewObjective("Lobby-Scoreboard", "dummy", Component.text("§f§lMiniCraft"));
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         obj.getScore("").setScore(8);
         obj.getScore("§aGruppe").setScore(7);

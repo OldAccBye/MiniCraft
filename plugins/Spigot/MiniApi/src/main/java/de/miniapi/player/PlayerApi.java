@@ -98,6 +98,8 @@ public class PlayerApi {
 
                 if (premiumTimestamp == -1) {
                     PlayerData pData = MiniApi.playerList.get(p.getUniqueId());
+                    if (pData == null) return;
+
                     if (pData.data.getLong("premiumTimestamp") == 0) {
                         cancel();
                         return;
@@ -109,15 +111,17 @@ public class PlayerApi {
                 long currentTimestamp = new Date().getTime();
                 if (premiumTimestamp >= currentTimestamp) return;
 
-                PlayerData pData = MiniApi.playerList.get(p.getUniqueId());
-                pData.data.replace("group", "default");
-                pData.data.replace("premiumTimestamp", 0L);
-                pData.prefix = Configs.permissionsList.getString("default.prefix");
-
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("update");
                 out.writeUTF("default");
                 p.sendPluginMessage(MiniApi.plugin, "bungeesystem:miniapi", out.toByteArray());
+
+                PlayerData pData = MiniApi.playerList.get(p.getUniqueId());
+                pData.data.replace("group", "default");
+                pData.data.replace("premiumTimestamp", 0L);
+                pData.prefix = Configs.permissionsList.getString("default.prefix");
+                pData.updatePermissions();
+                p.updateCommands();
 
                 p.sendMessage(Component.text("§3§l[§2SERVER§3§l] §aDeine Premium-Mitgliedschaft ist abgelaufen!"));
                 MiniApi.plugin.getLogger().warning("[PR] Premium-Mitgliedschaft von " + p.getName() + " ist abgelaufen!");
