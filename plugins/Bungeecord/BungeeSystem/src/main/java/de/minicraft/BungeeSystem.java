@@ -9,6 +9,7 @@ import de.minicraft.player.PlayerData;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.bson.Document;
 
 import java.io.File;
 import java.io.IOException;

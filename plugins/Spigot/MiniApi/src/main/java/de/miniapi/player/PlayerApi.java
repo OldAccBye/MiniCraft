@@ -28,10 +28,10 @@ public class PlayerApi {
         pData.prefix = Configs.permissionsList.getString(pData.data.getString("group") + ".prefix");
         pData.gameData = getData(p, "gameData");
         pData.updatePermissions();
+        p.updateCommands();
         MiniApi.playerList.put(p.getUniqueId(), pData);
 
-        p.updateCommands();
-        return true;
+        return MiniApi.playerList.containsKey(p.getUniqueId());
     }
 
     public static Document getData(Player p, String collection) {
@@ -113,11 +113,11 @@ public class PlayerApi {
 
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("update");
-                out.writeUTF("default");
+                out.writeUTF("player");
                 p.sendPluginMessage(MiniApi.plugin, "bungeesystem:miniapi", out.toByteArray());
 
                 PlayerData pData = MiniApi.playerList.get(p.getUniqueId());
-                pData.data.replace("group", "default");
+                pData.data.replace("group", "player");
                 pData.data.replace("premiumTimestamp", 0L);
                 pData.prefix = Configs.permissionsList.getString("default.prefix");
                 pData.updatePermissions();

@@ -8,7 +8,7 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
 public class MongoManager {
-    public MongoCollection<Document> player, banned;
+    public MongoCollection<Document> player, banned, online;
 
     public void connect() {
         String username = Configs.config.getString("mongodb.username"),
@@ -27,6 +27,7 @@ public class MongoManager {
             MongoDatabase mongoDatabase = mongoClient.getDatabase(database);
             this.player = mongoDatabase.getCollection("player");
             this.banned = mongoDatabase.getCollection("banned");
+            this.online = mongoDatabase.getCollection("online");
         } catch (MongoException e) {
             e.printStackTrace();
             BungeeSystem.plugin.getProxy().stop();

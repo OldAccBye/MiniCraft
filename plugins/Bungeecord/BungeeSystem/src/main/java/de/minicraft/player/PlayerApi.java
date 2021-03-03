@@ -19,15 +19,15 @@ public class PlayerApi {
     public static boolean login(ProxiedPlayer p) {
         Document playerDoc = getData(p);
         if (playerDoc == null) return false;
-        PlayerData pData = new PlayerData();
 
+        PlayerData pData = new PlayerData();
         for (String permissionKey : Configs.permissionsList.getKeys()) {
             pData.permissions.addAll(Configs.permissionsList.getStringList(permissionKey));
             if (permissionKey.equals(playerDoc.getString("group"))) break;
         }
-
         pData.data = playerDoc;
         BungeeSystem.playerList.put(p.getUniqueId(), pData);
+        
         return BungeeSystem.playerList.containsKey(p.getUniqueId());
     }
 
@@ -41,13 +41,13 @@ public class PlayerApi {
                 playerDoc = new Document("UUID", p.getUniqueId().toString())
                         .append("username", p.getName())
                         .append("cookies", 0)
-                        .append("group", "default")
+                        .append("group", "player")
                         .append("premiumTimestamp", 0L)
                         .append("friends", new ArrayList<>())
                         .append("securitycode", "null")
                         .append("registrationTimestamp", new Date().getTime());
                 BungeeSystem.mongo.player.insertOne(playerDoc);
-                return new Document("group", "default").append("friends", new ArrayList<>());
+                return new Document("group", "player").append("friends", new ArrayList<>());
             }
         } catch (MongoException e) {
             e.printStackTrace();
@@ -66,7 +66,7 @@ public class PlayerApi {
                 return;
             }
 
-            BungeeSystem.mongo.player.findOneAndUpdate(new Document("UUID", pUUID.toString()), new Document("$set", pData.data));
+            BungeeSystem.mongo.player.findOneAndUpdate(new Document("UUID", pUUID.toString()), new Document("$set", new Document("friends", pData.data.getList("friends", String.class))));
         } catch (MongoException e) {
             e.printStackTrace();
         }

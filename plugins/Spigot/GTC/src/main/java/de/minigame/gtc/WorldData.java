@@ -4,6 +4,7 @@ import de.minigame.gtc.players.PlayerData;
 import de.minigame.gtc.players.PlayerInventory;
 import de.minigame.gtc.players.PlayerScoreboard;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -96,6 +97,7 @@ public class WorldData {
 
     public static void stopRound() {
         roundStarted = false;
+        de.miniapi.player.PlayerData miniPlayerData;
 
         GTC.plugin.getServer().getScheduler().cancelTask(lastTaskId);
 
@@ -103,7 +105,12 @@ public class WorldData {
         String topPlayerName = "null";
         if (topPlayer != null) {
             topPlayerName = topPlayer.getName();
-            GTC.api.getPlayer(topPlayerUUID).gameData.replace("won", +1);
+
+            miniPlayerData = GTC.api.getPlayer(topPlayerUUID);
+            miniPlayerData.gameData.replace("won", miniPlayerData.gameData.getInteger("won") + 1);
+            miniPlayerData.data.replace("cookies", miniPlayerData.data.getInteger("cookies") + 10);
+            topPlayer.sendMessage(Component.text("§3GTC §7| §fDu erhielst §a+10§f Cookies!"));
+
             if (!GTC.api.savePlayer(topPlayer))
                 GTC.plugin.getLogger().severe("Spieler " + topPlayer.getUniqueId() + " konnte nicht gespeichert werden!");
         }
@@ -129,6 +136,12 @@ public class WorldData {
             p.getInventory().clear();
             p.setExp(0.0f);
             p.setLevel(0);
+
+            if (key != topPlayerUUID) {
+                miniPlayerData = GTC.api.getPlayer(key);
+                miniPlayerData.data.replace("cookies", miniPlayerData.data.getInteger("cookies") + 5);
+                p.sendMessage(Component.text("§3GTC §7| §fDu erhielst §a+10§f Cookies!"));
+            }
         }
 
         if (lastChicken != null && !lastChicken.isDead())

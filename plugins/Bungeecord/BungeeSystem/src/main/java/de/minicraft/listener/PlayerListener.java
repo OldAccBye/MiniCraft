@@ -5,6 +5,7 @@ import de.minicraft.BungeeSystem;
 import de.minicraft.Utils;
 import de.minicraft.player.PlayerApi;
 import de.minicraft.player.PlayerData;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
@@ -48,15 +49,18 @@ public class PlayerListener implements Listener {
             return;
         }
 
+        BungeeSystem.mongo.online.insertOne(new Document("UUID", p.getUniqueId().toString()));
+
         PlayerData pData = BungeeSystem.playerList.get(p.getUniqueId());
 
         if (BungeeSystem.plugin.getProxy().getOnlineCount() > BungeeSystem.plugin.getProxy().getConfigurationAdapter().getListeners().iterator().next().getMaxPlayers())
-            if (pData.data.getString("group").equals("default"))
+            if (pData.data.getString("group").equals("player"))
                 p.disconnect(new TextComponent("Du musst Premium, Donator oder ein Teammitglied sein um über dem Limit der Spieleranzahl beitreten zu können."));
     }
 
     @EventHandler
     public void onPlayerDisconnect(PlayerDisconnectEvent e) {
+        BungeeSystem.mongo.online.deleteOne(new Document("UUID", e.getPlayer().getUniqueId().toString()));
         if (!BungeeSystem.playerList.containsKey(e.getPlayer().getUniqueId())) return;
 
         // Spielerdaten werden nach 2 Sekunden gespeichert und entfernt
@@ -64,5 +68,15 @@ public class PlayerListener implements Listener {
             PlayerApi.saveAll(e.getPlayer().getUniqueId());
             BungeeSystem.playerList.remove(e.getPlayer().getUniqueId());
         }, 2, TimeUnit.SECONDS);
+    }
+
+    @EventHandler
+    public void onServerKick(ServerKickEvent e) {
+        String kickReason = BaseComponent.toLegacyText(e.getKickReasonComponent());
+        ProxiedPlayer p = e.getPlayer();
+        if (p == null || p.getServer().getInfo().getName().contains("lobby") || !kickReason.toLowerCase().contains("server closed")) return;
+
+        e.setCancelled(true);
+        e.setCancelServer(BungeeSystem.plugin.getProxy().getServerInfo("lobby"));
     }
 }

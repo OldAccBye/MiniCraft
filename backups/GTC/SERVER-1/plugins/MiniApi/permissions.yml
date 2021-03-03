@@ -1,5 +1,5 @@
-default:
-  prefix: "§7§l[D]§r "
+player:
+  prefix: "§7§l[P]§r "
   permissions:
 premium:
   prefix: "§e§l[P]§r "

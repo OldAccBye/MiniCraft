@@ -20,7 +20,7 @@ public class TablistListener implements Listener {
                 else if (cPP > 75) cPPT = "§e" + cPP;
                 else cPPT = "§7" + cPP;
 
-                String header = " §b§l§m------§7§l§m[--§6 §lMini§2§lCraft §7§l§m--]§b§l§m------§r \n"
+                String header = " §b§l§m------§7§l§m[--§6 §aMiniCraft §7§l§m--]§b§l§m------§r \n"
                         + "§aServer: §7" + e.getPlayer().getServer().getInfo().getName() + " §f| "
                         + "§aPing: " + cPPT;
                 String footer =  " §r§7§l§m--------------------------§r \n " + BungeeSystem.plugin.getProxy().getOnlineCount() + "/100 Online ";

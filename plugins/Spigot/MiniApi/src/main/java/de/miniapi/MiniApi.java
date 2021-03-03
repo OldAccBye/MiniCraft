@@ -3,6 +3,7 @@ package de.miniapi;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.miniapi.listener.PlayerListener;
+import de.miniapi.player.PlayerApi;
 import de.miniapi.player.PlayerData;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class MiniApi extends JavaPlugin {
@@ -69,6 +71,16 @@ public class MiniApi extends JavaPlugin {
 
         // Mongo
         mongo.connect();
+    }
+
+    @Override
+    public void onDisable() {
+        plugin.getLogger().warning("Spieler werden gespeichert...");
+
+        for (Map.Entry<UUID, PlayerData> entry : playerList.entrySet())
+            PlayerApi.saveAll(entry.getKey());
+
+        plugin.getLogger().warning("Spieler wurden gespeichert!");
     }
 
     public PlayerData getPlayer(UUID pUUID) {

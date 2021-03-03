@@ -77,27 +77,43 @@ public class PlayerListener implements Listener {
             case "§3§lNavigator" -> {
                 i = Bukkit.createInventory(null, 9, Component.text("§3§lNavigator"));
 
-                // FFA ITEM
-                is = new ItemStack(Material.DIAMOND_SWORD);
-                im = is.getItemMeta();
-                if (im == null) return;
-                im.displayName(Component.text("§c§lFFA"));
-                im.lore(Collections.singletonList(Component.text("§eFREE-FOR-ALL")));
-                im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                is.setItemMeta(im);
+                { // FFA ITEM
+                    is = new ItemStack(Material.DIAMOND_SWORD);
+                    im = is.getItemMeta();
+                    if (im == null) return;
+                    im.displayName(Component.text("§c§lFFA"));
+                    im.lore(Collections.singletonList(Component.text("§eFREE-FOR-ALL")));
+                    im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                    is.setItemMeta(im);
 
-                i.setItem(0, is); // Set item
+                    i.setItem(0, is); // Set item
+                }
 
-                // GTC ITEM
-                is = new ItemStack(Material.CHICKEN_SPAWN_EGG);
-                im = is.getItemMeta();
-                if (im == null) return;
-                im.displayName(Component.text("§c§lGTC"));
-                im.lore(Collections.singletonList(Component.text("§eGET-THE-CHICKEN")));
-                im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                is.setItemMeta(im);
+                { // GTC ITEM
+                    is = new ItemStack(Material.CHICKEN_SPAWN_EGG);
+                    im = is.getItemMeta();
+                    if (im == null) return;
+                    im.displayName(Component.text("§c§lGTC"));
+                    im.lore(Collections.singletonList(Component.text("§eGET-THE-CHICKEN")));
+                    im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                    is.setItemMeta(im);
 
-                i.setItem(1, is); // Set item
+                    i.setItem(1, is); // Set item
+                }
+
+                { // COMING SOON ITEM
+                    is = new ItemStack(Material.BARRIER);
+                    im = is.getItemMeta();
+                    if (im == null) return;
+                    im.displayName(Component.text("§4§lCOMING SOON"));
+                    im.lore(Collections.singletonList(Component.text("§f§lFREI FÜR EIN KOMMENDES MINIGAME")));
+                    im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                    is.setItemMeta(im);
+
+
+                    for (int b = 2; b < 9; b++)
+                        i.setItem(b, is); // Set item
+                }
 
                 e.getPlayer().openInventory(i);
             }
@@ -188,8 +204,8 @@ public class PlayerListener implements Listener {
                 }
             }
             case "§3§lEmote" -> {
-                if (pData.data.getString("group").equals("default"))
-                    p.sendMessage("§c[FEHLER]: §fDu musst Premium, Donator oder ein Teammitglied sein!");
+                if (pData.data.getString("group").equals("player"))
+                    p.sendMessage("§c[FEHLER]: §fDu musst mindestens ein Mitglied der Gruppe Premium sein!");
                 else {
                     switch (displayName) {
                         case "§4§lLiebe" -> p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2.25, 0), 10, 0.25f, 0.25f, 0.25f);

@@ -26,7 +26,7 @@ modules.mongoose.connect('mongodb+srv://miniuser:minipass@minicraft.kxkh9.mongod
         const players = await modules.player.find({ group: 'premium', premiumTimestamp: {$lte: new Date().getTime() } });
         for (player of players) {
             if (await modules.playerOnline.exists({ UUID: player.UUID })) continue;
-            await modules.player.updateOne({ UUID: player.UUID }, { group: 'default', premiumTimestamp: 0 })
+            await modules.player.updateOne({ UUID: player.UUID }, { group: 'player', premiumTimestamp: 0 })
             .then((user) => console.log(`[PR][\x1b[32mSUCCESS\x1b[0m] Spieler \x1b[33m${player.UUID}\x1b[0m verlor die Gruppe Premium!`))
             .catch((err) => console.log(`[PR][\x1b[31mFAILED\x1b[0m] Spieler \x1b[33m${player.UUID}\x1b[0m verlor nicht die Gruppe Premium!`));
         }

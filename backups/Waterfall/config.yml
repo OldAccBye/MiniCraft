@@ -41,7 +41,7 @@ servers:
   lobby:
     motd: |-
       &8>&7> &fMiniCraft &7<&8< &aMinigames Netzwerk&r
-      &c[&b1.16.x&c][&bEntwicklungsphase&c]
+      &c[&b1.16.x&c][&bTestphase&c]
     address: 127.0.0.1:25566
     restricted: false
   ffa:
