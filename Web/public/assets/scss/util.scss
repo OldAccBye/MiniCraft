@@ -14,3 +14,9 @@
         }
     }
 }
+
+.bg {
+    &\:primary {
+        background-color: #65d056!important;
+    }
+}

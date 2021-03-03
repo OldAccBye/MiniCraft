@@ -22,41 +22,35 @@
                     </div>
                 </div>
                 <div class="col-lg-8">
-                    <div class="card shadow-sm text-center mb-3">
-                        <div class="card-header">Informationen</div>
-                        <div class="card-body">
-                            <div class="d-inline d-sm-flex">
-                                <div class="fw-bold">UUID</div>
-                                <div class="ms-auto"><%= profile.uuid %></div>
-                            </div>
-                            <div class="d-inline d-sm-flex mt-sm-1">
-                                <div class="fw-bold">Benutzername</div>
-                                <div class="ms-auto"><%= profile.username %></div>
-                            </div>
-                            <div class="d-inline d-sm-flex mt-sm-1">
-                                <div class="fw-bold">Gruppe</div>
-                                <div class="ms-auto text-uppercase"><%= profile.group %></div>
-                            </div>
-                            <div class="d-inline d-sm-flex mt-sm-1">
-                                <div class="fw-bold">Registriert seit</div>
-                                <div class="ms-auto">
-                                    <%
-                                        let date = new Date(profile.registrationTimestamp);
-                                    %>
-                                    <%= date.getDate() %>.<%= date.getMonth() + 1 %>.<%= date.getFullYear() %> - <%= date.getHours() %>:<%= date.getMinutes() %>:<%= date.getSeconds() %>
-                                </div>
+                    <div class="shadow-sm p-3 bg-white rounded">
+                        <div class="d-flex">
+                            <img src="https://crafatar.com/avatars/<%= profile.uuid %>" width="48" alt=".">
+                            <div class="px-3">
+                                <span class="text-decoration-none text-light badge bg:primary"><%= profile.group %></span>
+                                <div><small class="text-muted"><%= profile.username %></small></div>
                             </div>
                         </div>
-                    </div>
-                    <div class="overflow-auto card shadow-sm">
-                        <div class="card-header text-center">Namensverlauf</div>
-                        <div class="card-body">
-                            <div class="overflow-auto" style="max-height: 200px;">
+                        <div class="mt-2">
+                            <small class="fw-bold text-muted">Player UUID</small>
+                            <p class="mb-0">
+                                <%= profile.uuid %>
+                            </p>
+                        </div>
+                        <div class="mt-2">
+                            <small class="fw-bold text-muted">Registriert seit</small>
+                            <p class="mb-0">
+                                <% let date = new Date(profile.registrationTimestamp); %>
+                                <%= date.getDate() %>.<%= date.getMonth() + 1 %>.<%= date.getFullYear() %> - <%= date.getHours() %>:<%= date.getMinutes() %>:<%= date.getSeconds() %>
+                            </p>
+                        </div>
+                        <div class="mt-2">
+                            <small class="fw-bold text-muted">Namensverlauf</small>
+                            <div class="overflow-auto bg-dark p-2" style="max-height: 200px;">
                                 <% profile.lastNameList.slice().reverse().forEach((item) => {
                                     if (item.changedToAt) { %>
-                                <figure>
+                                <figure class="lh-1">
                                     <blockquote class="blockquote mb-0">
-                                        <p>
+                                        <p class="text-light">
                                             <%= item.name %>
                                         </p>
                                     </blockquote>
@@ -68,9 +62,9 @@
                                     </small>
                                 </figure>
                                    <% } else { %>
-                                <figure class="mb-0">
+                                <figure class="mb-0 lh-1">
                                     <blockquote class="blockquote mb-0">
-                                        <p>
+                                        <p class="text-light">
                                             <%= item.name %>
                                         </p>
                                     </blockquote>
