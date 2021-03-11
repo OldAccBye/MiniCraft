@@ -1,4 +1,9 @@
 $(() => {
+    if (document.cookie.indexOf('cookieCheck=') === -1) {
+        $('#cookieCheck').toggleIt('d-none');
+        setTimeout(() => $('#cookieCheck').toggleIt('load'), 20);
+    }
+
     if (!!$('#buyPremium')) {
         $('#buyPremium').on('submit', async (e) => {
             e.preventDefault();
@@ -39,16 +44,16 @@ $(() => {
 });
 
 function openDonationDialog() {
-    const sizeLeft = window.screenLeft ?? screen.left,
-    sizeTop = window.screenTop ?? screen.top,
-    windowWidth = window.innerWidth ?? (document.documentElement.clientWidth ?? screen.width),
+    const windowWidth = window.innerWidth ?? (document.documentElement.clientWidth ?? screen.width),
     windowHeight = window.innerHeight ?? (document.documentElement.clientHeight ?? screen.height),
-    positionLeft = windowWidth / 2 - 450 + sizeLeft,
-    positionTop = windowHeight / 2 - 250 + sizeTop;
-
-    var test = [{ uuid: "123-abc-def-456" }];
-    test[0]['name'] = "CoolePizzaxD";
-    console.log(test[0]);
+    positionLeft = ((windowWidth / 2) - 450) + (window.screenLeft ?? screen.left),
+    positionTop = ((windowHeight / 2) - 250) + (window.screenTop ?? screen.top);
 
     window.open("...", "MiniCraft - Donate", "scrollbars=yes, width=900, height=500, top=" + positionTop + ", left=" + positionLeft);
+}
+
+function setCookieCheck() {
+    document.cookie = "cookieCheck=true";
+    $('#cookieCheck').toggleIt('hide');
+    setTimeout(() => $('#cookieCheck').toggleIt('d-none'), 500);
 }
